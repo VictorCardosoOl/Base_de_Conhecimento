@@ -1,0 +1,162 @@
+[
+  {
+    "id": "aposentadoria-especial",
+    "question": "Aposentadoria Especial (Regras Atuais)",
+    "category": "Previdenciário",
+    "date": "08 Jan 2026",
+    "tags": [
+      "Aposentadoria Especial",
+      "INSS",
+      "Reforma"
+    ],
+    "answer": "Requisitos e novas regras para aposentadoria especial em 2026.",
+    "fileName": "aposentadoria-especial.md",
+    "searchText": "Aposentadoria Especial A Aposentadoria Especial é um benefício previdenciário destinado a trabalhadores que exercem atividades expostos a agentes nocivos à saúde (químicos, físicos ou biológicos) de forma contínua e ininterrupta, em níveis acima dos limites de tolerância. Cenário Atual (2026) e Pós-Reforma (EC 103/2019) A Reforma da Previdência mudou drasticamente as regras. Antes, exigia-se apenas o tempo de contribuição (15, 20 ou 25 anos). Agora, é necessário cumprir também um critério de Idade Mínima ou Pontos (regra de transição). Tempos de Contribuição Especiais - 15 anos: Para trabalhos em mineração subterrânea (frente de produção). - 20 anos: Para trabalhos em mineração (afastado da frente) ou exposição a amianto. - 25 anos: Regra geral (ruído, calor, químicos, biológicos, etc.). Regra de Transição (Pontos) Para quem já trabalhava antes de 13/11/2019, mas não tinha completado o tempo: Soma-se: Idade + Tempo de Contribuição. - 66 Pontos (Para atividades de 15 anos). - 76 Pontos (Para atividades de 20 anos). - 86 Pontos (Para atividades de 25 anos). Regra Permanente (Idade Mínima) Para quem começou a trabalhar depois da Reforma (11/2019): - 55 anos de idade + 15 anos de atividade especial. - 58 anos de idade + 20 anos de atividade especial. - 60 anos de idade + 25 anos de atividade especial. Fim da Conversão de Tempo Desde a Reforma (13/11/2019), não é mais permitida a conversão de tempo especial em comum. O tempo trabalhado em condições insalubres conta apenas como tempo comum (1 para 1) se não for usado para aposentadoria especial, sem o acréscimo de 40% (homens) ou 20% (mulheres) que existia antes. Comprovação A única forma de comprovar o direito é através do PPP (Perfil Profissiográfico Previdenciário), que deve estar embasado em um LTCAT tecnicamente correto. O INSS exige prova de que os EPIs não foram eficazes para neutralizar a nocividade (exceto para Ruído e Agentes Cancerígenos, onde o EPI não descaracteriza o direito segundo o STF)."
+  },
+  {
+    "id": "aposentadoria-invalidez",
+    "question": "Aposentadoria por Incapacidade Permanente",
+    "category": "Previdenciário",
+    "date": "09 Jan 2026",
+    "tags": [
+      "Invalidez",
+      "Incapacidade",
+      "Auxílio Doença"
+    ],
+    "answer": "A antiga aposentadoria por invalidez: critérios e cálculo pós-reforma.",
+    "fileName": "aposentadoria-invalidez.md",
+    "searchText": "Aposentadoria por Incapacidade Permanente (Antiga Invalidez) Renomeada pela Reforma da Previdência de 2019, a Aposentadoria por Incapacidade Permanente é o benefício devido ao segurado que for considerado permanentemente incapaz de exercer qualquer atividade laborativa e que também não possa ser reabilitado em outra profissão. Requisitos Principais (2026) 1. Incapacidade Total e Permanente: Comprovada por perícia médica do INSS. Deve inviabilizar o sustento do indivíduo por meio do trabalho. 2. Qualidade de Segurado: Estar contribuindo para o INSS ou estar no \"período de graça\" no momento do início da incapacidade. 3. Carência: - Regra Geral: 12 contribuições mensais. - Isenção de Carência: Em casos de acidentes (de qualquer natureza), acidentes de trabalho, doenças profissionais ou doenças graves listadas em lei (Ex: Câncer, Tuberculose Ativa, Hanseníase, Alienação Mental, Cegueira, Esclerose Múltipla, etc.). Cálculo do Benefício (Pós-Reforma) O valor não é mais integral (100%) na maioria dos casos; sofreu redução drástica. - Regra Geral (Doença Comum): 60% da média salarial + 2% para cada ano que exceder 20 anos de contribuição (homens) ou 15 anos (mulheres). - Exceção (Acidente de Trabalho/Doença Ocupacional): Se a invalidez for decorrente do trabalho, o valor é 100% da média salarial, independente do tempo de contribuição. Nota: Este ponto torna crucial a emissão da CAT e o reconhecimento do nexo causal. Adicional de 25% (Grande Invalidez) Se o aposentado necessitar de assistência permanente de outra pessoa para atividades básicas da vida diária (comer, vestir-se, higienizar-se), ele tem direito a um acréscimo de 25% no valor do benefício, inclusive podendo ultrapassar o teto do INSS. Pente Fino e Reabilitação O benefício não é necessariamente vitalício. O INSS pode convocar o segurado para novas perícias a cada 2 anos. - Estão isentos de perícia: Segurados com mais de 60 anos, ou com mais de 55 anos que já recebam o benefício há 15 anos, e portadores de HIV/AIDS."
+  },
+  {
+    "id": "cat",
+    "question": "CAT - Comunicação de Acidente de Trabalho",
+    "category": "Previdenciário",
+    "date": "07 Jan 2026",
+    "tags": [
+      "CAT",
+      "Acidente",
+      "S-2210"
+    ],
+    "answer": "Prazos, tipos e obrigatoriedade da emissão da CAT.",
+    "fileName": "cat.md",
+    "searchText": "Comunicação de Acidente de Trabalho (CAT) A CAT é o documento utilizado para comunicar ao INSS a ocorrência de acidente de trabalho, acidente de trajeto ou doença ocupacional. É fundamental para garantir a assistência acidentária ao trabalhador e para fins estatísticos e epidemiológicos da Previdência. Prazos de Emissão - Regra Geral: Até o primeiro dia útil seguinte ao da ocorrência. - Em caso de Óbito: A comunicação deve ser imediata. Tipos de CAT 1. CAT Inicial: Refere-se à primeira comunicação do acidente ou doença. É emitida mesmo em casos de morte imediata (neste caso, é uma CAT Inicial com informação de óbito). 2. CAT de Reabertura: Deve ser emitida quando há agravamento de lesão de acidente ou doença já comunicada anteriormente (Ex: trabalhador retorna, mas precisa se afastar novamente pelo mesmo problema). 3. CAT de Óbito: Emitida exclusivamente quando o trabalhador falece em decorrência de acidente ou doença já comunicada em uma CAT Inicial anterior. (Se o trabalhador morre na hora do acidente, usa-se a CAT Inicial). Quem deve emitir? A obrigação principal é da Empresa (Empregador). Caso a empresa se recuse ou não emita no prazo, podem emitir a CAT (sem prazo determinado, mas sujeito a regras): - O próprio trabalhador. - Seus dependentes. - A entidade sindical. - O médico que o assistiu. - Autoridades públicas (Magistrados, MPT, Auditores do Trabalho). Evento no eSocial (S-2210) Atualmente, as empresas enviam a CAT através do evento S-2210 do eSocial. O preenchimento exige informações detalhadas, incluindo: - Parte do corpo atingida (Tabela 13). - Agente causador (Tabela 14 e 15). - Descrição da situação geradora. - Atestado médico com CID (Código Internacional de Doenças)."
+  },
+  {
+    "id": "ecac-guia",
+    "question": "Guia de Acesso ao e-CAC",
+    "category": "eSocial e Governo",
+    "date": "11 Jan 2026",
+    "tags": [
+      "e-CAC",
+      "Receita Federal",
+      "DCTFWeb"
+    ],
+    "answer": "Como acessar e utilizar o portal e-CAC para verificar pendências.",
+    "fileName": "ecac-guia.md",
+    "searchText": "Guia Rápido: e-CAC (Centro Virtual de Atendimento) O e-CAC (Centro Virtual de Atendimento ao Contribuinte) é o portal da Receita Federal que permite a comunicação digital segura entre o contribuinte (físico ou jurídico) e o Fisco. Para empregadores e profissionais de SST, ele é vital para acompanhar pendências fiscais relativas à folha de pagamento e obrigações previdenciárias. Como Acessar O acesso é restrito para garantir segurança. Pode ser feito via: 1. Conta gov.br: Nível Prata ou Ouro. 2. Certificado Digital (e-CPF ou e-CNPJ): A forma mais comum para empresas, garantindo acesso total. 3. Código de Acesso: Para serviços limitados, gerado com recibos de IRPF. Principais Funcionalidades para Empresas - Situação Fiscal: Verificar se a empresa tem pendências na Receita ou PGFN (Dívida Ativa) que impeçam a emissão de CND (Certidão Negativa de Débitos). - Consulta de Declarações (DCTFWeb): Conferir os débitos previdenciários declarados via eSocial. É aqui que se emite a guia de pagamento (DARF Previdenciário). - Caixa Postal: Receber intimações e avisos oficiais da Receita (Ex: notificações sobre divergências no eSocial ou multas por atraso na entrega de obrigações acessórias). - Procurações: Gerenciar procurações eletrônicas, permitindo que contadores ou empresas de SST enviem eventos do eSocial em nome da empresa. Importância para o eSocial Embora o eSocial tenha seu próprio portal, o \"fechamento\" das informações financeiras e a geração das guias de recolhimento (que incluem os riscos ambientais e custeio de aposentadoria especial) ocorrem no ambiente da DCTFWeb, acessível via e-CAC. Portanto, divergências informadas no evento S-2240 (SST) podem impactar diretamente os valores visualizados aqui."
+  },
+  {
+    "id": "esocial-sst",
+    "question": "Eventos de SST no eSocial (S-2210, S-2220, S-2240)",
+    "category": "eSocial e Governo",
+    "date": "10 Jan 2026",
+    "tags": [
+      "eSocial",
+      "S-2210",
+      "S-2220",
+      "S-2240",
+      "Obrigações"
+    ],
+    "answer": "Resumo dos eventos de SST que devem ser enviados ao eSocial.",
+    "fileName": "esocial-sst.md",
+    "searchText": "eSocial e os Eventos de SST O eSocial (Sistema de Escrituração Digital das Obrigações Fiscais, Previdenciárias e Trabalhistas) unificou o envio de informações ao governo. Para a área de Segurança e Saúde do Trabalho (SST), existem três eventos obrigatórios que substituíram formulários antigos (como o PPP físico e a CAT em papel/sistema antigo). S-2210: Comunicação de Acidente de Trabalho - O que é: O evento usado para registrar acidentes de trabalho e doenças ocupacionais. - Substitui: A antiga CAT Web/Papel. - Prazo: Até o primeiro dia útil seguinte à ocorrência (ou imediato em caso de morte). - Destaque: Exige informações precisas sobre o agente causador e a parte do corpo, cruzando dados com as tabelas do eSocial. S-2220: Monitoramento da Saúde do Trabalhador - O que é: O evento que envia os dados do ASO (Atestado de Saúde Ocupacional). - Substitui: Parte do PPP (Monitoração Biológica). - O que envia: Não envia o prontuário médico completo, apenas a conclusão do ASO (Apto/Inapto), data, tipo de exame (Admissional, Periódico...) e os códigos dos exames complementares realizados. - Prazo: Até o dia 15 do mês subsequente ao exame. S-2240: Condições Ambientais do Trabalho (Agentes Nocivos) - O que é: O evento mais complexo. Registra a exposição do trabalhador a riscos (físicos, químicos, biológicos) que podem dar direito a Aposentadoria Especial. - Substitui: O formulário PPP (Perfil Profissiográfico Previdenciário) físico. É este evento que alimenta o PPP Eletrônico no \"Meu INSS\". - O que envia: Descrição das atividades, agentes nocivos identificados (ou ausência de risco), EPIs utilizados, CA do EPI e identificação do responsável técnico pelo LTCAT. - Prazo: Até o dia 15 do mês subsequente à admissão ou alteração de risco. Multas e Penalidades O não envio ou envio incorreto desses eventos pode gerar multas automáticas pela Receita Federal, variando de acordo com a gravidade e o porte da empresa, além de impedir a emissão de Certidões Negativas de Débitos."
+  },
+  {
+    "id": "intro-sst",
+    "question": "Medicina Ocupacional e Segurança do Trabalho",
+    "category": "Saúde e Segurança",
+    "date": "01 Jan 2026",
+    "tags": [
+      "Medicina Ocupacional",
+      "Segurança do Trabalho",
+      "Conceitos"
+    ],
+    "answer": "Entenda as diferenças e a complementariedade entre Medicina e Segurança do Trabalho.",
+    "fileName": "intro-sst.md",
+    "searchText": "Medicina Ocupacional e Segurança do Trabalho: Entenda a Diferença Embora atuem juntas pela proteção do trabalhador, Medicina Ocupacional e Segurança do Trabalho são áreas distintas com focos complementares. Entender essa diferença é vital para a gestão eficiente de SST. Segurança do Trabalho Foca no Ambiente e na Prevenção de Acidentes. É uma ciência que estuda as causas dos acidentes e incidentes para criar medidas técnicas e administrativas que eliminem ou reduzam os riscos no local de trabalho. - Profissionais: Engenheiros de Segurança e Técnicos em Segurança do Trabalho. - Instrumentos principais: PGR, Permissões de Trabalho/Análise de Risco, Treinamentos (NRs), Sinalização, EPCs (Proteção Coletiva) e EPIs (Proteção Individual). - Objetivo: Evitar que o acidente aconteça. \"Proteger a vida e a integridade física\". Medicina Ocupacional (ou do Trabalho) Foca na Saúde Fisiológica e Mental do trabalhador. Avalia se o trabalho está causando doenças ou se o trabalhador tem condições de exercer determinada função sem agravar sua saúde. - Profissionais: Médicos do Trabalho, Enfermeiros e Auxiliares de Enfermagem do Trabalho, Fonoaudiólogos (para audiometrias), etc. - Instrumentos principais: PCMSO, Exames Clínicos (Admissional, Periódico, etc.), Exames Complementares (Raio-X, Sangue, Audiometria), ASO. - Objetivo: Monitorar a saúde e detectar doenças precocemente. \"Proteger a saúde biologica\". A Integração (GRO - Gerenciamento de Riscos Ocupacionais) Uma gestão moderna (PGR + PCMSO) exige que essas áreas conversem. O Médico do Trabalho precisa saber quais riscos a Segurança identificou no PGR para pedir os exames corretos. A Segurança precisa saber dos diagnósticos médicos (anonimizados/estatísticos) para saber se suas medidas de proteção estão sendo eficazes."
+  },
+  {
+    "id": "ltcat",
+    "question": "LTCAT - Laudo Técnico das Condições Ambientais",
+    "category": "Previdenciário",
+    "date": "05 Jan 2026",
+    "tags": [
+      "LTCAT",
+      "Laudo",
+      "Insalubridade",
+      "Aposentadoria"
+    ],
+    "answer": "O laudo técnico essencial para comprovação de aposentadoria especial.",
+    "fileName": "ltcat.md",
+    "searchText": "Laudo Técnico das Condições Ambientais do Trabalho (LTCAT) O LTCAT é um documento de natureza previdenciária, instituído pela Lei nº 8.213/91. Diferente do PGR (que é trabalhista/preventivo), a finalidade exclusiva do LTCAT é documentar a necessidade ou não de Aposentadoria Especial pelo INSS. Finalidade Principal Comprovar se o trabalhador esteve exposto a agentes nocivos (físicos, químicos ou biológicos) prejudiciais à saúde ou integridade física, de forma permanente, não ocasional nem intermitente, que enseje a concessão de benefício previdenciário especial. Conteúdo Técnico Obrigatório O LTCAT deve conter: - Identificação da empresa e do setor. - Descrição das atividades (individual ou por Grupo Homogêneo de Exposição). - Identificação dos agentes nocivos (baseado no Anexo IV do Decreto 3048/99). - Métodos de avaliação (Qualitativos ou Quantitativos). - Localização das fontes geradoras. - Medidas de controle existentes (EPC e EPI) e sua eficácia. - Conclusão sobre o enquadramento (Se gera direito a aposentadoria especial ou não). Quem pode elaborar? Apenas Médico do Trabalho ou Engenheiro de Segurança do Trabalho podem assinar o LTCAT. LTCAT x PGR x PPRA - PGR (NR-1): Foco na prevenção de acidentes e doenças (Trabalhista). - LTCAT: Foco na comprovação de direito a benefício e custeio previdenciário (Previdenciário). Embora o PGR possa ser usado como base de dados, ele não substitui o LTCAT se não atender a todos os requisitos da legislação previdenciária (IN 128/2022 do INSS). Atualização O LTCAT não tem \"validade\", mas deve ser atualizado sempre que houver alterações no ambiente de trabalho (layout, máquinas, produtos químicos, EPCs) que alterem as condições de exposição."
+  },
+  {
+    "id": "pcmso",
+    "question": "PCMSO - Controle Médico de Saúde Ocupacional (NR-07)",
+    "category": "Saúde e Segurança",
+    "date": "04 Jan 2026",
+    "tags": [
+      "PCMSO",
+      "NR-07",
+      "Exames",
+      "ASO"
+    ],
+    "answer": "Diretrizes para o monitoramento da saúde dos trabalhadores.",
+    "fileName": "pcmso.md",
+    "searchText": "Programa de Controle Médico de Saúde Ocupacional (PCMSO) - NR-07 O PCMSO, regido pela NR-07, é o programa responsável por monitorar a saúde dos trabalhadores em relação aos riscos aos quais estão expostos. Ele atua de forma integrada ao PGR, utilizando o Inventário de Riscos para definir os exames e controles médicos necessários. Objetivos - Rastrear e diagnosticar precocemente agravos à saúde relacionados ao trabalho. - Constatar a existência de casos de doenças profissionais ou danos irreversíveis. - Definir a aptidão do trabalhador para a função (\"Apto\" ou \"Inapto\"). Tipos de Exames Médicos Obrigatórios O PCMSO exige a realização de cinco tipos de exames, que geram o Atestado de Saúde Ocupacional (ASO): 1. Admissional: Antes de assumir as atividades. 2. Periódico: - Anual: Para menores de 18, maiores de 45, ou trabalhadores expostos a riscos que exijam monitoramento frequente. - Bienal: Para trabalhadores entre 18 e 45 anos, sem riscos específicos. 3. Retorno ao Trabalho: Obrigatório após afastamento por doença ou acidente (ocupacional ou não) igual ou superior a 30 dias. Nota: Não é mais exigido após o retorno de férias. 4. Mudança de Risco Ocupacional: Realizado antes da mudança de função, se houver alteração nos riscos. 5. Demissional: Realizado no desligamento. - Validade: Pode ser usado o exame periódico realizado há menos de 135 dias (risco 1 e 2) ou 90 dias (risco 3 e 4). ASO (Atestado de Saúde Ocupacional) É o documento entregue ao trabalhador (uma via) e arquivado pela empresa, que comprova a aptidão para o trabalho. Deve conter: - Dados do trabalhador e da empresa. - Riscos ocupacionais identificados (ou ausência deles). - Exames realizados e suas datas (sem detalhar resultados clínicos sigilosos). - Definição de Aptidão. - Assinatura do Médico. Responsabilidades - Empregador: Custear todos os exames e procedimentos. - Médico do Trabalho: Elaborar o PCMSO e analisar os resultados dos exames."
+  },
+  {
+    "id": "pgr",
+    "question": "PGR - Programa de Gerenciamento de Riscos (NR-01)",
+    "category": "Saúde e Segurança",
+    "date": "02 Jan 2026",
+    "tags": [
+      "PGR",
+      "GRO",
+      "NR-01",
+      "Riscos Ocupacionais"
+    ],
+    "answer": "Tudo sobre o novo programa de gestão de riscos que substituiu o PPRA.",
+    "fileName": "pgr.md",
+    "searchText": "Programa de Gerenciamento de Riscos (PGR) - NR-01 O PGR (Programa de Gerenciamento de Riscos) é o documento base para a gestão de riscos ocupacionais no Brasil, regulamentado pela Norma Regulamentadora nº 01 (NR-01). Obrigatório desde janeiro de 2022, ele substituiu o antigo PPRA (NR-09), trazendo uma visão mais abrangente que não se limita apenas aos riscos ambientais (físicos, químicos e biológicos), mas engloba também riscos de acidentes e ergonômicos. Objetivos O principal objetivo do PGR é prevenir a ocorrência de acidentes e doenças relacionadas ao trabalho através de um processo contínuo de: - Identificação de perigos. - Avaliação de riscos. - Implementação de medidas de controle. Estrutura Obrigatória O PGR deve conter, no mínimo, dois documentos principais: 1. Inventário de Riscos Ocupacionais Documento que consolida a identificação dos perigos e a avaliação dos riscos. Deve conter: - Caracterização dos processos e ambientes de trabalho. - Descrição dos perigos e possíveis lesões/agravos. - Identificação das fontes geradoras. - Grupos de trabalhadores expostos. - Dados da análise preliminar ou monitoramento das exposições. - Avaliação dos riscos (nível de risco), considerando a probabilidade e a severidade. 2. Plano de Ação Cronograma detalhado das medidas de prevenção a serem: - Introduzidas (novas medidas). - Aprimoradas (melhoria contínua). - Mantidas (controle existente). Para cada medida, deve-se definir o responsável, o prazo de execução e a forma de acompanhamento. Obrigatoriedade e Dispensas É obrigatório para todas as organizações que possuem empregados regidos pela CLT. Dispensas: Microempreendedores Individuais (MEI) estão dispensados. Microempresas (ME) e Empresas de Pequeno Porte (EPP) de graus de risco 1 e 2 podem ser dispensadas se declararem a inexistência de riscos físicos, químicos e biológicos (Declaração de Inexistência de Riscos - DIR). Validade e Revisão O PGR é um programa contínuo, não tem \"validade\" fixa de documento, mas deve ser revisado: - A cada 2 anos (regra geral). - A cada 3 anos (para empresas com certificação em sistema de gestão de SST). - Imediatamente se houver mudanças nos processos, novos riscos identificados ou acidentes."
+  },
+  {
+    "id": "pgrtr",
+    "question": "PGRTR - Gerenciamento de Riscos Rurais (NR-31)",
+    "category": "Saúde e Segurança",
+    "date": "03 Jan 2026",
+    "tags": [
+      "PGRTR",
+      "NR-31",
+      "Rural",
+      "Agro"
+    ],
+    "answer": "Especificidades da gestão de riscos no trabalho rural.",
+    "fileName": "pgrtr.md",
+    "searchText": "PGRTR - Gerenciamento de Riscos no Trabalho Rural (NR-31) O PGRTR (Programa de Gerenciamento de Riscos no Trabalho Rural) é o equivalente ao PGR para o setor agropecuário, regulamentado pela norma setorial NR-31. Ele substituiu o antigo PGSSMATR. Abrangência Aplica-se a quaisquer atividades da agricultura, pecuária, silvicultura, exploração florestal e aquicultura. Diferenciais em relação ao PGR Urbano (NR-01) Embora a estrutura (Inventário de Riscos + Plano de Ação) seja similar, o PGRTR deve abordar riscos específicos do campo, tais como: - Agrotóxicos: Gestão rigorosa da exposição, armazenamento e aplicação de defensivos agrícolas. - Máquinas Agrícolas: Riscos de tombamento, aprisionamento em eixos cardans, e operação de tratores/colheitadeiras. - Animais: Riscos biológicos (zoonoses) e acidentes com animais de grande porte ou peçonhentos. - Fatores Climáticos: Exposição intensa a calor (radiação solar), chuva e raios. - Ferramentas Manuais: Riscos ergonômicos e de corte em atividades de colheita manual. Periodicidade O ciclo de gestão é similar ao PGR: deve ser revisado continuamente e, no mínimo, a cada 3 anos, ou quando houverem mudanças significativas nas plantações, equipamentos ou processos produtivos. Integração O PGRTR deve estar integrado com a CIPATR (Comissão Interna de Prevenção de Acidentes do Trabalho Rural) e servir de base para os exames do PCMSO Rural."
+  },
+  {
+    "id": "ppp",
+    "question": "PPP - Perfil Profissiográfico Previdenciário",
+    "category": "Previdenciário",
+    "date": "06 Jan 2026",
+    "tags": [
+      "PPP",
+      "Histórico Laboral",
+      "INSS"
+    ],
+    "answer": "O documento histórico do trabalhador exigido pelo INSS.",
+    "fileName": "ppp.md",
+    "searchText": "Perfil Profissiográfico Previdenciário (PPP) O PPP é o documento histórico-laboral do trabalhador que reúne dados administrativos, registros ambientais e resultados de monitoração biológica durante todo o período em que este exerceu suas atividades na empresa. Para que serve? É o documento oficial exigido pelo INSS para requerer a Aposentadoria Especial. Ele fornece o histórico de exposição do trabalhador a agentes nocivos e comprova (ou não) o direito ao benefício. PPP Eletrônico (eSocial) Desde 1º de janeiro de 2023, o PPP passou a ser emitido obrigatoriamente de forma eletrônica para os segurados das empresas obrigadas ao eSocial. - As informações são enviadas através do evento S-2240 (Condições Ambientais do Trabalho - Agentes Nocivos) do eSocial. - O trabalhador pode consultar seu PPP Eletrônico diretamente pelo site ou aplicativo Meu INSS. Conteúdo do Documento O preenchimento do PPP deve ser feito com base no LTCAT. Seus campos principais incluem: 1. Dados Administrativos: CNPJ, setor, cargo/função (CBO), datas de admissão/demissão. 2. Registros Ambientais: - Períodos de exposição. - Fatores de risco (Tipo e intensidade/concentração). - Identificação do responsável técnico (Médico ou Engenheiro) pelo laudo no período. - Uso de EPI/EPC (se foi eficaz na neutralização do agente). 3. Resultados de Monitoração Biológica: (Opcional (vedado em alguns casos) no PPP físico, mas as informações de saúde são monitoradas via S-2220 no eSocial). Responsabilidade da Empresa A empresa é obrigada a manter o PPP atualizado e fornecer cópia autêntica ao trabalhador em caso de rescisão (para períodos anteriores ao PPP eletrônico) ou manter os dados do eSocial em dia (para o PPP eletrônico). A falta do documento pode gerar multas pesadas e ações regressivas do INSS."
+  }
+]
