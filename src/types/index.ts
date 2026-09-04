@@ -1,8 +1,8 @@
 ﻿export enum Category {
-  INTRODUCAO = 'IntroduÃ§Ã£o',
+  INTRODUCAO = 'Introdução',
   GRO = 'GRO',
   ESOCIAL = 'eSocial',
-  INFORMACOES = 'InformaÃ§Ãµes',
+  INFORMACOES = 'Informações',
   COLETIVO = 'Coletivo',
   EVENTOS = 'Eventos',
 }

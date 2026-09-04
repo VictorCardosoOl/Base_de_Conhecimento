@@ -74,9 +74,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </button>
         </div>
 
-        <nav className="flex-1 space-y-8 overflow-y-auto no-scrollbar" aria-label="NavegaÃ§Ã£o principal">
+        <nav className="flex-1 space-y-8 overflow-y-auto no-scrollbar" aria-label="Navegação principal">
           <div className="space-y-1">
-            <p className={getHeadingClass(isExpanded)} aria-hidden="true">NavegaÃ§Ã£o</p>
+            <p className={getHeadingClass(isExpanded)} aria-hidden="true">Navegação</p>
             <div className="space-y-0.5">
               <button
                 onClick={() => { onSelect(null); }}
@@ -114,7 +114,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <div className="space-y-1">
-            <p className={getHeadingClass(isExpanded)} aria-hidden="true">MÃ³dulos</p>
+            <p className={getHeadingClass(isExpanded)} aria-hidden="true">Módulos</p>
             <div className="space-y-0.5" role="menu">
               {Object.values(Category).map(cat => (
                 <button

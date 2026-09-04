@@ -10,7 +10,7 @@ interface SEOHeadProps {
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
     title = "SST FAQ | Base de Conhecimento",
-    description = "Base de conhecimento sobre SaÃºde e SeguranÃ§a do Trabalho, eSocial e PrevidÃªncia.",
+    description = "Base de conhecimento sobre Saúde e Segurança do Trabalho, eSocial e Previdência.",
     isArticle = false,
     url = typeof window !== 'undefined' ? window.location.href : ''
 }) => {

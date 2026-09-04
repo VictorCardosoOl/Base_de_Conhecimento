@@ -1,0 +1,18 @@
+User-agent: *
+Allow: /
+Disallow: /minha-lista
+
+# Permissão explícita para motores de Inteligência Artificial (AEO)
+# Garante que a base de conhecimento alimente o RAG do Google e OpenAI
+User-agent: Google-Extended
+Allow: /
+User-agent: GPTBot
+Allow: /
+User-agent: ClaudeBot
+Allow: /
+User-agent: OmgiliBot
+Allow: /
+User-agent: perplexity-bot
+Allow: /
+
+Sitemap: https://[SEU_DOMINIO_AQUI.com.br]/sitemap.xml

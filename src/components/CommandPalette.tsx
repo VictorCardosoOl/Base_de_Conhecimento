@@ -118,12 +118,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
                 {!inputValue && (
                   <div className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 dark:text-stone-600 mb-1">
-                    SugestÃµes RÃ¡pidas
+                    SugestÃµes Rápidas
                   </div>
                 )}
 
                 {(showLibrary || showQueue) && (
-                  <Command.Group heading="NavegaÃ§Ã£o">
+                  <Command.Group heading="Navegação">
                     {showLibrary && (
                       <Command.Item
                         onSelect={() => { onSelectCategory(null); onClose(); }}
