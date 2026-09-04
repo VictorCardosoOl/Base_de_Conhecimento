@@ -52,6 +52,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div
             onClick={onLogoClick}
             className="flex items-center gap-3 cursor-pointer hover:opacity-70 transition-opacity shrink-0"
+            role="button"
+            aria-label="Ir para a página inicial"
+            tabIndex={0}
           >
             <div className="w-5 h-5 rounded-full bg-[var(--text-main)] shrink-0 flex items-center justify-center">
               <div className="w-1.5 h-1.5 bg-[var(--bg-main)] rounded-full" />
@@ -63,22 +66,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <button
             onClick={onPinToggle}
+            aria-label={isPinned ? "Desafixar menu lateral" : "Fixar menu lateral"}
+            aria-pressed={isPinned}
             className={`hidden lg:block text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all duration-300 ${isExpanded ? 'opacity-100 scale-100' : 'opacity-0 scale-50 pointer-events-none'}`}
           >
-            {isPinned ? <Pin size={16} strokeWidth={2.5} /> : <PinOff size={16} strokeWidth={2.5} />}
+            {isPinned ? <Pin size={16} strokeWidth={2.5} aria-hidden="true" /> : <PinOff size={16} strokeWidth={2.5} aria-hidden="true" />}
           </button>
         </div>
 
-        <nav className="flex-1 space-y-8 overflow-y-auto no-scrollbar">
+        <nav className="flex-1 space-y-8 overflow-y-auto no-scrollbar" aria-label="Navegação principal">
           <div className="space-y-1">
-            <p className={getHeadingClass(isExpanded)}>Navegação</p>
+            <p className={getHeadingClass(isExpanded)} aria-hidden="true">Navegação</p>
             <div className="space-y-0.5">
               <button
                 onClick={() => { onSelect(null); }}
+                aria-label="Ver acervo completo"
+                aria-current={currentCat === null && !isQueueView ? 'page' : undefined}
                 className={getBtnClass(currentCat === null && !isQueueView)}
               >
                 <div className="flex items-center gap-3">
-                  <Archive size={18} strokeWidth={currentCat === null && !isQueueView ? 2.5 : 2} />
+                  <Archive size={18} strokeWidth={currentCat === null && !isQueueView ? 2.5 : 2} aria-hidden="true" />
                   <span className={`transition-opacity duration-300 whitespace-nowrap ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>Acervo</span>
                 </div>
                 {isExpanded && currentCat === null && !isQueueView && <Circle size={4} fill="currentColor" />}
@@ -86,14 +93,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
               <button
                 onClick={() => { onSelectQueue?.(); }}
+                aria-label={`Ver minha lista de leitura com ${queueCount} itens salvos`}
+                aria-current={isQueueView ? 'page' : undefined}
                 className={getBtnClass(isQueueView === true)}
               >
                 <div className="flex items-center gap-3">
-                  <Bookmark size={18} strokeWidth={isQueueView ? 2.5 : 2} />
+                  <Bookmark size={18} strokeWidth={isQueueView ? 2.5 : 2} aria-hidden="true" />
                   <div className={`flex items-center gap-2 transition-opacity duration-300 whitespace-nowrap ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
                     <span>Minha Lista</span>
                     {queueCount > 0 && (
-                      <span className="text-[9px] font-black bg-[var(--text-main)] text-[var(--bg-main)] px-1.5 py-0.5 rounded-full ml-1">
+                      <span className="text-[9px] font-black bg-[var(--text-main)] text-[var(--bg-main)] px-1.5 py-0.5 rounded-full ml-1" aria-label={`${queueCount} itens`}>
                         {queueCount}
                       </span>
                     )}
@@ -105,16 +114,19 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <div className="space-y-1">
-            <p className={getHeadingClass(isExpanded)}>Módulos</p>
-            <div className="space-y-0.5">
+            <p className={getHeadingClass(isExpanded)} aria-hidden="true">Módulos</p>
+            <div className="space-y-0.5" role="menu">
               {Object.values(Category).map(cat => (
                 <button
                   key={cat}
                   onClick={() => { onSelect(cat); }}
+                  aria-label={`Filtrar por módulo ${cat}`}
+                  aria-current={currentCat === cat ? 'page' : undefined}
+                  role="menuitem"
                   className={getBtnClass(currentCat === cat)}
                 >
                   <div className="flex items-center gap-3">
-                    <Hash size={18} strokeWidth={currentCat === cat ? 2.5 : 2} />
+                    <Hash size={18} strokeWidth={currentCat === cat ? 2.5 : 2} aria-hidden="true" />
                     <span className={`transition-opacity duration-300 whitespace-nowrap ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>{cat}</span>
                   </div>
                   {isExpanded && currentCat === cat && <div className="w-1 h-3 bg-[var(--text-main)] rounded-full" />}
@@ -127,10 +139,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
         <div className="pt-4 border-t border-[var(--border)] px-2">
           <button
             onClick={toggleDark}
+            aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
             className="w-full flex items-center justify-between py-2 text-[10px] font-black uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors"
           >
             <div className="flex items-center gap-3">
-              {isDarkMode ? <Sun size={18} strokeWidth={2} /> : <Moon size={18} strokeWidth={2} />}
+              {isDarkMode ? <Sun size={18} strokeWidth={2} aria-hidden="true" /> : <Moon size={18} strokeWidth={2} aria-hidden="true" />}
               <span className={`transition-opacity duration-300 whitespace-nowrap ${isExpanded ? 'opacity-100' : 'opacity-0'}`}>
                 {isDarkMode ? 'Claro' : 'Escuro'}
               </span>

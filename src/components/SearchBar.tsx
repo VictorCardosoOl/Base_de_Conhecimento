@@ -4,10 +4,9 @@ import { Search, Command, Sparkles } from 'lucide-react';
 
 interface SearchBarProps {
   onClick: () => void;
-  query?: string;
 }
 
-export const SearchBar: React.FC<SearchBarProps> = ({ onClick, query = "" }) => (
+export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
   <div
     className="relative w-full max-w-xl mx-auto cursor-pointer group"
     onClick={onClick}

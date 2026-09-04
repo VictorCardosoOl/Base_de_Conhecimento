@@ -103,7 +103,7 @@ export const MainLayout: React.FC = () => {
                         >
                             <Menu size={20} strokeWidth={1.5} />
                         </button>
-                        <Outlet context={{ currentCategory, setCurrentCategory }} />
+                        <Outlet context={{ currentCategory, setCurrentCategory, openCommandPalette: () => setIsCommandPaletteOpen(true) }} />
                     </div>
                 </main>
             </div>

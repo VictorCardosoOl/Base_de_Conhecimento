@@ -1,4 +1,3 @@
-
 import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
@@ -7,11 +6,11 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const CONTENT_DIR = path.join(__dirname, '../src/content/articles');
+// Updated to the new folder
+const CONTENT_DIR = path.join(__dirname, '../src/content/artigos');
 const OUTPUT_DIR = path.join(__dirname, '../src/data');
 const CATALOG_FILE = path.join(OUTPUT_DIR, 'catalog.json');
 const MAPPING_FILE = path.join(OUTPUT_DIR, 'mapping.ts');
-
 const CHUNKS_DIR = path.join(OUTPUT_DIR, 'chunks');
 
 if (!fs.existsSync(OUTPUT_DIR)) {
@@ -21,9 +20,24 @@ if (!fs.existsSync(CHUNKS_DIR)) {
     fs.mkdirSync(CHUNKS_DIR, { recursive: true });
 }
 
-console.log('🏗️  Generating Content Catalog & Chunks...');
+console.log('🏗️  Generating Content Catalog & Chunks from subdirectories...');
 
-const files = fs.readdirSync(CONTENT_DIR).filter(file => file.endsWith('.md'));
+// Recursive read directory
+function getFiles(dir, filesList = []) {
+    if (!fs.existsSync(dir)) return filesList;
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+        const name = path.join(dir, file);
+        if (fs.statSync(name).isDirectory()) {
+            getFiles(name, filesList);
+        } else if (name.endsWith('.md')) {
+            filesList.push(name);
+        }
+    }
+    return filesList;
+}
+
+const files = getFiles(CONTENT_DIR);
 const catalog = [];
 const mappingLines = [];
 
@@ -32,53 +46,45 @@ mappingLines.push('// Do not edit manually');
 mappingLines.push('');
 mappingLines.push('export const ARTICLE_CONTENT_MAP: Record<string, () => Promise<{ default: { content: string } }>> = {');
 
-files.forEach(file => {
-    const filePath = path.join(CONTENT_DIR, file);
+files.forEach(filePath => {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
     const { data, content } = matter(fileContent);
 
     if (!data.id) {
-        console.warn(`⚠️  Skipping ${file}: Missing 'id' in frontmatter.`);
+        console.warn(`⚠️  Skipping ${filePath}: Missing 'id' in frontmatter.`);
         return;
     }
 
-    // Improved plain text extraction for search
     const plainText = content
-        .replace(/!\[.*?\]\(.*?\)/g, '') // Remove images
-        .replace(/\[([^\]]+)\]\(.*?\)/g, '$1') // Keep link text
-        .replace(/#{1,6}\s+/g, '') // Remove headers
-        .replace(/(\*\*|__)(.*?)\1/g, '$2') // Remove bold
-        .replace(/(\*|_)(.*?)\1/g, '$2') // Remove italic
-        .replace(/`{3}[\s\S]*?`{3}/g, '') // Remove code blocks
-        .replace(/`(.+?)`/g, '$1') // Remove inline code
-        .replace(/\n/g, ' ') // Collapse newlines
-        .replace(/\s+/g, ' ') // Collapse spaces
+        .replace(/!\[.*?\]\(.*?\)/g, '')
+        .replace(/\[([^\]]+)\]\(.*?\)/g, '$1')
+        .replace(/#{1,6}\s+/g, '')
+        .replace(/(\*\*|__)(.*?)\1/g, '$2')
+        .replace(/(\*|_)(.*?)\1/g, '$2')
+        .replace(/`{3}[\s\S]*?`{3}/g, '')
+        .replace(/`(.+?)`/g, '$1')
+        .replace(/\n/g, ' ')
+        .replace(/\s+/g, ' ')
         .trim();
 
-    // Add filename to data for reference
     const item = {
         ...data,
-        fileName: file,
+        fileName: path.basename(filePath),
         searchText: plainText
     };
 
     catalog.push(item);
 
-    // Write content chunk (stripped of frontmatter) to JSON
-    // allowing the client to load just the data it needs
     const chunkPath = path.join(CHUNKS_DIR, `${data.id}.json`);
     fs.writeFileSync(chunkPath, JSON.stringify({ content: content }));
 
-    // Update mapping to point to the generated chunk
     mappingLines.push(`  "${data.id}": () => import('./chunks/${data.id}.json'),`);
 });
 
 mappingLines.push('};');
 
-// Write Catalog JSON
 fs.writeFileSync(CATALOG_FILE, JSON.stringify(catalog, null, 2));
 console.log(`✅ Catalog generated with ${catalog.length} items at ${CATALOG_FILE}`);
 
-// Write Mapping TS
 fs.writeFileSync(MAPPING_FILE, mappingLines.join('\n'));
 console.log(`✅ Lazy load mapping generated at ${MAPPING_FILE}`);

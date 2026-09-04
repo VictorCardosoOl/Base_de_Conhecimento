@@ -1,5 +1,4 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 import { ArticleCard } from '../components/ArticleCard';
 import { FAQ_DATA } from '../constants';
 import { useReadingQueue } from '../hooks/useReadingQueue';
@@ -7,7 +6,6 @@ import { FAQItem } from '../types';
 
 export const QueuePage: React.FC = () => {
     const { queue, toggleQueue } = useReadingQueue();
-    const navigate = useNavigate();
 
     const displayedArticles = queue
         .map(id => FAQ_DATA.find(a => a.id === id))

@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 export const useReadingQueue = () => {
   const [queue, setQueue] = useState<string[]>([]);
 
-  // Carrega a fila salva ao iniciar
+  // Carrega a fila salva ao iniciar e escuta alterações entre abas
   useEffect(() => {
     // Migration Logic: Check for old key
     const oldSaved = localStorage.getItem('teamwiki_queue');
@@ -17,17 +17,32 @@ export const useReadingQueue = () => {
       } catch (e) { }
     }
 
-    const saved = localStorage.getItem('sstfaq_queue');
-    if (saved) {
-      try {
-        setQueue(JSON.parse(saved));
-      } catch (e) {
-        console.error("Erro ao carregar fila de leitura", e);
+    const loadFromStorage = () => {
+      const saved = localStorage.getItem('sstfaq_queue');
+      if (saved) {
+        try {
+          setQueue(JSON.parse(saved));
+        } catch (e) {
+          console.error("Erro ao carregar fila de leitura", e);
+        }
+      } else {
+        setQueue([]);
       }
-    }
+    };
+
+    loadFromStorage();
+
+    // Sincronia Inter-Abas
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'sstfaq_queue') {
+        loadFromStorage();
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Salva no localStorage sempre que mudar
+  // Salva no localStorage sempre que mudar (mas somente ações locais, o sync via storage resolve outras abas)
   const saveQueue = (newQueue: string[]) => {
     setQueue(newQueue);
     localStorage.setItem('sstfaq_queue', JSON.stringify(newQueue));
@@ -51,18 +66,5 @@ export const useReadingQueue = () => {
     }
   };
 
-  const moveItem = (id: string, direction: 'UP' | 'DOWN') => {
-    const index = queue.indexOf(id);
-    if (index === -1) return;
-
-    const newQueue = [...queue];
-    const targetIndex = direction === 'UP' ? index - 1 : index + 1;
-
-    if (targetIndex >= 0 && targetIndex < newQueue.length) {
-      [newQueue[index], newQueue[targetIndex]] = [newQueue[targetIndex], newQueue[index]];
-      saveQueue(newQueue);
-    }
-  };
-
-  return { queue, addToQueue, removeFromQueue, toggleQueue, moveItem };
+  return { queue, addToQueue, removeFromQueue, toggleQueue };
 };

@@ -35,14 +35,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const showQueue = !inputValue || isMatch("Minha Lista de Leitura") || isMatch("Artigos salvos");
   const showTheme = !inputValue || isMatch("Alternar para Modo") || isMatch("Tema") || isMatch("Claro") || isMatch("Escuro");
 
-  // Reset input and focus when opening
+  // Reset input when opening
   useEffect(() => {
     if (isOpen) {
       setInputValue('');
-      // Small delay to ensure animation validation and DOM presence
-      setTimeout(() => inputRef.current?.focus(), 50);
     }
   }, [isOpen]);
+
+  const handleAnimationComplete = () => {
+    if (isOpen) {
+      inputRef.current?.focus();
+    }
+  };
 
   // Lock Body Scroll & Handle ESC
   useEffect(() => {
@@ -79,6 +83,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            onAnimationComplete={handleAnimationComplete}
             className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/40 dark:shadow-black/50 rounded-2xl overflow-hidden"
           >
             <Command
