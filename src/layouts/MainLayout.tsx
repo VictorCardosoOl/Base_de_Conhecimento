@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
 import { CommandPalette } from '../components/CommandPalette';
-import { Category, FAQItem } from '../types';
+import { Category, FAQItem } from '../types/index';
 import { useReadingQueue } from '../hooks/useReadingQueue';
 import { SmoothScroll } from '../components/SmoothScroll';
 import { Menu } from 'lucide-react';

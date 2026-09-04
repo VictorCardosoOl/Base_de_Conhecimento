@@ -1,7 +1,7 @@
 ---
 id: "esocial-sst"
 question: "Eventos de SST no eSocial (S-2210, S-2220, S-2240)"
-category: "eSocial e Governo"
+category: eSocial
 date: "10 Jan 2026"
 tags: ["eSocial", "S-2210", "S-2220", "S-2240", "Obrigações"]
 answer: "Resumo dos eventos de SST que devem ser enviados ao eSocial."

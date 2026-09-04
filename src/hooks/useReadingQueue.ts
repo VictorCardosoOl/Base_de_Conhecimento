@@ -1,10 +1,10 @@
-
+﻿
 import { useState, useEffect } from 'react';
 
 export const useReadingQueue = () => {
   const [queue, setQueue] = useState<string[]>([]);
 
-  // Carrega a fila salva ao iniciar e escuta alterações entre abas
+  // Carrega a fila salva ao iniciar e escuta alteraÃ§Ãµes entre abas
   useEffect(() => {
     // Migration Logic: Check for old key
     const oldSaved = localStorage.getItem('teamwiki_queue');
@@ -42,7 +42,7 @@ export const useReadingQueue = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  // Salva no localStorage sempre que mudar (mas somente ações locais, o sync via storage resolve outras abas)
+  // Salva no localStorage sempre que mudar (mas somente aÃ§Ãµes locais, o sync via storage resolve outras abas)
   const saveQueue = (newQueue: string[]) => {
     setQueue(newQueue);
     localStorage.setItem('sstfaq_queue', JSON.stringify(newQueue));

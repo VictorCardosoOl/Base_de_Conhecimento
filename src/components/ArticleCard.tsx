@@ -1,8 +1,8 @@
-import React from 'react';
+﻿import React from 'react';
 import { Plus, Check, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
-import { FAQItem } from '../types';
+import { FAQItem } from '../types/index';
 
 interface ArticleCardProps {
   item: FAQItem;

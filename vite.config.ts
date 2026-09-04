@@ -39,6 +39,18 @@ export default defineConfig(({ mode }) => {
     ],
     define: {
     },
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            'react-vendor': ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
+            'ui-vendor': ['framer-motion', 'lucide-react', 'cmdk'],
+            'utils-vendor': ['fuse.js', 'dompurify', 'marked']
+          }
+        }
+      },
+      chunkSizeWarningLimit: 800
+    },
     resolve: {
       alias: {
         '@': path.resolve(__dirname, './src'),

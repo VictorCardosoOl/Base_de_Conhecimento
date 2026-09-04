@@ -1,7 +1,7 @@
 ---
 id: "eventos-sst-orgaos-publicos"
 question: "SST para Órgãos Públicos"
-category: "eSocial e Governo"
+category: eSocial
 date: "04 Sep 2026"
 tags: ["Órgão Público","SST","Servidor"]
 answer: "Regras específicas para envio de eventos SST de servidores estatutários e celetistas."

@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+﻿import { useMemo } from 'react';
 import Fuse from 'fuse.js';
 
 interface UseSearchOptions<T> {

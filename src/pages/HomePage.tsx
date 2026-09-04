@@ -1,9 +1,9 @@
-import React, { useMemo, useEffect } from 'react';
+﻿import React, { useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchBar } from '../components/SearchBar';
 import { ArticleCard } from '../components/ArticleCard';
-import { FAQ_DATA } from '../constants';
-import { Category } from '../types';
+import { FAQ_DATA } from '../constants/index';
+import { Category } from '../types/index';
 import { useReadingQueue } from '../hooks/useReadingQueue';
 import { useOutletContext } from 'react-router-dom';
 

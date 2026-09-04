@@ -1,7 +1,7 @@
 ---
 id: "eventos-sst-esocial"
 question: "Eventos de SST (S-2210, S-2220, S-2240)"
-category: "eSocial e Governo"
+category: eSocial
 date: "04 Sep 2026"
 tags: ["S-2210","S-2220","S-2240","SST"]
 answer: "Detalhes técnicos, prazos e multas dos eventos de Saúde e Segurança no Trabalho."

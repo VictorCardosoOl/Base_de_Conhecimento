@@ -1,6 +1,6 @@
-import { useMemo } from 'react';
-import { FAQItem } from '../types';
-import { FAQ_DATA } from '../constants';
+﻿import { useMemo } from 'react';
+import { FAQItem } from '../types/index';
+import { FAQ_DATA } from '../constants/index';
 
 export const useRelatedArticles = (article: FAQItem) => {
     return useMemo(() => {

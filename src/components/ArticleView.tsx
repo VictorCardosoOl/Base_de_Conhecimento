@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+﻿import React, { useEffect, useState, useCallback } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUp, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FAQItem } from '../types';
+import { FAQItem } from '../types/index';
 import { SEOHead } from './SEOHead';
 import { ArticleSkeleton } from './ArticleSkeleton';
 import { useArticleContent } from '../hooks/useArticleContent';
@@ -36,8 +36,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
       showToast(direction === 'prev'
-        ? "Este é o primeiro artigo desta seção."
-        : "Você chegou ao último artigo desta seção.");
+        ? "Este Ã© o primeiro artigo desta seÃ§Ã£o."
+        : "VocÃª chegou ao Ãºltimo artigo desta seÃ§Ã£o.");
     }
   }, [nav, onNavigate, showToast]);
 
@@ -82,7 +82,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
               <span className="hidden sm:inline">Voltar</span>
             </button>
             <span className="text-gray-300">|</span>
-            <Link to="/" className="hover:text-blue-600 transition-colors">Início</Link>
+            <Link to="/" className="hover:text-blue-600 transition-colors">InÃ­cio</Link>
             <ChevronRight size={12} className="text-gray-400" />
             <span className="uppercase tracking-wide opacity-80">{article.category}</span>
             <ChevronRight size={12} className="text-gray-400 hidden sm:block" />
@@ -109,7 +109,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
               <motion.div variants={itemVariants} className="flex items-center justify-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-[var(--accent)] mb-6">
                 <span>{article.category}</span>
                 <span className="w-1 h-1 rounded-full bg-current opacity-40" />
-                <span>Leitura Rápida</span>
+                <span>Leitura RÃ¡pida</span>
               </motion.div>
 
               <motion.h1
@@ -126,7 +126,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
                 <p className="text-xl md:text-2xl text-[var(--text-muted)] font-serif italic leading-relaxed max-w-2xl mx-auto">
                   {article.answer}
                 </p>
-                <div className="absolute -top-6 -left-8 text-7xl text-gray-200 opacity-50 font-serif select-none">“</div>
+                <div className="absolute -top-6 -left-8 text-7xl text-gray-200 opacity-50 font-serif select-none">â€œ</div>
               </motion.div>
 
               <div className="w-full flex justify-center mt-12 mb-8">
@@ -150,7 +150,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
 
             {relatedArticles.length > 0 && (
               <motion.div variants={itemVariants} className="mt-24 pt-12 border-t border-[var(--border)] no-print">
-                <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] mb-8">Veja também</h3>
+                <h3 className="text-xs font-bold uppercase tracking-widest text-[var(--text-muted)] mb-8">Veja tambÃ©m</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                   {relatedArticles.map(related => (
                     <button
@@ -180,7 +180,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
                   Anterior
                 </span>
                 <h4 className="text-xl font-serif text-[var(--text-main)] leading-tight group-hover:underline decoration-1 underline-offset-4">
-                  {nav.prev ? nav.prev.question : "Início do Módulo"}
+                  {nav.prev ? nav.prev.question : "InÃ­cio do MÃ³dulo"}
                 </h4>
               </div>
 
@@ -189,11 +189,11 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
                 className={`group text-right md:text-right space-y-3 p-6 -mr-6 rounded-2xl transition-all duration-300 block w-full flex flex-col items-end cursor-pointer ${!nav.next ? 'opacity-40 grayscale hover:bg-transparent cursor-not-allowed' : 'hover:bg-[var(--bg-island)]'}`}
               >
                 <span className="text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] group-hover:text-[var(--text-main)] transition-colors flex items-center gap-2 justify-end">
-                  Próximo
+                  PrÃ³ximo
                   <ArrowRight size={14} className={nav.next ? "group-hover:translate-x-1 transition-transform" : ""} />
                 </span>
                 <h4 className="text-xl font-serif text-[var(--text-main)] leading-tight group-hover:underline decoration-1 underline-offset-4">
-                  {nav.next ? nav.next.question : "Final do Módulo"}
+                  {nav.next ? nav.next.question : "Final do MÃ³dulo"}
                 </h4>
               </div>
             </motion.footer>

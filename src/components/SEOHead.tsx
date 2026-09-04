@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 interface SEOHeadProps {
@@ -10,7 +10,7 @@ interface SEOHeadProps {
 
 export const SEOHead: React.FC<SEOHeadProps> = ({
     title = "SST FAQ | Base de Conhecimento",
-    description = "Base de conhecimento sobre Saúde e Segurança do Trabalho, eSocial e Previdência.",
+    description = "Base de conhecimento sobre SaÃºde e SeguranÃ§a do Trabalho, eSocial e PrevidÃªncia.",
     isArticle = false,
     url = typeof window !== 'undefined' ? window.location.href : ''
 }) => {

@@ -1,5 +1,5 @@
-import { useEffect } from 'react';
-import { FAQItem } from '../types';
+﻿import { useEffect } from 'react';
+import { FAQItem } from '../types/index';
 
 export const useKeyboardNav = (
     nav: { prev: FAQItem | null; next: FAQItem | null },

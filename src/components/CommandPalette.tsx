@@ -1,9 +1,9 @@
-import React, { useEffect, useState, useRef } from 'react';
+﻿import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
 import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FAQItem, Category } from '../types';
-import { FAQ_DATA } from '../constants';
+import { FAQItem, Category } from '../types/index';
+import { FAQ_DATA } from '../constants/index';
 import { useSearch } from '../hooks/useSearch';
 
 interface CommandPaletteProps {
@@ -97,7 +97,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   ref={inputRef}
                   value={inputValue}
                   onValueChange={setInputValue}
-                  placeholder="O que você procura?"
+                  placeholder="O que vocÃª procura?"
                   className="flex-1 h-16 bg-transparent outline-none text-lg text-white placeholder:text-white/30 font-medium font-serif"
                 />
                 <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest bg-white/5 px-2 py-1 rounded-md border border-white/10">
@@ -110,7 +110,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
               <Command.List
                 className="max-h-[60vh] overflow-y-auto p-3 scroll-py-3"
-                data-lenis-prevent // Impede que o Lenis sequestre o scroll desta área
+                data-lenis-prevent // Impede que o Lenis sequestre o scroll desta Ã¡rea
               >
                 <Command.Empty className="py-12 text-center text-stone-500 dark:text-stone-400">
                   <p className="font-serif italic text-lg">Nenhum resultado encontrado.</p>
@@ -118,12 +118,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
                 {!inputValue && (
                   <div className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 dark:text-stone-600 mb-1">
-                    Sugestões Rápidas
+                    SugestÃµes RÃ¡pidas
                   </div>
                 )}
 
                 {(showLibrary || showQueue) && (
-                  <Command.Group heading="Navegação">
+                  <Command.Group heading="NavegaÃ§Ã£o">
                     {showLibrary && (
                       <Command.Item
                         onSelect={() => { onSelectCategory(null); onClose(); }}

@@ -1,7 +1,7 @@
 ---
 id: "ecac-guia"
 question: "Guia de Acesso ao e-CAC"
-category: "eSocial e Governo"
+category: eSocial
 date: "11 Jan 2026"
 tags: ["e-CAC", "Receita Federal", "DCTFWeb"]
 answer: "Como acessar e utilizar o portal e-CAC para verificar pendências."

@@ -1,4 +1,4 @@
-
+﻿
 import { describe, it, expect } from 'vitest';
 import { loadArticles } from './contentLoader';
 
@@ -8,7 +8,7 @@ describe('contentLoader / FAQ_DATA integrity', () => {
     expect(articles.length).toBeGreaterThan(0);
   });
 
-  it('cada artigo carregado deve possuir a estrutura mínima obrigatória', () => {
+  it('cada artigo carregado deve possuir a estrutura mÃ­nima obrigatÃ³ria', () => {
     const articles = loadArticles();
     articles.forEach(article => {
       expect(article.id).toBeDefined();
@@ -18,12 +18,12 @@ describe('contentLoader / FAQ_DATA integrity', () => {
       expect(article.answer).toBeDefined();
       expect(article.category).toBeDefined();
       
-      // Verifica se a data segue um padrão mínimo (ex: "Jan 2025")
+      // Verifica se a data segue um padrÃ£o mÃ­nimo (ex: "Jan 2025")
       expect(article.date).toMatch(/[0-9]{4}|[A-Z][a-z]{2}/);
     });
   });
 
-  it('não deve permitir IDs duplicados na base de conhecimento', () => {
+  it('nÃ£o deve permitir IDs duplicados na base de conhecimento', () => {
     const articles = loadArticles();
     const ids = articles.map(a => a.id);
     const uniqueIds = new Set(ids);

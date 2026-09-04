@@ -1,7 +1,7 @@
 ---
 id: "esocial-sst-transmission"
 question: "Rotina de Transmissão de SST"
-category: "eSocial e Governo"
+category: eSocial
 date: "04 Sep 2026"
 tags: ["Transmissão","Mensageria","Fluxo"]
 answer: "Entenda como funciona o fluxo de envio e retorno de eventos no sistema Sigo."

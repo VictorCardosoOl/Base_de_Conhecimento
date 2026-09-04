@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+﻿import { useState, useEffect } from 'react';
 import { useScroll, useSpring } from 'framer-motion';
 
 export const useScrollSpy = () => {

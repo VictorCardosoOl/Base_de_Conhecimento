@@ -1,7 +1,7 @@
-import { useState, useEffect, useMemo } from 'react';
+﻿import { useState, useEffect, useMemo } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
-import { FAQItem } from '../types';
+import { FAQItem } from '../types/index';
 import glossaryData from '../data/glossary.json';
 
 export const useArticleContent = (article: FAQItem) => {

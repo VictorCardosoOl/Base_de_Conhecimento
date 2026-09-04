@@ -1,7 +1,7 @@
 ---
 id: "ecac-esocial-advanced-guide"
 question: "e-CAC e Procuração Eletrônica"
-category: "eSocial e Governo"
+category: eSocial
 date: "04 Sep 2026"
 tags: ["e-CAC","Procuração","Certificado"]
 answer: "Como utilizar o portal e-CAC para gerenciar procurações e permitir o envio de eventos pela Wise System."
