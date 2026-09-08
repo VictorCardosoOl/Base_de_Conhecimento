@@ -1,4 +1,4 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { ArticleView } from '../components/ArticleView';
 import { FAQ_DATA } from '../constants/index';
@@ -29,9 +29,9 @@ export const ArticlePage: React.FC = () => {
     if (!article) {
         return (
             <div className="py-20 text-center">
-                <h2 className="text-2xl font-serif text-[var(--text-main)]">Artigo nÃ£o encontrado</h2>
-                <button onClick={() => navigate('/')} className="mt-4 text-sm underline text-[var(--text-muted)]">
-                    Voltar ao inÃ­cio
+                <h2 className="text-2xl font-serif text-text-main">Artigo não encontrado</h2>
+                <button onClick={() => navigate('/')} className="mt-4 text-sm underline text-text-muted">
+                    Voltar ao início
                 </button>
             </div>
         );

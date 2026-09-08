@@ -1,4 +1,4 @@
-﻿
+
 import { useState, useEffect } from 'react';
 
 export const useReadingQueue = () => {
@@ -14,7 +14,9 @@ export const useReadingQueue = () => {
       try {
         setQueue(JSON.parse(oldSaved));
         return;
-      } catch (e) { }
+      } catch (e) {
+        console.error("Erro ao carregar fila legada (teamwiki_queue):", e);
+      }
     }
 
     const loadFromStorage = () => {

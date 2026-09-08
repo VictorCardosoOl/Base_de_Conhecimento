@@ -114,10 +114,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               >
                 <Command.Empty className="py-12 text-center text-stone-500 dark:text-stone-400">
                   <p className="font-serif italic text-lg">Nenhum resultado encontrado.</p>
-                  {/* Simulate an analytics call to capture zero-result searches */}
-                  <span className="hidden">
-                    {inputValue && console.warn('[Analytics] Zero search results for:', inputValue)}
-                  </span>
                 </Command.Empty>
 
                 {!inputValue && (

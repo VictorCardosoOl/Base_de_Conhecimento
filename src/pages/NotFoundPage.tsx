@@ -7,11 +7,11 @@ export const NotFoundPage: React.FC = () => {
 
     return (
         <div className="min-h-[80vh] flex flex-col items-center justify-center text-center reveal">
-            <h1 className="text-6xl md:text-8xl font-serif mb-4 text-[var(--text-main)]">404</h1>
-            <h2 className="text-2xl md:text-3xl font-light mb-6 text-[var(--text-body)]">
+            <h1 className="text-6xl md:text-8xl font-serif mb-4 text-text-main">404</h1>
+            <h2 className="text-2xl md:text-3xl font-light mb-6 text-text-body">
                 Página não encontrada
             </h2>
-            <p className="text-[var(--text-muted)] max-w-md mb-10 mx-auto leading-relaxed">
+            <p className="text-text-muted max-w-md mb-10 mx-auto leading-relaxed">
                 Desculpe, não conseguimos encontrar a página que você está procurando. 
                 Ela pode ter sido movida ou não existe mais.
             </p>

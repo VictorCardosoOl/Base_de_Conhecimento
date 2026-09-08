@@ -7,92 +7,71 @@
 ![Vite](https://img.shields.io/badge/Vite-6.2-646CFF?logo=vite&logoColor=white)
 ![PWA Ready](https://img.shields.io/badge/PWA-Ready-5A0FC8?logo=pwa&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-4.1-38B2AC?logo=tailwind-css&logoColor=white)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Clean Code](https://img.shields.io/badge/Architecture-Clean%20Code-brightgreen)
 
 ---
 
-Plataforma de documentação corporativa e suporte normativo em SST focada em rapidez de consulta e conformidade regulatória. O sistema resolve a dispersão de informações críticas (eSocial, eventos S-2210/S-2220/S-2240, NRs e rotinas previdenciárias), reduzindo o tempo de resolução de dúvidas técnicas do time. Construído como um PWA offline-first, combina compilação estática de conteúdo com carregamento sob demanda para garantir navegação instantânea em qualquer dispositivo.
+Plataforma de documentação corporativa e suporte normativo em SST focada em rapidez de consulta e conformidade regulatória. O sistema resolve a dispersão de informações críticas (eSocial, eventos S-2210/S-2220/S-2240, NRs e rotinas previdenciárias), reduzindo o tempo de resolução de dúvidas técnicas do time. Construído como um **PWA offline-first**, combina compilação estática de conteúdo com carregamento sob demanda para garantir navegação instantânea em qualquer dispositivo.
 
 ---
 
 ## 🚀 Visão de Produto (Features)
 
-* **Busca Fuzzy Instantânea (Zero-Latency):** Mecanismo de busca local tolerante a erros de digitação e acentuação, com indexação pré-compilada para respostas imediatas sem requisições adicionais ao servidor.
-* **Command Palette Global (`Cmd+K` / `Ctrl+K`):** Navegação rápida orientada ao teclado para localização de tópicos, atalhos e seções normativas.
-* **Suporte PWA Offline-First:** Aplicação instalável em desktop e mobile com Service Worker configurado para cache de assets e consulta a conteúdos críticos mesmo sem conexão à rede.
-* **Leitura com Tipografia Fluida e Alta Legibilidade:** Renderização de Markdown sanitizado com formatação técnica elegante, tabelas comparativas, destaques de advertência e navegação ancorada.
-* **Organização Modular por Domínios SST:** Classificação clara entre Previdenciário, eSocial, Saúde e Segurança, e Resolução de Problemas Técnicos.
+* **Busca Fuzzy Instantânea (Zero-Latency):** Mecanismo de busca local com `fuse.js`, indexação pré-compilada, suportando erros de digitação e acentuação.
+* **Command Palette Global (`Cmd+K` / `Ctrl+K`):** Navegação rápida orientada ao teclado.
+* **Suporte PWA Offline-First Extremo:** Application cache avançado via Workbox. A aplicação pode ser acessada totalmente offline, cacheando bibliotecas, fontes e JSONs de artigos agressivamente.
+* **Leitura Fluida e Legível:** Renderização de Markdown sanitizado (`DOMPurify`), tipografia Tailwind adaptativa com injeção automática de tooltips de glossário.
+* **SEO & Compartilhamento Aprimorados:** O projeto suporta tags OpenGraph (OG) e Twitter Cards, carregando metadados enriquecidos no compartilhamento de links.
 
 ---
 
-## 🧠 Arquitetura e Engenharia
+## 🧠 Engenharia e Padrões de Qualidade (Clean Code)
 
-### 1. Pipeline de Conteúdo Estático & Code-Splitting Sob Demanda
-O projeto não trafega toda a base documental no bundle inicial. Um script de build customizado (`scripts/generate-catalog.js`) lê arquivos Markdown brutos, processa o frontmatter com `gray-matter`, extrai o texto plano para alimentar o índice de busca e compila cada artigo em chunks JSON independentes na pasta `src/data/chunks/`. Uma tabela de mapeamento tipada (`src/data/mapping.ts`) permite o *lazy loading* do corpo do artigo apenas quando a rota correspondente é acessada.
+O repositório opera sob padrões estritos de engenharia moderna de Frontend:
 
-## 🎨 Identidade Visual e UI (Nova Sidebar)
+### 1. Separação Estrita de Responsabilidades (SRP)
+Os componentes de UI são extremamente atomizados. Modelos de "God Components" foram refatorados para garantir isolamento:
+- `ArticleView` atua apenas como orquestrador, delegando a UI para `ArticleHeader`, `ArticleContent`, `ArticleRelated` e `ArticleFooterNav`.
+- **Acessibilidade (WCAG 2.1)** implementada rigorosamente com uso de tags semânticas e suporte total a navegação por teclado (Enter, Espaço, Esc).
 
-A aplicação conta com um design sofisticado e minimalista (Glassmorphism), destacando a funcionalidade da nova **Sidebar Flutuante**:
-- **Menu Oculto (Hover)**: O menu lateral começa retraído apenas com ícones para maximizar o espaço de leitura. Ao passar o mouse, ele se expande fluidamente.
-- **Posicionamento Dinâmico**: Assim como a barra de tarefas de um SO, o usuário pode escolher ancorar o menu em qualquer um dos cantos da tela (Esquerda, Direita, Topo ou Base) usando o botão de *Layout* no próprio menu.
-- **Ícones Semânticos**: Cada categoria (eSocial, GRO, etc) possui um ícone visual distinto para facilitar a rápida identificação.
+### 2. Design System Nativo (Tailwind v4)
+Em vez de mapeamentos manuais em hexadecimais rígidos, o sistema consome os tokens nativos do Tailwind v4 ancorados em variáveis CSS dinâmicas. Isso permite transições fluidas, idênticas e globais de **Dark/Light Mode** que afetam bordas, textos e fundos simultaneamente com zero esforço em nível de componente.
 
-### 2. Separação Estrita de Responsabilidades (SoC)
-* **`src/content/`:** Repositório desacoplado de dados em Markdown para facilitar a contribuição editorial sem risco de quebra de componentes.
-* **`src/hooks/`:** Encapsulamento de regras de negócio, persistência de preferências locais e ciclo de vida de busca.
-* **`src/components/` & `src/layouts/`:** Componentes de apresentação isolados, acessíveis e focados em renderização idempotente.
+### 3. Pipeline de Conteúdo e Lazy Loading
+O projeto processa arquivos `.md` brutos em build-time (`scripts/generate-catalog.js`) e os compila em _chunks JSON_. Uma tabela de roteamento tipada (`src/data/mapping.ts`) invoca o carregamento do conteúdo (`import()`) apenas quando a página é visitada.
 
-### 3. Sanitização e Segurança em Tempo de Execução
-Todo Markdown dinâmico é sanitizado via `DOMPurify` antes da injeção no DOM, eliminando vetores de ataque Cross-Site Scripting (XSS) em links ou blocos de código externos.
-
-### 4. Qualidade e Resiliência
-* **Testes Automatizados:** Suíte de testes com `Vitest` e `Testing Library` para verificação de montagem, filtros de busca e integridade de componentes de interface.
-* **Tipagem Estrita:** TypeScript configurado com checagem rígida de interfaces para metadados de artigos, categorias e retornos de busca.
-* **Pipeline de Deploy Automatizado:** Integração contínua e deploy otimizado com execução do script de catálogo antes de cada compilação de produção (`npm run gen:catalog && vite build`).
+### 4. Vendor Splitting e Vite Performance
+Configuração nativa no Vite separa bibliotecas pesadas em chunks individuais (`react-vendor`, `ui-vendor`, `utils-vendor`). Assim, ao atualizar o conteúdo da aplicação, os caches dos navegadores para bibliotecas como Framer Motion ou DOMPurify permanecem intactos.
 
 ---
 
 ## 💻 Stack Tecnológico
 
-| Camada | Tecnologias | Finalidade |
-| :--- | :--- | :--- |
-| **Frontend Core** | React 19, TypeScript 5.8 | Camada declarativa reativa com tipagem estrita |
-| **Build & Tooling** | Vite 6, PostCSS, Autoprefixer | Empacotamento ultrarrápido com Hot Module Replacement |
-| **Estilização** | Tailwind CSS 4, Tailwind Typography | Design system utilitário com controle tipográfico para artigos |
-| **Interação & UI** | CMDK, Framer Motion, Lenis | Paleta de comandos universal e animações fluidas |
-| **Mecanismo de Busca**| Fuse.js | Busca fuzzy client-side sobre catálogo pré-indexado |
-| **Parsing & Segurança**| Marked, DOMPurify, Gray-Matter | Extração de metadados, parsing de Markdown e sanitização XSS |
-| **Armazenamento & PWA**| Vite PWA (Workbox) | Estratégia de cache offline e manifesto de aplicação instalável |
-| **Testes** | Vitest, Testing Library React | Execução rápida de testes unitários e de integração de UI |
+| Camada | Tecnologias |
+| :--- | :--- |
+| **Frontend Core** | React 19, TypeScript 5.8 |
+| **Build & Bundle** | Vite 6, PostCSS, Vendor Splitting Ativo |
+| **Estilização** | Tailwind CSS 4, Tailwind Typography |
+| **Interação & UI** | CMDK, Framer Motion, Lenis |
+| **Busca & Markdown**| Fuse.js, Marked, DOMPurify, Gray-Matter |
+| **Infraestrutura**| Vite PWA (Workbox - CacheFirst Strategies), React Helmet Async (SEO) |
 
 ---
 
-## 🛠️ Quick Start (Guia de Execução)
+## 🛠️ Quick Start e Contribuição
 
-### Pré-requisitos
-* **Node.js:** `>= 18.x`
-* **npm:** `>= 9.x`
+Para orientações sobre como adicionar artigos, padrões de commit e estruturação de novos componentes, **LEIA O GUIA OFICIAL DE CONTRIBUIÇÃO:**
+👉 [CONTRIBUTING.md](./CONTRIBUTING.md)
 
-### 1. Clonar o repositório e instalar dependências
+### Rodando o Projeto (Dev)
 ```bash
 git clone https://github.com/VictorCardosoOl/FAQSST.git
 cd FAQSST
 npm install
-```
-
-### 2. Iniciar em ambiente de desenvolvimento
-O comando gera o catálogo de artigos e inicia o servidor Vite local:
-```bash
 npm run dev
 ```
-Acesse a aplicação em `http://localhost:3000`.
 
-### 3. Executar suíte de testes
-```bash
-npm run test
-```
-
-### 4. Build de produção
+### Build de Produção
 ```bash
 npm run build
 ```

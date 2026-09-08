@@ -17,14 +17,7 @@ interface SidebarProps {
   onPositionChange: (pos: 'left'|'right'|'top'|'bottom') => void;
 }
 
-const categoryIcons: Record<string, React.ElementType> = {
-  [Category.INTRODUCAO]: BookOpen,
-  [Category.GRO]: Shield,
-  [Category.ESOCIAL]: FileText,
-  [Category.INFORMACOES]: Info,
-  [Category.COLETIVO]: Users,
-  [Category.EVENTOS]: Calendar,
-};
+import { getCategoryIcon } from '../constants/navigation';
 
 export const Sidebar: React.FC<SidebarProps> = ({
   currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange
@@ -54,8 +47,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     flex items-center text-sm rounded-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] relative group
     ${isHorizontal ? 'justify-center p-3 lg:hover:scale-[1.15] lg:hover:-translate-y-1 shrink-0' : 'w-full py-3 px-3 ' + (isExpanded ? '' : 'justify-center')}
     ${isActive
-      ? 'text-[var(--text-main)] font-semibold'
-      : 'text-[var(--text-muted)] hover:text-[var(--text-main)] font-medium'}
+      ? 'text-text-main font-semibold'
+      : 'text-text-muted hover:text-text-main font-medium'}
   `;
 
   // Desktop positioning logic (ensuring true centering)
@@ -76,24 +69,30 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`fixed z-[70] glass bg-[var(--bg-island)] border-[var(--border)] shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+        className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
           lg:border lg:rounded-[2.5rem] flex
           ${desktopPosClass}
           ${mobilePosClass}
         `}
       >
-        <div className={`flex items-center justify-between shrink-0 ${isHorizontal ? 'max-lg:mb-6 max-lg:w-full lg:pr-6 lg:mr-3 lg:border-r lg:border-[var(--border)]' : 'mb-8 px-2 ' + (isExpanded ? '' : 'lg:justify-center')}`}>
+        <div className={`flex items-center justify-between shrink-0 ${isHorizontal ? 'max-lg:mb-6 max-lg:w-full lg:pr-6 lg:mr-3 lg:border-r lg:border-border' : 'mb-8 px-2 ' + (isExpanded ? '' : 'lg:justify-center')}`}>
           <div
             onClick={onLogoClick}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onLogoClick?.();
+              }
+            }}
             className="flex items-center gap-4 cursor-pointer hover:opacity-70 transition-opacity"
             role="button"
             aria-label="Ir para a página inicial"
             tabIndex={0}
           >
             <div className="w-8 h-8 rounded-full bg-[var(--text-main)] shrink-0 flex items-center justify-center">
-              <div className="w-2.5 h-2.5 bg-[var(--bg-main)] rounded-full" />
+              <div className="w-2.5 h-2.5 bg-bg-main rounded-full" />
             </div>
-            <span className={`text-[13px] font-bold uppercase tracking-[0.3em] text-[var(--text-main)] transition-all duration-500 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:translate-x-0' : 'lg:opacity-0 lg:hidden'}`}>
+            <span className={`text-[13px] font-bold uppercase tracking-[0.3em] text-text-main transition-all duration-500 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:translate-x-0' : 'lg:opacity-0 lg:hidden'}`}>
               SST FAQ
             </span>
           </div>
@@ -101,7 +100,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={cyclePosition}
             aria-label="Alterar posição do menu"
-            className={`hidden lg:block text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all duration-500 ${(!isHorizontal && isExpanded) ? 'opacity-100 scale-100' : 'opacity-0 scale-50 absolute pointer-events-none'}`}
+            className={`hidden lg:block text-text-muted hover:text-text-main transition-all duration-500 ${(!isHorizontal && isExpanded) ? 'opacity-100 scale-100' : 'opacity-0 scale-50 absolute pointer-events-none'}`}
           >
             <Layout size={18} strokeWidth={1.5} aria-hidden="true" />
           </button>
@@ -109,7 +108,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <nav className={`flex-1 flex max-lg:flex-col max-lg:space-y-8 max-lg:overflow-y-auto no-scrollbar lg:overflow-visible ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-3' : 'lg:flex-col lg:space-y-8 lg:overflow-y-auto'}`} aria-label="Navegação principal">
           <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2' : 'lg:flex-col lg:space-y-1'}`}>
-            <p className={`text-[9px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Navegação</p>
+            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Navegação</p>
             <div className={`flex max-lg:flex-col max-lg:space-y-1 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-1 lg:items-center xl:items-stretch'}`}>
               <button
                 onClick={() => { onSelect(null); }}
@@ -148,11 +147,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             </div>
           </div>
 
-          <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2 lg:ml-2 lg:pl-5 lg:border-l lg:border-[var(--border)]' : 'lg:flex-col lg:space-y-1'}`}>
-            <p className={`text-[9px] uppercase tracking-[0.3em] text-[var(--text-muted)] font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Módulos</p>
+          <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2 lg:ml-2 lg:pl-5 lg:border-l lg:border-border' : 'lg:flex-col lg:space-y-1'}`}>
+            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Módulos</p>
             <div className={`flex max-lg:flex-col max-lg:space-y-1 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-1 lg:items-center xl:items-stretch'}`} role="menu">
               {Object.values(Category).map(cat => {
-                const Icon = categoryIcons[cat] || List;
+                const Icon = getCategoryIcon(cat);
                 const isActive = currentCat === cat;
                 return (
                   <button
@@ -176,11 +175,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </nav>
 
-        <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-[var(--border)] max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-[var(--border)]' : 'lg:pt-6 lg:mt-4 lg:border-t lg:border-[var(--border)] lg:px-2 lg:flex-col lg:items-stretch'}`}>
+        <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-border' : 'lg:pt-6 lg:mt-4 lg:border-t lg:border-border lg:px-2 lg:flex-col lg:items-stretch'}`}>
           <button
             onClick={toggleDark}
             aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-[var(--text-muted)] hover:text-[var(--text-main)] transition-colors max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
+            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
           >
             <div className="flex items-center gap-4">
               {isDarkMode ? <Sun size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-500" /> : <Moon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-500" />}
@@ -195,7 +194,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={cyclePosition}
               aria-label="Alterar posição do menu"
-              className="ml-4 text-[var(--text-muted)] hover:text-[var(--text-main)] transition-all duration-500 hidden lg:block p-3 group relative lg:hover:scale-110 lg:hover:-translate-y-1"
+              className="ml-4 text-text-muted hover:text-text-main transition-all duration-500 hidden lg:block p-3 group relative lg:hover:scale-110 lg:hover:-translate-y-1"
             >
               <Layout size={20} strokeWidth={1.5} aria-hidden="true" />
               <TooltipLabel text="Mudar Posição" />

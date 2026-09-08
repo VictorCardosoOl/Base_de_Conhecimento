@@ -38,13 +38,13 @@ export const HomePage: React.FC = () => {
         <div className="space-y-12">
             <header className="space-y-6 text-center max-w-2xl mx-auto">
                 <div className="space-y-2">
-                    <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-[var(--text-muted)] reveal">
+                    <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted reveal">
                         <div className="w-8 h-[1px] bg-stone-300 dark:bg-stone-700" />
                         <span>Arquivos 2026</span>
                         <div className="w-8 h-[1px] bg-stone-300 dark:bg-stone-700" />
                     </div>
 
-                    <h1 className="text-4xl lg:text-5xl font-serif font-light leading-tight tracking-tight text-[var(--text-main)] reveal">
+                    <h1 className="text-4xl lg:text-5xl font-serif font-light leading-tight tracking-tight text-text-main reveal">
                         {categoryParam ? (
                             <span>{categoryParam}</span>
                         ) : (
@@ -76,7 +76,7 @@ export const HomePage: React.FC = () => {
             </div>
 
             {displayedArticles.length === 0 && (
-                <div className="py-12 border-t border-[var(--border)] reveal">
+                <div className="py-12 border-t border-border reveal">
                     <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl font-light">
                         Nenhum documento encontrado.
                     </p>

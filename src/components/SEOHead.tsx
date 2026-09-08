@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Helmet } from 'react-helmet-async';
 
 interface SEOHeadProps {
@@ -39,6 +39,8 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         <Helmet>
             <title>{title}</title>
             <meta name="description" content={description} />
+            <link rel="canonical" href={url} />
+            
             <meta property="og:title" content={title} />
             <meta property="og:description" content={description} />
             <meta property="og:type" content={isArticle ? "article" : "website"} />

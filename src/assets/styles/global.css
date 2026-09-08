@@ -10,14 +10,14 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-bg-main: #ffffff;
-  --color-bg-island: rgba(255, 255, 255, 0.98);
-  --color-text-main: #000000;
-  --color-text-body: #0a0a0a;
-  --color-text-muted: #262626;
-  --color-accent: #000000;
-  --color-border: rgba(0, 0, 0, 0.18);
-  --color-selection: rgba(0, 0, 0, 0.1);
+  --color-bg-main: var(--bg-main);
+  --color-bg-island: var(--bg-island);
+  --color-text-main: var(--text-main);
+  --color-text-body: var(--text-body);
+  --color-text-muted: var(--text-muted);
+  --color-accent: var(--accent);
+  --color-border: var(--border);
+  --color-selection: var(--selection);
 
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'Playfair Display', serif;
@@ -51,7 +51,7 @@
   }
 
   body {
-    @apply antialiased transition-colors duration-500 bg-[var(--bg-main)] text-[var(--text-body)] font-sans;
+    @apply antialiased transition-colors duration-500 bg-bg-main text-text-body font-sans;
   }
 
   /* Scrollbar Hide */

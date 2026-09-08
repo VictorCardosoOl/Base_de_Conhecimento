@@ -6,7 +6,6 @@ import { MainLayout } from './layouts/MainLayout';
 const HomePage = React.lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
 const ArticlePage = React.lazy(() => import('./pages/ArticlePage').then(m => ({ default: m.ArticlePage })));
 const QueuePage = React.lazy(() => import('./pages/QueuePage').then(m => ({ default: m.QueuePage })));
-const LoginPage = React.lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
 const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
 
 // Um loader simples para o Suspense
@@ -21,7 +20,6 @@ export default function App() {
     <Router>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          <Route path="/admin" element={<LoginPage />} />
           <Route path="/" element={<MainLayout />}>
             <Route index element={<HomePage />} />
             <Route path="minha-lista" element={<QueuePage />} />

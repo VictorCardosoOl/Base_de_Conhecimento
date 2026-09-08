@@ -15,9 +15,9 @@ interface ArticleCardProps {
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isInQueue, onToggleQueue, featured }) => {
   const CardContent = (
-    <div className={`group cursor-pointer relative py-6 border-b border-[var(--border)] transition-all duration-700 lg:hover:pl-4`}>
+    <div className={`group cursor-pointer relative py-6 border-b border-border transition-all duration-700 lg:hover:pl-4`}>
       {/* Indicador de Hover Lateral */}
-      <div className="absolute left-0 top-6 bottom-6 w-[2px] bg-[var(--text-main)] scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-700 origin-top z-10" />
+      <div className="absolute left-0 top-6 bottom-6 w-[2px] bg-text-main scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-700 origin-top z-10" />
 
       <div className="space-y-3">
         <div className="space-y-2">
@@ -34,7 +34,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isI
 
             <button
               onClick={onToggleQueue}
-              className={`p-1.5 rounded-full transition-all duration-500 z-20 ${isInQueue ? 'text-indigo-600 bg-indigo-50/80 dark:bg-indigo-900/30' : 'text-stone-500 hover:text-[var(--text-main)] hover:bg-stone-100 dark:hover:bg-white/5'
+              className={`p-1.5 rounded-full transition-all duration-500 z-20 ${isInQueue ? 'text-indigo-600 bg-indigo-50/80 dark:bg-indigo-900/30' : 'text-stone-500 hover:text-text-main hover:bg-stone-100 dark:hover:bg-white/5'
                 }`}
             >
               {isInQueue ? <Check size={16} /> : <Plus size={16} />}
@@ -42,11 +42,11 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isI
           </div>
 
           <div className="max-w-4xl space-y-2">
-            <h3 className={`${featured ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-lg md:text-xl lg:text-2xl'} font-serif font-light leading-tight text-[var(--text-main)] transition-transform duration-700 group-hover:translate-x-1`}>
+            <h3 className={`${featured ? 'text-2xl md:text-3xl lg:text-4xl' : 'text-lg md:text-xl lg:text-2xl'} font-serif font-light leading-tight text-text-main transition-transform duration-700 group-hover:translate-x-1`}>
               {item.question}
             </h3>
 
-            <p className={`text-stone-700 dark:text-stone-300 font-light leading-relaxed line-clamp-2 transition-colors duration-500 group-hover:text-[var(--text-main)] ${featured ? 'text-lg md:text-xl max-w-3xl' : 'text-base max-w-2xl'}`}>
+            <p className={`text-stone-700 dark:text-stone-300 font-light leading-relaxed line-clamp-2 transition-colors duration-500 group-hover:text-text-main ${featured ? 'text-lg md:text-xl max-w-3xl' : 'text-base max-w-2xl'}`}>
               {item.answer}
             </p>
           </div>

@@ -81,7 +81,7 @@ export const MainLayout: React.FC = () => {
 
     return (
         <SmoothScroll>
-            <div className="flex min-h-screen selection:bg-[var(--selection)] transition-colors duration-500 bg-[var(--bg-main)]">
+            <div className="flex min-h-screen selection:bg-selection transition-colors duration-500 bg-bg-main">
                 <Sidebar
                     currentCat={currentCategory}
                     onSelect={handleCategorySelect}
@@ -117,7 +117,7 @@ export const MainLayout: React.FC = () => {
                     `}>
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden fixed top-4 right-4 z-40 p-2.5 glass bg-[var(--bg-island)] border border-[var(--border)] rounded-full shadow-lg text-[var(--text-main)] mt-[env(safe-area-inset-top)]"
+                            className="lg:hidden fixed top-4 right-4 z-40 p-2.5 glass bg-bg-island border border-border rounded-full shadow-lg text-text-main mt-[env(safe-area-inset-top)]"
                         >
                             <Menu size={20} strokeWidth={1.5} />
                         </button>
