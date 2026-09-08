@@ -1,8 +1,12 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Plus, Check, ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { FAQItem } from '../types/index';
+
+gsap.registerPlugin(ScrollTrigger);
 
 interface ArticleCardProps {
   item: FAQItem;
@@ -14,6 +18,22 @@ interface ArticleCardProps {
 }
 
 export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isInQueue, onToggleQueue, featured }) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    gsap.from(containerRef.current, {
+      opacity: 0,
+      y: 20,
+      duration: 0.8,
+      ease: "power3.out",
+      scrollTrigger: {
+        trigger: containerRef.current,
+        start: "top 95%",
+        once: true
+      }
+    });
+  }, { scope: containerRef });
+
   const CardContent = (
     <div className={`group cursor-pointer relative py-6 border-b border-border transition-all duration-700 lg:hover:pl-4`}>
       {/* Indicador de Hover Lateral */}
@@ -60,12 +80,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isI
   );
 
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-50px" }}
-      transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-    >
+    <div ref={containerRef}>
       {to ? (
         <Link to={to} className="block" aria-label={`Explorar diretriz sobre ${item.question}`}>
           {CardContent}
@@ -79,6 +94,6 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isI
           {CardContent}
         </button>
       )}
-    </motion.div>
+    </div>
   );
 };

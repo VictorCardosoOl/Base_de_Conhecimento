@@ -1,19 +1,16 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { FAQItem } from '../types/index';
 
 interface ArticleFooterNavProps {
   nav: { prev: FAQItem | null; next: FAQItem | null };
   onNavigateAttempt: (direction: 'prev' | 'next') => void;
-  variants: any;
 }
 
-export const ArticleFooterNav: React.FC<ArticleFooterNavProps> = ({ nav, onNavigateAttempt, variants }) => {
+export const ArticleFooterNav: React.FC<ArticleFooterNavProps> = ({ nav, onNavigateAttempt }) => {
   return (
-    <motion.footer
-      variants={variants}
-      className="mt-16 pt-12 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 no-print"
+    <footer
+      className="gsap-stagger-item mt-16 pt-12 border-t border-border grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 no-print"
     >
       <button
         onClick={() => onNavigateAttempt('prev')}
@@ -42,6 +39,6 @@ export const ArticleFooterNav: React.FC<ArticleFooterNavProps> = ({ nav, onNavig
           {nav.next ? nav.next.question : "Final do Módulo"}
         </h4>
       </button>
-    </motion.footer>
+    </footer>
   );
 };

@@ -1,16 +1,13 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 
 interface ArticleContentProps {
   htmlContent: string;
-  variants: any;
 }
 
-export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, variants }) => {
+export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent }) => {
   return (
-    <motion.div
-      variants={variants}
-      className="article-content-render prose prose-lg prose-slate max-w-none
+    <div
+      className="gsap-stagger-item article-content-render prose prose-lg prose-slate max-w-none
         prose-headings:font-serif prose-headings:font-medium prose-headings:tracking-tight prose-headings:text-gray-900
         prose-p:leading-8 prose-p:text-gray-600 prose-p:font-light
         prose-strong:font-semibold prose-strong:text-gray-800

@@ -64,7 +64,7 @@ export default defineConfig(({ mode }) => {
         output: {
           manualChunks: {
             'react-vendor': ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
-            'ui-vendor': ['framer-motion', 'lucide-react', 'cmdk'],
+            'ui-vendor': ['gsap', '@gsap/react', 'lucide-react', 'cmdk'],
             'utils-vendor': ['fuse.js', 'dompurify', 'marked']
           }
         }

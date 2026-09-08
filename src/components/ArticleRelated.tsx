@@ -1,18 +1,16 @@
 import React from 'react';
-import { motion } from 'framer-motion';
 import { FAQItem } from '../types/index';
 
 interface ArticleRelatedProps {
   relatedArticles: FAQItem[];
   onNavigate: (article: FAQItem) => void;
-  variants: any;
 }
 
-export const ArticleRelated: React.FC<ArticleRelatedProps> = ({ relatedArticles, onNavigate, variants }) => {
+export const ArticleRelated: React.FC<ArticleRelatedProps> = ({ relatedArticles, onNavigate }) => {
   if (relatedArticles.length === 0) return null;
 
   return (
-    <motion.div variants={variants} className="mt-24 pt-12 border-t border-border no-print">
+    <div className="gsap-stagger-item mt-24 pt-12 border-t border-border no-print">
       <h3 className="text-xs font-bold uppercase tracking-widest text-text-muted mb-8">Veja também</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {relatedArticles.map(related => (
@@ -27,6 +25,6 @@ export const ArticleRelated: React.FC<ArticleRelatedProps> = ({ relatedArticles,
           </button>
         ))}
       </div>
-    </motion.div>
+    </div>
   );
 };

@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import { ArrowLeft, ArrowUp, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 import { FAQItem } from '../types/index';
 import { SEOHead } from './SEOHead';
 import { ArticleSkeleton } from './ArticleSkeleton';
@@ -28,6 +29,7 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
   const { htmlContent, isLoading } = useArticleContent(article);
   const relatedArticles = useRelatedArticles(article);
   const { scaleX, showBackToTop, scrollToTop } = useScrollSpy();
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const showToast = useCallback((msg: string) => {
     setToastMessage(msg);
@@ -52,28 +54,27 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }, [article.id]);
 
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: { opacity: 1, transition: { staggerChildren: 0.1 } },
-    exit: { opacity: 0 }
-  };
-
-  const itemVariants = {
-    hidden: { opacity: 0, y: 20 },
-    visible: { opacity: 1, y: 0, transition: { duration: 0.8, ease: [0.16, 1, 0.3, 1] } }
-  };
+  useGSAP(() => {
+    if (!isLoading && containerRef.current) {
+      gsap.fromTo(
+        ".gsap-stagger-item",
+        { opacity: 0, y: 20 },
+        { opacity: 1, y: 0, duration: 0.8, stagger: 0.1, ease: "power3.out" }
+      );
+    }
+  }, { dependencies: [isLoading, article.id], scope: containerRef });
 
   return (
-    <div className="min-h-screen pb-20 relative">
+    <div className="min-h-screen pb-20 relative" ref={containerRef}>
       <SEOHead
         title={`${article.question} | SST FAQ`}
         description={article.answer.substring(0, 150)}
         isArticle={true}
       />
 
-      <motion.div
-        className="fixed bottom-0 left-0 right-0 h-[3px] bg-black origin-left z-50"
-        style={{ scaleX }}
+      <div
+        className="fixed bottom-0 left-0 right-0 h-[3px] bg-black origin-left z-50 transition-transform duration-100 ease-out"
+        style={{ transform: `scaleX(${scaleX})` }}
       />
 
       <nav className="sticky top-0 z-10 w-full bg-bg-island/80 backdrop-blur-md border-b border-border mb-12 no-print transition-all duration-300">
@@ -101,74 +102,48 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
       {isLoading ? (
         <ArticleSkeleton />
       ) : (
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={article.id}
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="max-w-6xl mx-auto px-6"
-          >
-            <ArticleHeader
-              category={article.category}
-              question={article.question}
-              answer={article.answer}
-              variants={itemVariants}
-            />
+        <div className="max-w-6xl mx-auto px-6">
+          <ArticleHeader
+            category={article.category}
+            question={article.question}
+            answer={article.answer}
+          />
 
-            <ArticleContent
-              htmlContent={htmlContent}
-              variants={itemVariants}
-            />
+          <ArticleContent
+            htmlContent={htmlContent}
+          />
 
-            <ArticleRelated
-              relatedArticles={relatedArticles}
-              onNavigate={onNavigate}
-              variants={itemVariants}
-            />
+          <ArticleRelated
+            relatedArticles={relatedArticles}
+            onNavigate={onNavigate}
+          />
 
-            <ArticleFooterNav
-              nav={nav}
-              onNavigateAttempt={handleNavAttempt}
-              variants={itemVariants}
-            />
+          <ArticleFooterNav
+            nav={nav}
+            onNavigateAttempt={handleNavAttempt}
+          />
 
-            <AnimatePresence>
-              {toastMessage && (
-                <div className="sticky bottom-12 z-[100] flex justify-center w-full pointer-events-none">
-                  <motion.div
-                    initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="pointer-events-auto px-8 py-3 bg-black/90 backdrop-blur-sm text-white rounded-full shadow-2xl border border-white/10"
-                  >
-                    <p className="font-serif italic text-lg md:text-xl leading-snug whitespace-nowrap">
-                      {toastMessage}
-                    </p>
-                  </motion.div>
-                </div>
-              )}
-            </AnimatePresence>
-          </motion.div>
-        </AnimatePresence>
+          {toastMessage && (
+            <div className="sticky bottom-12 z-[100] flex justify-center w-full pointer-events-none">
+              <div className="pointer-events-auto px-8 py-3 bg-black/90 backdrop-blur-sm text-white rounded-full shadow-2xl border border-white/10 animate-fade-in-up">
+                <p className="font-serif italic text-lg md:text-xl leading-snug whitespace-nowrap">
+                  {toastMessage}
+                </p>
+              </div>
+            </div>
+          )}
+        </div>
       )}
 
-      <AnimatePresence>
-        {showBackToTop && (
-          <motion.button
-            onClick={scrollToTop}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            className="fixed bottom-8 right-8 z-40 p-3 bg-white border border-gray-200 shadow-lg rounded-full text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all duration-300"
-            title="Voltar ao topo"
-          >
-            <ArrowUp size={20} />
-          </motion.button>
-        )}
-      </AnimatePresence>
+      {showBackToTop && (
+        <button
+          onClick={scrollToTop}
+          className="fixed bottom-8 right-8 z-40 p-3 bg-white border border-gray-200 shadow-lg rounded-full text-gray-500 hover:text-blue-600 hover:border-blue-200 transition-all duration-300 animate-fade-in-up"
+          title="Voltar ao topo"
+        >
+          <ArrowUp size={20} />
+        </button>
+      )}
     </div>
   );
 };
