@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { Plus, Check, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -51,7 +51,7 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isI
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.15em] text-stone-600 dark:text-stone-300 opacity-0 lg:group-hover:opacity-100 transition-all duration-700 translate-y-1 lg:group-hover:translate-y-0">
+          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.15em] text-stone-600 dark:text-stone-300 opacity-0 lg:group-hover:opacity-100 transition-all duration-700 translate-y-1 lg:group-hover:translate-y-0" aria-hidden="true">
             Explorar Diretriz <ArrowRight size={12} strokeWidth={1.5} />
           </div>
         </div>
@@ -67,13 +67,17 @@ export const ArticleCard: React.FC<ArticleCardProps> = ({ item, to, onClick, isI
       transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
     >
       {to ? (
-        <Link to={to} className="block">
+        <Link to={to} className="block" aria-label={`Explorar diretriz sobre ${item.question}`}>
           {CardContent}
         </Link>
       ) : (
-        <div onClick={onClick}>
+        <button 
+          onClick={onClick}
+          className="w-full text-left block" 
+          aria-label={`Explorar diretriz sobre ${item.question}`}
+        >
           {CardContent}
-        </div>
+        </button>
       )}
     </motion.div>
   );

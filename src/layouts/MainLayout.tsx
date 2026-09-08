@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import { Sidebar } from '../components/Sidebar';
 import { CommandPalette } from '../components/CommandPalette';
@@ -8,10 +8,25 @@ import { SmoothScroll } from '../components/SmoothScroll';
 import { Menu } from 'lucide-react';
 
 export const MainLayout: React.FC = () => {
-    const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        const saved = localStorage.getItem('isDarkMode');
+        if (saved !== null) return saved === 'true';
+        return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+    });
+    
+    useEffect(() => {
+        localStorage.setItem('isDarkMode', String(isDarkMode));
+    }, [isDarkMode]);
+
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-    const [isSidebarPinned, setIsSidebarPinned] = useState(true);
+    const [sidebarPos, setSidebarPos] = useState<'left'|'right'|'top'|'bottom'>(() => {
+        return (localStorage.getItem('sidebarPos') as 'left'|'right'|'top'|'bottom') || 'left';
+    });
     const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
+
+    useEffect(() => {
+        localStorage.setItem('sidebarPos', sidebarPos);
+    }, [sidebarPos]);
 
     // State for sidebar selection (can be synced with URL in pages, but kept here for visual state)
     const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
@@ -45,9 +60,6 @@ export const MainLayout: React.FC = () => {
     const handleCategorySelect = (cat: Category | null) => {
         setCurrentCategory(cat);
         if (cat) {
-            // In a real app we might have /category/:slug, but for now we filter in Home
-            // Let's assume we pass this state via context or URL query params.
-            // Ideally, URL: /?category=SST
             navigate(`/?category=${encodeURIComponent(cat)}`);
         } else {
             navigate('/');
@@ -81,8 +93,8 @@ export const MainLayout: React.FC = () => {
                     onSelectQueue={handleQueueSelect}
                     queueCount={queue.length}
                     onLogoClick={handleReset}
-                    isPinned={isSidebarPinned}
-                    onPinToggle={() => setIsSidebarPinned(!isSidebarPinned)}
+                    position={sidebarPos}
+                    onPositionChange={setSidebarPos}
                 />
 
                 <CommandPalette
@@ -95,8 +107,14 @@ export const MainLayout: React.FC = () => {
                     onSelectQueue={() => { handleQueueSelect(); setIsCommandPaletteOpen(false); }}
                 />
 
-                <main className={`flex-1 transition-all duration-700 ease-[cubic-bezier(0.16, 1, 0.3, 1)] px-5 sm:px-8 md:px-12 pt-8 pb-12 ${isSidebarPinned ? 'lg:pl-64' : 'lg:pl-28'} lg:pr-16 pt-[max(2rem,env(safe-area-inset-top))]`}>
-                    <div className="max-w-5xl mx-auto">
+                <main className="flex-1 w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] relative">
+                    <div className={`max-w-[1600px] mx-auto w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+                        px-5 sm:px-8 max-lg:pt-24 max-lg:pb-12 lg:py-12
+                        ${sidebarPos === 'left' ? 'lg:pl-[140px] lg:pr-12' : 
+                          sidebarPos === 'right' ? 'lg:pr-[140px] lg:pl-12' : 
+                          sidebarPos === 'top' ? 'lg:pt-[140px] lg:px-12' : 
+                          'lg:pb-[140px] lg:px-12'}
+                    `}>
                         <button
                             onClick={() => setIsSidebarOpen(true)}
                             className="lg:hidden fixed top-4 right-4 z-40 p-2.5 glass bg-[var(--bg-island)] border border-[var(--border)] rounded-full shadow-lg text-[var(--text-main)] mt-[env(safe-area-inset-top)]"

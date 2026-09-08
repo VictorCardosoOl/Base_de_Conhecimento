@@ -1,24 +1,35 @@
-import React from 'react';
+import React, { Suspense } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { MainLayout } from './layouts/MainLayout';
-import { HomePage } from './pages/HomePage';
-import { ArticlePage } from './pages/ArticlePage';
-import { QueuePage } from './pages/QueuePage';
-import { LoginPage } from './pages/LoginPage';
-import { NotFoundPage } from './pages/NotFoundPage';
+
+// Lazy loading pages to reduce FCP and split the main bundle
+const HomePage = React.lazy(() => import('./pages/HomePage').then(m => ({ default: m.HomePage })));
+const ArticlePage = React.lazy(() => import('./pages/ArticlePage').then(m => ({ default: m.ArticlePage })));
+const QueuePage = React.lazy(() => import('./pages/QueuePage').then(m => ({ default: m.QueuePage })));
+const LoginPage = React.lazy(() => import('./pages/LoginPage').then(m => ({ default: m.LoginPage })));
+const NotFoundPage = React.lazy(() => import('./pages/NotFoundPage').then(m => ({ default: m.NotFoundPage })));
+
+// Um loader simples para o Suspense
+const PageLoader = () => (
+  <div className="flex h-[50vh] items-center justify-center">
+    <div className="w-8 h-8 border-4 border-gray-200 border-t-blue-600 rounded-full animate-spin"></div>
+  </div>
+);
 
 export default function App() {
   return (
     <Router>
-      <Routes>
-        <Route path="/admin" element={<LoginPage />} />
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<HomePage />} />
-          <Route path="minha-lista" element={<QueuePage />} />
-          <Route path="artigo/:id" element={<ArticlePage />} />
-          <Route path="*" element={<NotFoundPage />} />
-        </Route>
-      </Routes>
+      <Suspense fallback={<PageLoader />}>
+        <Routes>
+          <Route path="/admin" element={<LoginPage />} />
+          <Route path="/" element={<MainLayout />}>
+            <Route index element={<HomePage />} />
+            <Route path="minha-lista" element={<QueuePage />} />
+            <Route path="artigo/:id" element={<ArticlePage />} />
+            <Route path="*" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </Suspense>
     </Router>
   );
 }

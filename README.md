@@ -30,6 +30,13 @@ Plataforma de documentação corporativa e suporte normativo em SST focada em ra
 ### 1. Pipeline de Conteúdo Estático & Code-Splitting Sob Demanda
 O projeto não trafega toda a base documental no bundle inicial. Um script de build customizado (`scripts/generate-catalog.js`) lê arquivos Markdown brutos, processa o frontmatter com `gray-matter`, extrai o texto plano para alimentar o índice de busca e compila cada artigo em chunks JSON independentes na pasta `src/data/chunks/`. Uma tabela de mapeamento tipada (`src/data/mapping.ts`) permite o *lazy loading* do corpo do artigo apenas quando a rota correspondente é acessada.
 
+## 🎨 Identidade Visual e UI (Nova Sidebar)
+
+A aplicação conta com um design sofisticado e minimalista (Glassmorphism), destacando a funcionalidade da nova **Sidebar Flutuante**:
+- **Menu Oculto (Hover)**: O menu lateral começa retraído apenas com ícones para maximizar o espaço de leitura. Ao passar o mouse, ele se expande fluidamente.
+- **Posicionamento Dinâmico**: Assim como a barra de tarefas de um SO, o usuário pode escolher ancorar o menu em qualquer um dos cantos da tela (Esquerda, Direita, Topo ou Base) usando o botão de *Layout* no próprio menu.
+- **Ícones Semânticos**: Cada categoria (eSocial, GRO, etc) possui um ícone visual distinto para facilitar a rápida identificação.
+
 ### 2. Separação Estrita de Responsabilidades (SoC)
 * **`src/content/`:** Repositório desacoplado de dados em Markdown para facilitar a contribuição editorial sem risco de quebra de componentes.
 * **`src/hooks/`:** Encapsulamento de regras de negócio, persistência de preferências locais e ciclo de vida de busca.

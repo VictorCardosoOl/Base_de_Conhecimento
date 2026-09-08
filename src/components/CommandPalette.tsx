@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
 import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -114,11 +114,15 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               >
                 <Command.Empty className="py-12 text-center text-stone-500 dark:text-stone-400">
                   <p className="font-serif italic text-lg">Nenhum resultado encontrado.</p>
+                  {/* Simulate an analytics call to capture zero-result searches */}
+                  <span className="hidden">
+                    {inputValue && console.warn('[Analytics] Zero search results for:', inputValue)}
+                  </span>
                 </Command.Empty>
 
                 {!inputValue && (
                   <div className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 dark:text-stone-600 mb-1">
-                    SugestÃµes Rápidas
+                    Sugestões Rápidas
                   </div>
                 )}
 
@@ -158,7 +162,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
                 {filteredArticles.length > 0 && (
                   <Command.Group heading="Artigos e Conhecimento" className="mt-4">
-                    {filteredArticles.map((item) => (
+                    {/* Limit rendering to top 15 results to prevent INP regression on large data */}
+                    {filteredArticles.slice(0, 15).map((item) => (
                       <Command.Item
                         key={item.id}
                         onSelect={() => {

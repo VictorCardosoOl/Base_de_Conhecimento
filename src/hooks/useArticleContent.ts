@@ -1,4 +1,4 @@
-﻿import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import { FAQItem } from '../types/index';
@@ -43,15 +43,24 @@ export const useArticleContent = (article: FAQItem) => {
 
         let rawHtml = marked.parse(content) as string;
 
-        // Inject Glossary Tooltips BEFORE Sanitization!
-        Object.entries(glossaryData).forEach(([term, definition]) => {
-            const regex = new RegExp(`\\b(${term})\\b`, 'gi');
-            // Safe escape of the definition to prevent breaking the attribute quotes
-            const safeDef = definition.replace(/"/g, '&quot;');
-            rawHtml = rawHtml.replace(regex, (match) =>
-                `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>`
+        // Inject Glossary Tooltips efficiently (O(N) instead of O(N*M))
+        const glossaryEntries = Object.entries(glossaryData);
+        if (glossaryEntries.length > 0) {
+            // Sort by length descending to match longest phrases first
+            const sortedTerms = glossaryEntries.map(([t]) => t).sort((a, b) => b.length - a.length);
+            const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const combinedRegex = new RegExp(`\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
+            
+            // Map for O(1) lookup
+            const termToDef = Object.fromEntries(
+                glossaryEntries.map(([t, d]) => [t.toLowerCase(), d.replace(/"/g, '&quot;')])
             );
-        });
+
+            rawHtml = rawHtml.replace(combinedRegex, (match) => {
+                const safeDef = termToDef[match.toLowerCase()];
+                return safeDef ? `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>` : match;
+            });
+        }
 
         // Sanitize AFTER everything, allowing our custom attribute
         return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['data-tooltip'] });

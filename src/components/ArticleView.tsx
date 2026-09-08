@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import { ArrowLeft, ArrowRight, ArrowUp, ChevronRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -144,9 +144,8 @@ export const ArticleView: React.FC<ArticleViewProps> = ({ article, onBack, onNav
                 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline
                 prose-li:marker:text-gray-400 prose-img:rounded-lg prose-img:shadow-sm
                 first-letter:float-left first-letter:text-[4.5rem] first-letter:leading-[0.8] first-letter:font-serif first-letter:mr-3 first-letter:text-gray-900 first-letter:font-medium"
-            >
-              <div dangerouslySetInnerHTML={{ __html: htmlContent }} />
-            </motion.div>
+              dangerouslySetInnerHTML={{ __html: htmlContent }}
+            />
 
             {relatedArticles.length > 0 && (
               <motion.div variants={itemVariants} className="mt-24 pt-12 border-t border-[var(--border)] no-print">

@@ -1,4 +1,4 @@
-﻿import { useMemo } from 'react';
+import { useMemo, useDeferredValue } from 'react';
 import Fuse from 'fuse.js';
 
 interface UseSearchOptions<T> {
@@ -7,6 +7,9 @@ interface UseSearchOptions<T> {
 }
 
 export function useSearch<T>(data: T[], query: string, options: UseSearchOptions<T>) {
+    // Defer the query so typing remains smooth while search runs in background
+    const deferredQuery = useDeferredValue(query);
+
     const fuse = useMemo(() => {
         return new Fuse(data, {
             includeScore: true,
@@ -18,12 +21,12 @@ export function useSearch<T>(data: T[], query: string, options: UseSearchOptions
     }, [data, options.keys, options.threshold]);
 
     const results = useMemo(() => {
-        if (!query) return data;
+        if (!deferredQuery) return data;
 
         // fuse.search returns { item: T, score: number }[]
         // We map back to T[]
-        return fuse.search(query).map(result => result.item);
-    }, [fuse, query, data]);
+        return fuse.search(deferredQuery).map(result => result.item);
+    }, [fuse, deferredQuery, data]);
 
     return results;
 }
