@@ -1,11 +1,13 @@
-import React from 'react';
-import { ArticleCard } from '../components/ArticleCard';
+ï»¿import React from 'react';
+import { MasterDetailGrid } from '../components/MasterDetailGrid';
 import { FAQ_DATA } from '../constants/index';
 import { useReadingQueue } from '../hooks/useReadingQueue';
 import { FAQItem } from '../types/index';
+import { useOutletContext } from 'react-router-dom';
 
 export const QueuePage: React.FC = () => {
-    const { queue, toggleQueue } = useReadingQueue();
+    const { queue } = useReadingQueue();
+    const { setIsArticleOpen } = useOutletContext<{ setIsArticleOpen: (isOpen: boolean) => void }>();
 
     const displayedArticles = queue
         .map(id => FAQ_DATA.find(a => a.id === id))
@@ -26,23 +28,14 @@ export const QueuePage: React.FC = () => {
                 </div>
             </header>
 
-            <div className="grid grid-cols-1 gap-1 pt-4">
-                {displayedArticles.map((item) => (
-                    <ArticleCard
-                        key={item.id}
-                        item={item}
-                        to={`/artigo/${item.id}`}
-                        isInQueue={queue.includes(item.id)}
-                        onToggleQueue={(e) => { e.stopPropagation(); toggleQueue(item.id); }}
-                        featured={false}
-                    />
-                ))}
+            <div className="pt-4 max-w-6xl mx-auto">
+                <MasterDetailGrid items={displayedArticles} onModalStateChange={setIsArticleOpen} />
             </div>
 
             {displayedArticles.length === 0 && (
                 <div className="py-12 border-t border-border reveal">
                     <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl font-light">
-                        Sua lista de leitura está vazia.
+                        Sua lista de leitura esta vazia.
                     </p>
                 </div>
             )}

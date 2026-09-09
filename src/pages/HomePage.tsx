@@ -1,22 +1,19 @@
 import React, { useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchBar } from '../components/SearchBar';
-import { ArticleCard } from '../components/ArticleCard';
+import { MasterDetailGrid } from '../components/MasterDetailGrid';
 import { FAQ_DATA } from '../constants/index';
 import { Category } from '../types/index';
-import { useReadingQueue } from '../hooks/useReadingQueue';
 import { useOutletContext } from 'react-router-dom';
 
 export const HomePage: React.FC = () => {
     const [searchParams] = useSearchParams();
     const categoryParam = searchParams.get('category');
 
-    const { queue, toggleQueue } = useReadingQueue();
-
-    // Context for CommandPalette trigger and Category sync
-    const { setCurrentCategory, openCommandPalette } = useOutletContext<{ 
+    const { setCurrentCategory, openCommandPalette, setIsArticleOpen } = useOutletContext<{ 
         setCurrentCategory: (c: Category | null) => void,
-        openCommandPalette: () => void 
+        openCommandPalette: () => void,
+        setIsArticleOpen: (isOpen: boolean) => void
     }>();
 
     useEffect(() => {
@@ -62,17 +59,8 @@ export const HomePage: React.FC = () => {
                 </div>
             </header>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xl:gap-6 pt-4 max-w-6xl mx-auto">
-                {displayedArticles.map((item, i) => (
-                    <ArticleCard
-                        key={item.id}
-                        item={item}
-                        to={`/artigo/${item.id}`}
-                        isInQueue={queue.includes(item.id)}
-                        onToggleQueue={(e) => { e.stopPropagation(); toggleQueue(item.id); }}
-                        featured={i === 0 && !categoryParam}
-                    />
-                ))}
+            <div className="pt-4 max-w-6xl mx-auto">
+                <MasterDetailGrid items={displayedArticles} onModalStateChange={setIsArticleOpen} />
             </div>
 
             {displayedArticles.length === 0 && (

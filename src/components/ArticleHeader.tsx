@@ -23,11 +23,11 @@ export const ArticleHeader: React.FC<ArticleHeaderProps> = ({ category, question
         <p className="text-xl md:text-2xl text-text-muted font-serif italic leading-relaxed max-w-2xl mx-auto">
           {answer}
         </p>
-        <div className="absolute -top-6 -left-8 text-7xl text-gray-200 opacity-50 font-serif select-none">“</div>
+        <div className="absolute -top-6 -left-8 text-7xl text-text-muted opacity-20 font-serif select-none">“</div>
       </div>
 
       <div className="w-full flex justify-center mt-12 mb-8">
-        <span className="inline-block w-24 h-[1px] bg-gray-300"></span>
+        <span className="inline-block w-24 h-[1px] bg-border"></span>
       </div>
     </header>
   );

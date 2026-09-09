@@ -14,7 +14,7 @@ answer: "Artigo importado automaticamente."
 **Primeiro Passo:** O representante legal da empresa acessa o portal e-CAC utilizando um Certificado Digital e-CNPJ.  
   
   
-\>>>imagem aqui.
+
 
   
   
@@ -27,7 +27,7 @@ Primeiramente, acesse o portal e realize o login utilizando um certificado digit
 
 **Segundo Passo:** No menu, deve-se buscar pela opção "Cadastro, Consulta e Cancelamento de Procuração para e-CAC".  
   
-\>>>>>imagem aqui.  
+  
   
   
   
@@ -39,7 +39,7 @@ Para criar a nova procuração para o exame toxicologo, apenas clique em **“Ca
 
 **Terceiro Passo:** A empresa informa o CNPJ ou CPF do procurador (a clínica de SST, o contador, etc.).
 
-\>>>>Imagem aqui.  
+  
   
   
 O preenchimento do formulário se inicia pela seção **"Dados do Outorgante"**, cujas informações são importadas automaticamente pelo sistema, correspondendo à entidade que outorga a procuração.
@@ -54,7 +54,7 @@ Conclua o processo selecionando o tipo de documento e estabelecendo o período d
 
 **Quarto Passo:** São definidos os serviços que o procurador poderá acessar. É crucial selecionar os grupos de serviços relacionados ao eSocial, como o "eSocial - Grupo SST", para permitir o envio dos eventos de Saúde e Segurança do Trabalho.
 
-\>>>>Imagem aqui.  
+  
   
   
 Na tela seguinte, em "Opções de Atendimento Permitidas para o Delegante", marque as caixas de seleção conforme abaixo:
@@ -72,7 +72,7 @@ Na tela seguinte, em "Opções de Atendimento Permitidas para o Delegante", marq
 
 **Quinto Passo:** Define-se o prazo de validade da procuração e se haverá ou não a opção de substabelecimento (ou seja, se o procurador poderá transferir os poderes recebidos a um terceiro).
 
-\>>>>Imagem aqui.  
+  
   
   
   

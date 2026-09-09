@@ -34,20 +34,28 @@ export const useReadingQueue = () => {
 
     loadFromStorage();
 
-    // Sincronia Inter-Abas
+    // Sincronia Inter-Abas e Mesma Aba
     const handleStorageChange = (e: StorageEvent) => {
       if (e.key === 'sstfaq_queue') {
         loadFromStorage();
       }
     };
+    const handleLocalSync = () => loadFromStorage();
+
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
+    window.addEventListener('sstfaq-queue-sync', handleLocalSync);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('sstfaq-queue-sync', handleLocalSync);
+    };
   }, []);
 
-  // Salva no localStorage sempre que mudar (mas somente aÃ§Ãµes locais, o sync via storage resolve outras abas)
+  // Salva no localStorage e emite evento para sincronizar outras instâncias na mesma aba
   const saveQueue = (newQueue: string[]) => {
     setQueue(newQueue);
     localStorage.setItem('sstfaq_queue', JSON.stringify(newQueue));
+    window.dispatchEvent(new CustomEvent('sstfaq-queue-sync'));
   };
 
   const addToQueue = (id: string) => {

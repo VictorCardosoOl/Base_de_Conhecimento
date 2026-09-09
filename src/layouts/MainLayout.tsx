@@ -30,12 +30,17 @@ export const MainLayout: React.FC = () => {
 
     // State for sidebar selection (can be synced with URL in pages, but kept here for visual state)
     const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
+    const [isArticleOpen, setIsArticleOpen] = useState(false);
 
     const { queue } = useReadingQueue();
     const navigate = useNavigate();
     const location = useLocation();
 
     const isQueueView = location.pathname === '/minha-lista';
+
+    // Se estiver na página de artigo (via CommandPalette), também consideramos "aberto"
+    const isArticleRoute = location.pathname.startsWith('/artigo/');
+    const effectivelyArticleOpen = isArticleOpen || isArticleRoute;
 
     useEffect(() => {
         document.body.classList.toggle('dark', isDarkMode);
@@ -95,6 +100,7 @@ export const MainLayout: React.FC = () => {
                     onLogoClick={handleReset}
                     position={sidebarPos}
                     onPositionChange={setSidebarPos}
+                    isArticleOpen={effectivelyArticleOpen}
                 />
 
                 <CommandPalette
@@ -107,7 +113,7 @@ export const MainLayout: React.FC = () => {
                     onSelectQueue={() => { handleQueueSelect(); setIsCommandPaletteOpen(false); }}
                 />
 
-                <main className="flex-1 w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] relative">
+                <main className={`flex-1 w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${effectivelyArticleOpen ? 'z-50' : ''}`}>
                     <div className={`max-w-[1600px] mx-auto w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
                         px-5 sm:px-8 max-lg:pt-24 max-lg:pb-12 lg:py-12
                         ${sidebarPos === 'left' ? 'lg:pl-[140px] lg:pr-12' : 
@@ -121,7 +127,7 @@ export const MainLayout: React.FC = () => {
                         >
                             <Menu size={20} strokeWidth={1.5} />
                         </button>
-                        <Outlet context={{ currentCategory, setCurrentCategory, openCommandPalette: () => setIsCommandPaletteOpen(true) }} />
+                        <Outlet context={{ currentCategory, setCurrentCategory, openCommandPalette: () => setIsCommandPaletteOpen(true), setIsArticleOpen }} />
                     </div>
                 </main>
             </div>

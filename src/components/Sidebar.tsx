@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Archive, Hash, Bookmark, Sun, Moon, Layout, Home, List, BookOpen, Shield, FileText, Info, Users, Calendar, Circle } from 'lucide-react';
+import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home } from 'lucide-react';
 import { Category } from '../types/index';
 
 interface SidebarProps {
@@ -15,17 +15,18 @@ interface SidebarProps {
   onLogoClick?: () => void;
   position: 'left'|'right'|'top'|'bottom';
   onPositionChange: (pos: 'left'|'right'|'top'|'bottom') => void;
+  isArticleOpen?: boolean;
 }
 
 import { getCategoryIcon } from '../constants/navigation';
 
 export const Sidebar: React.FC<SidebarProps> = ({
-  currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange
+  currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange, isArticleOpen
 }) => {
   const [isHovered, setIsHovered] = useState(false);
   
   // No mobile, hover rules
-  const isExpanded = isHovered || isOpen;
+  const isExpanded = (isHovered || isOpen) && !isArticleOpen;
   const isHorizontal = position === 'top' || position === 'bottom';
 
   const cyclePosition = () => {
@@ -35,9 +36,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const TooltipLabel = ({ text }: { text: string }) => {
-    if (!isHorizontal) return null;
+    if (!isHorizontal && !isArticleOpen) return null;
     return (
-      <span className={`hidden lg:block absolute ${position === 'top' ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} left-1/2 -translate-x-1/2 px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-500 ease-out whitespace-nowrap z-[100] shadow-sm transform group-hover:translate-y-0 ${position === 'top' ? '-translate-y-1' : 'translate-y-1'}`}>
+      <span className={`hidden lg:block absolute ${position === 'top' || (isArticleOpen && !isHorizontal) ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} ${isArticleOpen && !isHorizontal ? 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2'} px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-500 ease-out whitespace-nowrap z-[100] shadow-sm transform group-hover:translate-y-0`}>
         {text}
       </span>
     );
@@ -45,16 +46,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const getBtnClass = (isActive: boolean) => `
     flex items-center text-sm rounded-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] relative group
-    ${isHorizontal ? 'justify-center p-3 lg:hover:scale-[1.15] lg:hover:-translate-y-1 shrink-0' : 'w-full py-3 px-3 ' + (isExpanded ? '' : 'justify-center')}
+    ${isHorizontal || isArticleOpen ? 'justify-center p-2.5 lg:hover:scale-[1.15] lg:hover:-translate-y-1 shrink-0' : 'w-full py-2.5 px-3 ' + (isExpanded ? '' : 'justify-center')}
     ${isActive
-      ? 'text-text-main font-semibold'
-      : 'text-text-muted hover:text-text-main font-medium'}
+      ? 'text-text-main font-semibold bg-stone-100 dark:bg-white/10 shadow-sm'
+      : 'text-text-muted hover:text-text-main hover:bg-stone-50 dark:hover:bg-white/5 font-medium'}
   `;
 
   // Desktop positioning logic (ensuring true centering)
   const desktopPosClass = isHorizontal 
-    ? `lg:left-1/2 lg:-translate-x-1/2 ${position === 'top' ? 'lg:top-6' : 'lg:bottom-6'} lg:flex-row lg:h-[4.5rem] lg:w-auto lg:px-6 lg:py-2`
-    : `lg:top-1/2 lg:-translate-y-1/2 ${position === 'left' ? 'lg:left-6' : 'lg:right-6'} lg:flex-col lg:h-auto lg:py-8 lg:px-3 ${isExpanded ? 'lg:w-[17rem]' : 'lg:w-20'}`;
+    ? `lg:left-1/2 lg:-translate-x-1/2 ${position === 'top' ? 'lg:top-6' : 'lg:bottom-6'} lg:flex-row lg:h-[4rem] lg:w-auto lg:px-6 lg:py-2`
+    : `lg:top-1/2 lg:-translate-y-1/2 ${position === 'left' ? (isArticleOpen ? 'lg:left-2' : 'lg:left-6') : (isArticleOpen ? 'lg:right-2' : 'lg:right-6')} lg:flex-col lg:h-auto lg:py-6 lg:px-2.5 ${isExpanded ? 'lg:w-[12rem]' : (isArticleOpen ? 'lg:w-14 lg:py-4 scale-90' : 'lg:w-16')}`;
 
   // Mobile drawer logic (always left drawer)
   const mobilePosClass = `max-lg:top-0 max-lg:left-0 max-lg:h-full max-lg:w-[85vw] max-lg:max-w-[280px] max-lg:flex-col max-lg:py-6 max-lg:px-4 max-lg:border-r ${isOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-[150%]'}`;
@@ -70,46 +71,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
-          lg:border lg:rounded-[2.5rem] flex
+          lg:border lg:rounded-[2rem] flex
           ${desktopPosClass}
           ${mobilePosClass}
         `}
       >
-        <div className={`flex items-center justify-between shrink-0 ${isHorizontal ? 'max-lg:mb-6 max-lg:w-full lg:pr-6 lg:mr-3 lg:border-r lg:border-border' : 'mb-8 px-2 ' + (isExpanded ? '' : 'lg:justify-center')}`}>
-          <div
-            onClick={onLogoClick}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
-                e.preventDefault();
-                onLogoClick?.();
-              }
-            }}
-            className="flex items-center gap-4 cursor-pointer hover:opacity-70 transition-opacity"
-            role="button"
-            aria-label="Ir para a página inicial"
-            tabIndex={0}
-          >
-            <div className="w-8 h-8 rounded-full bg-[var(--text-main)] shrink-0 flex items-center justify-center">
-              <div className="w-2.5 h-2.5 bg-bg-main rounded-full" />
-            </div>
-            <span className={`text-[13px] font-bold uppercase tracking-[0.3em] text-text-main transition-all duration-500 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:translate-x-0' : 'lg:opacity-0 lg:hidden'}`}>
-              SST FAQ
-            </span>
-          </div>
 
-          <button
-            onClick={cyclePosition}
-            aria-label="Alterar posição do menu"
-            className={`hidden lg:block text-text-muted hover:text-text-main transition-all duration-500 ${(!isHorizontal && isExpanded) ? 'opacity-100 scale-100' : 'opacity-0 scale-50 absolute pointer-events-none'}`}
-          >
-            <Layout size={18} strokeWidth={1.5} aria-hidden="true" />
-          </button>
-        </div>
-
-        <nav className={`flex-1 flex max-lg:flex-col max-lg:space-y-8 max-lg:overflow-y-auto no-scrollbar lg:overflow-visible ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-3' : 'lg:flex-col lg:space-y-8 lg:overflow-y-auto'}`} aria-label="Navegação principal">
+        <nav className={`flex-1 flex max-lg:flex-col max-lg:space-y-8 max-lg:overflow-y-auto no-scrollbar lg:overflow-visible ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-3' : 'lg:flex-col lg:space-y-4 lg:overflow-y-auto'}`} aria-label="Navegação principal">
           <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2' : 'lg:flex-col lg:space-y-1'}`}>
             <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Navegação</p>
-            <div className={`flex max-lg:flex-col max-lg:space-y-1 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-1 lg:items-center xl:items-stretch'}`}>
+            <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`}>
               <button
                 onClick={() => { onSelect(null); }}
                 aria-label="Ver acervo completo"
@@ -149,7 +120,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
           <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2 lg:ml-2 lg:pl-5 lg:border-l lg:border-border' : 'lg:flex-col lg:space-y-1'}`}>
             <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Módulos</p>
-            <div className={`flex max-lg:flex-col max-lg:space-y-1 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-1 lg:items-center xl:items-stretch'}`} role="menu">
+            <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`} role="menu">
               {Object.values(Category).map(cat => {
                 const Icon = getCategoryIcon(cat);
                 const isActive = currentCat === cat;
@@ -175,7 +146,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </nav>
 
-        <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-border' : 'lg:pt-6 lg:mt-4 lg:border-t lg:border-border lg:px-2 lg:flex-col lg:items-stretch'}`}>
+        <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-border' : 'lg:pt-4 lg:mt-2 lg:border-t lg:border-border lg:px-2 lg:flex-col lg:items-stretch'}`}>
           <button
             onClick={toggleDark}
             aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}

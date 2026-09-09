@@ -67,18 +67,24 @@ files.forEach(filePath => {
         .replace(/\s+/g, ' ')
         .trim();
 
+    const sanitizedId = path.basename(data.id).replace(/[^a-zA-Z0-9_-]/g, '');
+    data.id = sanitizedId;
+
+    const excerpt = plainText.substring(0, 160).trim() + (plainText.length > 160 ? '...' : '');
+
     const item = {
         ...data,
         fileName: path.basename(filePath),
+        excerpt: excerpt,
         searchText: plainText
     };
 
     catalog.push(item);
 
-    const chunkPath = path.join(CHUNKS_DIR, `${data.id}.json`);
+    const chunkPath = path.join(CHUNKS_DIR, `${sanitizedId}.json`);
     fs.writeFileSync(chunkPath, JSON.stringify({ content: content }));
 
-    mappingLines.push(`  "${data.id}": () => import('./chunks/${data.id}.json'),`);
+    mappingLines.push(`  "${sanitizedId}": () => import('./chunks/${sanitizedId}.json'),`);
 });
 
 mappingLines.push('};');

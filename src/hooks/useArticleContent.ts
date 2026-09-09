@@ -49,7 +49,7 @@ export const useArticleContent = (article: FAQItem) => {
             // Sort by length descending to match longest phrases first
             const sortedTerms = glossaryEntries.map(([t]) => t).sort((a, b) => b.length - a.length);
             const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const combinedRegex = new RegExp(`\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
+            const combinedRegex = new RegExp(`(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
             
             // Map for O(1) lookup
             const termToDef = Object.fromEntries(

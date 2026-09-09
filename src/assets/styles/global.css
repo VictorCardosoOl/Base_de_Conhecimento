@@ -107,7 +107,7 @@
     width: 100%;
     /* The Grid: 1fr | Content (65ch) | 1fr */
     display: grid;
-    grid-template-columns: 1fr min(65ch, 100%) 1fr;
+    grid-template-columns: 1fr minmax(0, 65ch) 1fr;
     row-gap: 2em;
   }
 
@@ -132,19 +132,18 @@
   .article-content-render p,
   .article-content-render li {
     font-family: var(--font-sans);
-    color: var(--text-body) !important;
-    font-size: 1.125rem;
-    /* 18px */
-    line-height: 1.9;
-    /* Relaxed */
-    letter-spacing: -0.01em;
+    font-size: 1.1875rem; /* 19px for better readability */
+    line-height: 1.8;
+    letter-spacing: -0.015em;
+    text-align: left;
+    margin-bottom: 1.5em;
+    color: inherit;
   }
 
   /* Drop Cap (Capitular) */
   .article-content-render>p:first-of-type::first-letter {
     font-family: var(--font-serif);
     font-size: 4.8em;
-    float: left;
     float: left;
     line-height: 0.8;
     margin-right: 0.12em;
@@ -159,7 +158,7 @@
   .article-content-render h3,
   .article-content-render h4 {
     font-family: var(--font-serif);
-    color: var(--text-main) !important;
+    color: var(--text-main);
     font-weight: 400;
     line-height: 1.2;
     letter-spacing: -0.02em;
@@ -231,6 +230,18 @@
     opacity: 0.15;
   }
 
+  /* Typography Emphasis */
+  .article-content-render strong,
+  .article-content-render b {
+    font-weight: 600;
+    color: var(--text-main);
+  }
+
+  .article-content-render em,
+  .article-content-render i {
+    font-style: italic;
+  }
+
   /* Links */
   .article-content-render a {
     color: var(--text-main);
@@ -247,13 +258,14 @@
   /* Lists */
   .article-content-render ul,
   .article-content-render ol {
-    margin-top: 1em;
+    margin-top: 0.5em;
     margin-bottom: 2em;
-    padding-left: 1rem;
+    padding-left: 1.5rem;
   }
 
   .article-content-render li {
     padding-left: 0.5rem;
+    margin-bottom: 0.5em;
   }
 
   .article-content-render ul li {
@@ -262,6 +274,26 @@
 
   .article-content-render ol li {
     list-style-type: decimal;
+  }
+
+  /* Tables */
+  .article-content-render table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 2em 0;
+    grid-column: 2;
+  }
+
+  .article-content-render th,
+  .article-content-render td {
+    padding: 0.75em;
+    border: 1px solid var(--border);
+    text-align: left;
+  }
+
+  .article-content-render th {
+    background-color: var(--selection);
+    font-weight: 600;
   }
 
   /* HR */

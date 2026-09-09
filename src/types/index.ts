@@ -1,20 +1,22 @@
 ﻿export enum Category {
-  INTRODUCAO = 'Introdução',
+  INTRODUCAO = 'INTRODU',
   GRO = 'GRO',
-  ESOCIAL = 'eSocial',
-  INFORMACOES = 'Informações',
-  COLETIVO = 'Coletivo',
-  EVENTOS = 'Eventos',
+  ESOCIAL = 'ESOCIAL',
+  INFORMACOES = 'INFORMACOES',
+  EVENTOS = 'EVENTOS'
 }
 
 export interface FAQItem {
   id: string;
+  category: Category;
   question: string;
   answer: string;
-  category: Category;
-  tags: string[];
-  content?: any;
-  date?: string;
-  searchText?: string;
+  date: string;
+  excerpt?: string;
 }
 
+export interface FAQItemExtended extends FAQItem {
+  fileName?: string;
+  content?: any;
+  searchText?: string;
+}
