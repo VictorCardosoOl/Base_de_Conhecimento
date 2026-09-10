@@ -9,17 +9,22 @@ import { useArticleContent } from '../hooks/useArticleContent';
 import { ArticleContent } from './ArticleContent';
 import { ArticleSkeleton } from './ArticleSkeleton';
 
-// A wrapper to handle the loading of article content while inside the modal
 const ModalArticleContent = ({ article }: { article: FAQItem }) => {
   const { htmlContent, isLoading } = useArticleContent(article);
+
+  // Tempo de leitura estimado baseado em 200 palavras por minuto (usando o tamanho aproximado)
+  const readingTime = Math.max(1, Math.ceil((article.searchText?.length || 1000) / 1000));
 
   if (isLoading) {
     return <ArticleSkeleton />;
   }
 
   return (
-    <div className="max-w-4xl mx-auto">
-      <ArticleContent htmlContent={htmlContent} />
+    <div className="max-w-4xl mx-auto flex flex-col gap-8">
+      {/* Main Article Content */}
+      <div className="flex-1 min-w-0">
+        <ArticleContent htmlContent={htmlContent} />
+      </div>
     </div>
   );
 };
@@ -28,6 +33,16 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const scopedLenisRef = useRef<Lenis | null>(null);
+
+  // Barra de progresso de leitura
+  const { scrollYProgress } = useScroll({
+    container: modalContainerRef
+  });
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   useEffect(() => {
     if (isOpen) {
@@ -85,20 +100,17 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
             initial={{ y: "100%", opacity: 0 }}
             animate={{ y: "2%", opacity: 1, transition: { type: "spring", damping: 25, stiffness: 200, mass: 0.8 } }}
             exit={{ y: "5%", opacity: 0, transition: { duration: 0.2, ease: "easeOut" } }}
-            drag="y"
-            dragConstraints={{ top: 0, bottom: 0 }}
-            dragElastic={0.2}
-            onDragEnd={(e, { offset, velocity }) => {
-                if (offset.y > 150 || velocity.y > 500) {
-                    onClose();
-                }
-            }}
             className="fixed inset-0 z-[60] bg-bg-main rounded-t-[2rem] h-[98vh] border border-border overflow-hidden shadow-2xl"
           >
             <div ref={modalContainerRef} className="h-full w-full overflow-y-auto no-scrollbar pb-20">
                <div ref={modalContentRef}>
                   {/* Header Section inside the Modal (No image placeholder) */}
-                  <nav className="sticky top-0 z-10 w-full bg-bg-main/80 backdrop-blur-md border-b border-border no-print transition-all duration-300">
+                  <nav className="sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-300">
+                    {/* Magnetic Reading Progress Bar */}
+                    <motion.div 
+                      className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50"
+                      style={{ scaleX }}
+                    />
                     <div className="w-full px-6 md:px-8 h-16 flex items-center justify-between">
                       <div className="flex items-center gap-4 text-xs font-medium text-text-muted">
                         <button
@@ -130,36 +142,27 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
                     </div>
                   </nav>
 
-                  <div className="w-full pt-10 pb-8 px-6 md:px-12 border-b border-border">
-                    <div className="max-w-4xl mx-auto">
-                        <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.3em] text-text-muted mb-6">
-                            <span>{item.category}</span>
-                            <span className="w-4 h-[1px] bg-border" />
-                            <span>{item.date}</span>
-                        </div>
-                        <motion.h3 
+                  <div className="w-full pt-12 pb-6 px-6 md:px-12">
+                    <div className="max-w-4xl mx-auto text-center">
+                        <motion.h1 
                           layoutId={`title-${item.id}`} 
-                          className="text-3xl md:text-5xl lg:text-6xl font-serif text-text-main leading-tight"
+                          className="text-4xl md:text-6xl lg:text-7xl font-serif font-medium text-text-main leading-tight mb-8"
                         >
                           {item.question}
-                        </motion.h3>
+                        </motion.h1>
+                        
+                        <p className="text-xl md:text-2xl font-serif font-bold text-text-main leading-relaxed mb-8 max-w-3xl mx-auto">
+                            {item.answer}
+                        </p>
                     </div>
                   </div>
 
-                  {/* Rest of the Content */}
                   <motion.div 
                     initial={{ opacity: 0, y: 30 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ delay: 0.3, duration: 0.6 }}
-                    className="p-6 md:p-12 mt-8"
+                    className="p-6 md:p-12"
                   >
-                    {/* Excerpt/Answer as a prelude */}
-                    <div className="max-w-4xl mx-auto mb-16 text-center">
-                        <p className="text-xl md:text-2xl text-text-muted font-serif italic leading-relaxed">
-                            {item.answer}
-                        </p>
-                    </div>
-                    
                     <ModalArticleContent article={item} />
                   </motion.div>
                </div>

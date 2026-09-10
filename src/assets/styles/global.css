@@ -105,25 +105,14 @@
    */
   .article-content-render {
     width: 100%;
-    /* The Grid: 1fr | Content (65ch) | 1fr */
-    display: grid;
-    grid-template-columns: 1fr minmax(0, 65ch) 1fr;
-    row-gap: 2em;
-  }
-
-  /* All direct children go to the center column by default */
-  .article-content-render>* {
-    grid-column: 2;
-    margin-bottom: 0;
-    /* Handled by grid-gap */
+    /* The Grid removed for better paragraph distribution */
+    display: block;
   }
 
   /* Features that break out of the center column */
   .article-content-render>.full-width,
   .article-content-render>img {
-    grid-column: 1 / -1;
     width: 100%;
-    max-width: 1200px;
     margin: 3rem auto;
     border-radius: 8px;
   }
@@ -131,25 +120,13 @@
   /* Typography Body */
   .article-content-render p,
   .article-content-render li {
-    font-family: var(--font-sans);
+    font-family: var(--font-serif);
     font-size: 1.1875rem; /* 19px for better readability */
     line-height: 1.8;
     letter-spacing: -0.015em;
     text-align: left;
     margin-bottom: 1.5em;
     color: inherit;
-  }
-
-  /* Drop Cap (Capitular) */
-  .article-content-render>p:first-of-type::first-letter {
-    font-family: var(--font-serif);
-    font-size: 4.8em;
-    float: left;
-    line-height: 0.8;
-    margin-right: 0.12em;
-    margin-top: -0.02em;
-    color: var(--text-main);
-    font-weight: 700;
   }
 
   /* Headings */
@@ -170,21 +147,19 @@
   }
 
   .article-content-render h1 {
-    font-size: 2.5rem;
-    /* Reduced slightly as main title is in header */
+    font-size: clamp(2rem, 5vw, 3.5rem);
     margin-top: 1.5em;
-    /* Local adjustment */
   }
 
   .article-content-render h2 {
-    font-size: 2.25rem;
+    font-size: clamp(1.75rem, 4vw, 2.5rem);
     margin-top: 2.5em;
     padding-bottom: 0.5em;
     border-bottom: 1px solid var(--border);
   }
 
   .article-content-render h3 {
-    font-size: 1.5rem;
+    font-size: clamp(1.25rem, 3vw, 1.75rem);
     margin-top: 2em;
     font-weight: 500;
     font-style: italic;
@@ -201,9 +176,9 @@
 
   /* Blockquotes - Center Pull Quote Style */
   .article-content-render blockquote {
-    grid-column: 2;
-    margin: 4rem 0;
-    padding: 0;
+    max-width: 1000px;
+    margin: 5rem auto;
+    padding: 0 2rem;
     border: none;
     text-align: center;
     position: relative;
@@ -212,7 +187,7 @@
 
   .article-content-render blockquote p {
     font-family: var(--font-serif);
-    font-size: 1.75rem !important;
+    font-size: clamp(1.5rem, 4vw, 2.5rem) !important;
     line-height: 1.4 !important;
     font-style: italic;
     color: var(--text-main) !important;
@@ -223,11 +198,11 @@
     content: "“";
     display: block;
     font-family: var(--font-serif);
-    font-size: 6rem;
-    line-height: 0.5;
-    margin-bottom: 0.2rem;
+    font-size: 8rem;
+    line-height: 0;
+    margin-bottom: 2rem;
     color: var(--text-muted);
-    opacity: 0.15;
+    opacity: 0.1;
   }
 
   /* Typography Emphasis */
@@ -281,7 +256,6 @@
     width: 100%;
     border-collapse: collapse;
     margin: 2em 0;
-    grid-column: 2;
   }
 
   .article-content-render th,

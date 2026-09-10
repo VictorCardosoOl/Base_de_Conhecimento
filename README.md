@@ -78,7 +78,23 @@ npm run build
 
 ---
 
-## 📬 Contato
+## 🗺️ Mapa de Rotas do App
+- `/` - Tela Inicial (Listagem e Busca)
+- `/minha-lista` - Fila de Leitura
+- `/artigo/:id` - Acesso Direto aos Artigos (SEO)
+- `/login` - Tela de Login do Administrador
+- `/admin` - Painel Administrativo (Listagem de Artigos para Admins)
+- `/admin/editor` - Interface do Editor de Artigos
+- `*` (404) - Página de Erro (NotFoundPage)
+
+### 🔐 Acesso Administrativo (Testes)
+Para acessar as páginas administrativas (`/admin`), utilize as seguintes credenciais de teste na rota de login:
+- **Usuário (Email):** `admin@admin.com`
+- **Senha:** `admin`
+
+---
+
+## 📞 Contato
 
 **Victor Cardoso Cunha**  
 Engenheiro de Software / Freelance Developer  

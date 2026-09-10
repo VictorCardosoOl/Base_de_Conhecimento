@@ -2,6 +2,33 @@ import path from 'path';
 import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import { VitePWA } from 'vite-plugin-pwa';
+import { execSync } from 'child_process';
+
+// Plugin customizado para automatizar a geração do catálogo sem scripts manuais
+function catalogGeneratorPlugin() {
+  return {
+    name: 'catalog-generator',
+    buildStart() {
+      console.log('📦 Inicializando e gerando catálogo de artigos...');
+      try {
+        execSync('node scripts/generate-catalog.js', { stdio: 'inherit' });
+      } catch (err) {
+        console.error('Erro ao gerar catálogo:', err);
+      }
+    },
+    handleHotUpdate({ file, server }) {
+      if (file.endsWith('.md') && file.includes('src/content/artigos')) {
+        console.log(`📝 Artigo alterado: ${path.basename(file)}. Regenerando catálogo...`);
+        try {
+          execSync('node scripts/generate-catalog.js', { stdio: 'inherit' });
+          server.ws.send({ type: 'full-reload' });
+        } catch (err) {
+          console.error('Erro ao regenerar catálogo:', err);
+        }
+      }
+    }
+  };
+}
 
 export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, '.', '');
@@ -11,6 +38,7 @@ export default defineConfig(({ mode }) => {
       host: '0.0.0.0',
     },
     plugins: [
+      catalogGeneratorPlugin(),
       react(),
       VitePWA({
         registerType: 'autoUpdate',
