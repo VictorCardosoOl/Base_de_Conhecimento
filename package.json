@@ -59,7 +59,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "16.3.3",
     "@types/node": "22.14.0",
-    "@vitejs/plugin-react": "5.0.0",
+    "@vitejs/plugin-react": "6.1.1",
     "@vitest/coverage-v8": "^5.0.0",
     "autoprefixer": "10.4.23",
     "gray-matter": "4.0.3",
