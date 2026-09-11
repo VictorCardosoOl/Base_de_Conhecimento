@@ -1,5 +1,5 @@
-﻿import React from 'react';
-import { MasterDetailGrid } from '../components/MasterDetailGrid';
+import React from 'react';
+import { MasterDetailGrid } from '../components/layout/MasterDetailGrid';
 import { FAQ_DATA } from '../constants/index';
 import { useReadingQueue } from '../hooks/useReadingQueue';
 import { FAQItem } from '../types/index';
@@ -35,7 +35,7 @@ export const QueuePage: React.FC = () => {
             {displayedArticles.length === 0 && (
                 <div className="py-12 border-t border-border reveal">
                     <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl font-light">
-                        Sua lista de leitura esta vazia.
+                        Sua lista de leitura está vazia.
                     </p>
                 </div>
             )}

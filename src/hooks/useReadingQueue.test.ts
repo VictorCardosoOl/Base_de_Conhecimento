@@ -1,4 +1,4 @@
-﻿
+
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { renderHook, act } from '@testing-library/react';
 import { useReadingQueue } from './useReadingQueue';
@@ -15,14 +15,14 @@ describe('useReadingQueue', () => {
     expect(result.current.queue).toEqual([]);
   });
 
-  it('deve adicionar um item Ã  fila e persistir no localStorage', () => {
+  it('deve adicionar um item à fila e persistir no localStorage', () => {
     const { result } = renderHook(() => useReadingQueue());
     act(() => {
       result.current.addToQueue('tratativa-protocolo');
     });
     expect(result.current.queue).toContain('tratativa-protocolo');
     
-    const saved = JSON.parse(localStorage.getItem('teamwiki_queue') || '[]');
+    const saved = JSON.parse(localStorage.getItem('sstfaq_queue') || '[]');
     expect(saved).toContain('tratativa-protocolo');
   });
 
@@ -74,7 +74,7 @@ describe('useReadingQueue', () => {
     expect(result.current.queue).toEqual(['item-1', 'item-2', 'item-3']);
   });
 
-  it('nÃ£o deve permitir duplicatas na fila via addToQueue', () => {
+  it('não deve permitir duplicatas na fila via addToQueue', () => {
     const { result } = renderHook(() => useReadingQueue());
     act(() => {
       result.current.addToQueue('item-unico');

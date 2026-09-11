@@ -2,6 +2,9 @@
 // Do not edit manually
 
 export const ARTICLE_CONTENT_MAP: Record<string, () => Promise<{ default: { content: string } }>> = {
+  "feedback-24h": () => import('./chunks/feedback-24h.json'),
+  "script-atendimento": () => import('./chunks/script-atendimento.json'),
+  "tratativa-protocolo": () => import('./chunks/tratativa-protocolo.json'),
   "ecac-esocial-advanced-guide": () => import('./chunks/ecac-esocial-advanced-guide.json'),
   "ecac-guia": () => import('./chunks/ecac-guia.json'),
   "ecac": () => import('./chunks/ecac.json'),
@@ -10,11 +13,9 @@ export const ARTICLE_CONTENT_MAP: Record<string, () => Promise<{ default: { cont
   "esocial-sst": () => import('./chunks/esocial-sst.json'),
   "esocial": () => import('./chunks/esocial.json'),
   "eventos-sst-esocial": () => import('./chunks/eventos-sst-esocial.json'),
-  "eventos-sst-orgaos-publicos": () => import('./chunks/eventos-sst-orgaos-publicos.json'),
   "finalidade-esocial": () => import('./chunks/finalidade-esocial.json'),
   "funcionarios-declarantes-esocial": () => import('./chunks/funcionarios-declarantes-esocial.json'),
   "funcion-rios-e-declarantes-no-esocial---regras-de-identifica--o": () => import('./chunks/funcion-rios-e-declarantes-no-esocial---regras-de-identifica--o.json'),
-  "rotina-de-transmiss-o-dos-eventos-de-sst-ao-esocial": () => import('./chunks/rotina-de-transmiss-o-dos-eventos-de-sst-ao-esocial.json'),
   "evento-s2210-comunicacao-cat": () => import('./chunks/evento-s2210-comunicacao-cat.json'),
   "evento-s2220-monitoramento-saude": () => import('./chunks/evento-s2220-monitoramento-saude.json'),
   "evento-s2221-exame-toxicologico": () => import('./chunks/evento-s2221-exame-toxicologico.json'),
@@ -37,9 +38,9 @@ export const ARTICLE_CONTENT_MAP: Record<string, () => Promise<{ default: { cont
   "cat": () => import('./chunks/cat.json'),
   "entendendo-o-mundo-jur-dico---conclu-do": () => import('./chunks/entendendo-o-mundo-jur-dico---conclu-do.json'),
   "informa--es-sobre-o-xml": () => import('./chunks/informa--es-sobre-o-xml.json'),
-  "ltcat": () => import('./chunks/ltcat.json'),
   "nrs---conclu-do": () => import('./chunks/nrs---conclu-do.json'),
   "ppp": () => import('./chunks/ppp.json'),
   "sistema-tribut-rio-e-seu-impacto-nas-notas-fiscais": () => import('./chunks/sistema-tribut-rio-e-seu-impacto-nas-notas-fiscais.json'),
   "smtp": () => import('./chunks/smtp.json'),
+  "configuracao-vpn": () => import('./chunks/configuracao-vpn.json'),
 };

@@ -1,9 +1,12 @@
-﻿export enum Category {
-  INTRODUCAO = 'INTRODU',
+export enum Category {
+  INTRODUCAO = 'Introdução',
   GRO = 'GRO',
-  ESOCIAL = 'ESOCIAL',
-  INFORMACOES = 'INFORMACOES',
-  EVENTOS = 'EVENTOS'
+  ESOCIAL = 'eSocial',
+  INFORMACOES = 'Informações',
+  EVENTOS = 'Eventos',
+  COLETIVO = 'Coletivo',
+  FINANCEIRO = 'Financeiro',
+  TI = 'Tecnologia'
 }
 
 export interface FAQItem {
@@ -13,10 +16,11 @@ export interface FAQItem {
   answer: string;
   date: string;
   excerpt?: string;
+  tags?: string[];
+  searchText?: string;
+  content?: any;
 }
 
 export interface FAQItemExtended extends FAQItem {
   fileName?: string;
-  content?: any;
-  searchText?: string;
 }

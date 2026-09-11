@@ -3,9 +3,9 @@ import { Command } from 'cmdk';
 import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { FAQItem, Category } from '../types/index';
-import { FAQ_DATA } from '../constants/index';
-import { useSearch } from '../hooks/useSearch';
+import { FAQItem, Category } from '../../types/index';
+import { FAQ_DATA } from '../../constants/index';
+import { useSearch } from '../../hooks/useSearch';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -53,8 +53,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           inputRef.current?.focus();
         }
       });
-      tl.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" })
-        .fromTo(modalRef.current, { opacity: 0, scale: 0.95, y: 10 }, { opacity: 1, scale: 1, y: 0, duration: 0.4, ease: "back.out(1.5)" }, "-=0.2");
+      tl.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "power2.out" })
+        .fromTo(modalRef.current, { opacity: 0, scale: 0.985, y: 6 }, { opacity: 1, scale: 1, y: 0, duration: 0.15, ease: "power3.out" }, "-=0.08");
     }
   }, { dependencies: [isOpen], scope: containerRef });
 

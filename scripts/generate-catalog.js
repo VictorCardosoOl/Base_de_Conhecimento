@@ -48,12 +48,12 @@ mappingLines.push('export const ARTICLE_CONTENT_MAP: Record<string, () => Promis
 
 files.forEach(filePath => {
     const fileContent = fs.readFileSync(filePath, 'utf-8');
-    const { data, content } = matter(fileContent);
+    const { data, content } = matter(fileContent.trimStart());
 
-    if (!data.id) {
-        console.warn(`⚠️  Skipping ${filePath}: Missing 'id' in frontmatter.`);
-        return;
-    }
+    const fileId = data.id || path.basename(filePath, '.md');
+    const question = data.question || data.title || path.basename(filePath, '.md');
+    data.id = fileId;
+    data.question = question;
 
     const plainText = content
         .replace(/!\[.*?\]\(.*?\)/g, '')

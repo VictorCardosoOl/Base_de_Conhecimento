@@ -1,4 +1,3 @@
-
 ---
 title: A Estética do Feedback Contínuo
 category: Coletivo

@@ -4,10 +4,11 @@ import { ArrowUpRight, X, Plus, Check, ArrowLeft, ChevronRight } from 'lucide-re
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
-import { FAQItem } from '../types/index';
-import { useArticleContent } from '../hooks/useArticleContent';
-import { ArticleContent } from './ArticleContent';
-import { ArticleSkeleton } from './ArticleSkeleton';
+import { FAQItem } from '../../types/index';
+import { useArticleContent } from '../../hooks/useArticleContent';
+import { useReadingQueue } from '../../hooks/useReadingQueue';
+import { ArticleContent } from '../article/ArticleContent';
+import { ArticleSkeleton } from '../article/ArticleSkeleton';
 
 const ModalArticleContent = ({ article }: { article: FAQItem }) => {
   const { htmlContent, isLoading } = useArticleContent(article);
@@ -29,7 +30,14 @@ const ModalArticleContent = ({ article }: { article: FAQItem }) => {
   );
 };
 
-export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: boolean, onClose: () => void, layoutId: string, item: FAQItem }) => {
+interface ContentModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  layoutId: string;
+  item: FAQItem;
+}
+
+export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, layoutId, item }) => {
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const scopedLenisRef = useRef<Lenis | null>(null);
@@ -39,43 +47,48 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
     container: modalContainerRef
   });
   const scaleX = useSpring(scrollYProgress, {
-    stiffness: 100,
-    damping: 30,
+    stiffness: 350,
+    damping: 35,
     restDelta: 0.001
   });
 
   useEffect(() => {
+    let rafId: number | null = null;
+    let timer: NodeJS.Timeout | null = null;
+
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       
-      const timer = setTimeout(() => {
+      timer = setTimeout(() => {
         if (modalContainerRef.current && modalContentRef.current) {
-            const scopedLenis = new Lenis({
-                wrapper: modalContainerRef.current,
-                content: modalContentRef.current,
-                duration: 1.2,
-                easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-                orientation: 'vertical',
-                touchMultiplier: 2,
-            });
-            scopedLenisRef.current = scopedLenis;
-            
-            function raf(time: number) {
-                scopedLenis.raf(time);
-                requestAnimationFrame(raf);
-            }
-            requestAnimationFrame(raf);
+          const scopedLenis = new Lenis({
+            wrapper: modalContainerRef.current,
+            content: modalContentRef.current,
+            duration: 0.5,
+            easing: (t) => 1 - Math.pow(1 - t, 4),
+            orientation: 'vertical',
+            touchMultiplier: 1.5,
+          });
+          scopedLenisRef.current = scopedLenis;
+          
+          function raf(time: number) {
+            scopedLenis.raf(time);
+            rafId = requestAnimationFrame(raf);
+          }
+          rafId = requestAnimationFrame(raf);
         }
-      }, 300);
-
-      return () => clearTimeout(timer);
+      }, 30);
     } else {
       document.body.style.overflow = '';
+      if (rafId) cancelAnimationFrame(rafId);
       scopedLenisRef.current?.destroy();
     }
+
     return () => {
-       document.body.style.overflow = '';
-       scopedLenisRef.current?.destroy();
+      document.body.style.overflow = '';
+      if (timer) clearTimeout(timer);
+      if (rafId) cancelAnimationFrame(rafId);
+      scopedLenisRef.current?.destroy();
     };
   }, [isOpen]);
 
@@ -87,25 +100,25 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
         <>
           <motion.div 
             onClick={onClose} 
-            className="fixed inset-0 bg-black/90 z-[50]" 
-            initial={{opacity:0}} 
-            animate={{opacity:1}} 
-            exit={{opacity:0}} 
+            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[50] will-change-[opacity]" 
+            initial={{ opacity: 0 }} 
+            animate={{ opacity: 1, transition: { duration: 0.12 } }} 
+            exit={{ opacity: 0, transition: { duration: 0.10 } }} 
           />
           
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-labelledby={`modal-title-${item.id}`}
-            initial={{ y: "100%", opacity: 0 }}
-            animate={{ y: "2%", opacity: 1, transition: { type: "spring", damping: 25, stiffness: 200, mass: 0.8 } }}
-            exit={{ y: "5%", opacity: 0, transition: { duration: 0.2, ease: "easeOut" } }}
-            className="fixed inset-0 z-[60] bg-bg-main rounded-t-[2rem] h-[98vh] border border-border overflow-hidden shadow-2xl"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0, transition: { duration: 0.16, ease: [0.16, 1, 0.3, 1] } }}
+            exit={{ opacity: 0, y: 8, transition: { duration: 0.10, ease: [0.2, 0, 0, 1] } }}
+            className="fixed inset-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2rem] h-[96vh] top-[4vh] border border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity]"
           >
             <div ref={modalContainerRef} className="h-full w-full overflow-y-auto no-scrollbar pb-20">
                <div ref={modalContentRef}>
                   {/* Header Section inside the Modal (No image placeholder) */}
-                  <nav className="sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-300">
+                  <nav className="sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-150 transform-gpu">
                     {/* Magnetic Reading Progress Bar */}
                     <motion.div 
                       className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50"
@@ -144,12 +157,11 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
 
                   <div className="w-full pt-12 pb-6 px-6 md:px-12">
                     <div className="max-w-4xl mx-auto text-center">
-                        <motion.h1 
-                          layoutId={`title-${item.id}`} 
-                          className="text-4xl md:text-6xl lg:text-7xl font-serif font-medium text-text-main leading-tight mb-8"
+                        <h1 
+                          className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium text-text-main leading-tight mb-8"
                         >
                           {item.question}
-                        </motion.h1>
+                        </h1>
                         
                         <p className="text-xl md:text-2xl font-serif font-bold text-text-main leading-relaxed mb-8 max-w-3xl mx-auto">
                             {item.answer}
@@ -157,14 +169,9 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
                     </div>
                   </div>
 
-                  <motion.div 
-                    initial={{ opacity: 0, y: 30 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.6 }}
-                    className="p-6 md:p-12"
-                  >
+                  <div className="p-6 md:p-12">
                     <ModalArticleContent article={item} />
-                  </motion.div>
+                  </div>
                </div>
             </div>
           </motion.div>
@@ -175,13 +182,18 @@ export const ContentModal = ({ isOpen, onClose, layoutId, item }: { isOpen: bool
   );
 };
 
-import { useReadingQueue } from '../hooks/useReadingQueue';
+interface CardItemProps {
+  item: FAQItem;
+  onClick: () => void;
+  isInQueue: boolean;
+  onToggleQueue: (e?: React.MouseEvent) => void;
+}
 
-export const CardItem = ({ item, onClick, isInQueue, onToggleQueue }: { item: FAQItem, onClick: () => void, isInQueue: boolean, onToggleQueue: (e: React.MouseEvent) => void }) => {
+export const CardItem: React.FC<CardItemProps> = ({ item, onClick, isInQueue, onToggleQueue }) => {
   return (
-    <div onClick={onClick} className="group cursor-pointer relative py-6 border-b border-border transition-all duration-700 lg:hover:pl-4 flex flex-col justify-center">
+    <div onClick={onClick} className="group cursor-pointer relative py-6 border-b border-border transition-all duration-150 ease-out transform-gpu active:scale-[0.99] active:opacity-90 lg:hover:pl-3 flex flex-col justify-between h-full">
       {/* Indicador de Hover Lateral */}
-      <div className="absolute left-0 top-6 bottom-6 w-[2px] bg-text-main scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-700 origin-top z-10" />
+      <div className="absolute left-0 top-6 bottom-6 w-[2px] bg-text-main scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-150 ease-out origin-top z-10 transform-gpu" />
 
       <div className="space-y-3 w-full">
         <div className="space-y-2">
@@ -201,24 +213,24 @@ export const CardItem = ({ item, onClick, isInQueue, onToggleQueue }: { item: FA
                 e.stopPropagation();
                 onToggleQueue(e);
               }}
-              className={`p-1.5 rounded-full transition-all duration-500 z-20 ${isInQueue ? 'text-indigo-600 bg-indigo-50/80 dark:bg-indigo-900/30' : 'text-stone-500 hover:text-text-main hover:bg-stone-100 dark:hover:bg-white/5'
+              className={`p-1.5 rounded-full transition-colors duration-150 z-20 ${isInQueue ? 'text-indigo-600 bg-indigo-50/80 dark:bg-indigo-900/30' : 'text-stone-500 hover:text-text-main hover:bg-stone-100 dark:hover:bg-white/5'
                 }`}
             >
               {isInQueue ? <Check size={16} /> : <Plus size={16} />}
             </button>
           </div>
 
-          <motion.div className="max-w-4xl space-y-2 bg-transparent">
-            <motion.h3 layoutId={`title-${item.id}`} className="text-2xl md:text-3xl lg:text-4xl font-serif font-light leading-tight text-text-main transition-transform duration-700 group-hover:translate-x-1">
+          <div className="w-full space-y-2 bg-transparent">
+            <h3 className="text-xl sm:text-2xl lg:text-3xl font-serif font-light leading-tight text-text-main transition-transform duration-150 ease-out transform-gpu group-hover:translate-x-1">
               {item.question}
-            </motion.h3>
+            </h3>
 
-            <p className="text-stone-700 dark:text-stone-300 font-light leading-relaxed line-clamp-2 transition-colors duration-500 group-hover:text-text-main text-lg md:text-xl max-w-3xl">
+            <p className="text-stone-700 dark:text-stone-300 font-light leading-relaxed line-clamp-2 transition-colors duration-150 group-hover:text-text-main text-base sm:text-lg">
               {item.answer}
             </p>
-          </motion.div>
+          </div>
 
-          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.15em] text-stone-600 dark:text-stone-300 opacity-0 lg:group-hover:opacity-100 transition-all duration-700 translate-y-1 lg:group-hover:translate-y-0" aria-hidden="true">
+          <div className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.15em] text-stone-600 dark:text-stone-300 opacity-0 lg:group-hover:opacity-100 transition-all duration-150 ease-out translate-y-1 lg:group-hover:translate-y-0 transform-gpu" aria-hidden="true">
             Explorar Diretriz <ArrowUpRight size={12} strokeWidth={1.5} />
           </div>
         </div>
@@ -246,7 +258,7 @@ export const MasterDetailGrid = ({ items, onModalStateChange }: { items: FAQItem
 
   return (
     <div className="w-full">
-      <div className="flex flex-col">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 lg:gap-x-12 gap-y-2">
         {items.map(item => (
           <CardItem 
             key={item.id} 

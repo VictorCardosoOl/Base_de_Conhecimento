@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { Sidebar } from '../components/Sidebar';
-import { CommandPalette } from '../components/CommandPalette';
+import { Sidebar } from '../components/layout/Sidebar';
+import { CommandPalette } from '../components/ui/CommandPalette';
 import { Category, FAQItem } from '../types/index';
 import { useReadingQueue } from '../hooks/useReadingQueue';
-import { SmoothScroll } from '../components/SmoothScroll';
+import { SmoothScroll } from '../components/ui/SmoothScroll';
 import { Menu } from 'lucide-react';
 
 export const MainLayout: React.FC = () => {
@@ -113,8 +113,8 @@ export const MainLayout: React.FC = () => {
                     onSelectQueue={() => { handleQueueSelect(); setIsCommandPaletteOpen(false); }}
                 />
 
-                <main className={`flex-1 w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${effectivelyArticleOpen ? 'z-50' : ''}`}>
-                    <div className={`max-w-[1600px] mx-auto w-full transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+                <main className={`flex-1 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${effectivelyArticleOpen ? 'z-50' : ''}`}>
+                    <div className={`max-w-[1600px] mx-auto w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
                         px-5 sm:px-8 max-lg:pt-24 max-lg:pb-12 lg:py-12
                         ${sidebarPos === 'left' ? 'lg:pl-[140px] lg:pr-12' : 
                           sidebarPos === 'right' ? 'lg:pr-[140px] lg:pl-12' : 

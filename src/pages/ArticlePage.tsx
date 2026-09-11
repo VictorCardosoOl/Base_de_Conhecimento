@@ -1,6 +1,6 @@
-﻿import React, { useMemo } from 'react';
+import React, { useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ContentModal } from '../components/MasterDetailGrid';
+import { ContentModal } from '../components/layout/MasterDetailGrid';
 import { FAQ_DATA } from '../constants/index';
 
 export const ArticlePage: React.FC = () => {
@@ -12,9 +12,9 @@ export const ArticlePage: React.FC = () => {
     if (!article) {
         return (
             <div className="py-20 text-center">
-                <h2 className="text-2xl font-serif text-text-main">Artigo no encontrado</h2>
+                <h2 className="text-2xl font-serif text-text-main">Artigo não encontrado</h2>
                 <button onClick={() => navigate('/')} className="mt-4 text-sm underline text-text-muted">
-                    Voltar ao incio
+                    Voltar ao início
                 </button>
             </div>
         );

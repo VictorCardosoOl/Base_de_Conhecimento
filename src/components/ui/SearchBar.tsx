@@ -20,7 +20,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
       </div>
       <div className="flex items-center gap-3 md:gap-4 ml-2">
         <div className="hidden sm:flex items-center gap-1.5 px-1.5 py-0.5 border border-stone-300 dark:border-stone-700 rounded text-[9px] md:text-[11px] font-bold text-stone-600 dark:text-stone-300">
-          <Command size={10} md:size={12} strokeWidth={1.5} /> K
+          <Command className="w-2.5 h-2.5 md:w-3 md:h-3" strokeWidth={1.5} /> K
         </div>
 
       </div>

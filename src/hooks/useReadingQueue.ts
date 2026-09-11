@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 export const useReadingQueue = () => {
   const [queue, setQueue] = useState<string[]>([]);
 
-  // Carrega a fila salva ao iniciar e escuta alteraÃ§Ãµes entre abas
+  // Carrega a fila salva ao iniciar e escuta alterações entre abas
   useEffect(() => {
     // Migration Logic: Check for old key
     const oldSaved = localStorage.getItem('teamwiki_queue');
@@ -76,5 +76,16 @@ export const useReadingQueue = () => {
     }
   };
 
-  return { queue, addToQueue, removeFromQueue, toggleQueue };
+  const moveItem = (id: string, direction: 'UP' | 'DOWN') => {
+    const index = queue.indexOf(id);
+    if (index === -1) return;
+    const targetIndex = direction === 'UP' ? index - 1 : index + 1;
+    if (targetIndex < 0 || targetIndex >= queue.length) return;
+    const newQueue = [...queue];
+    const [removed] = newQueue.splice(index, 1);
+    newQueue.splice(targetIndex, 0, removed);
+    saveQueue(newQueue);
+  };
+
+  return { queue, addToQueue, removeFromQueue, toggleQueue, moveItem };
 };

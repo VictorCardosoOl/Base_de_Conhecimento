@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home } from 'lucide-react';
-import { Category } from '../types/index';
+import { Category } from '../../types/index';
+import { getCategoryIcon } from '../../constants/navigation';
 
 interface SidebarProps {
   currentCat: Category | null;
@@ -17,8 +18,6 @@ interface SidebarProps {
   onPositionChange: (pos: 'left'|'right'|'top'|'bottom') => void;
   isArticleOpen?: boolean;
 }
-
-import { getCategoryIcon } from '../constants/navigation';
 
 export const Sidebar: React.FC<SidebarProps> = ({
   currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange, isArticleOpen
@@ -38,15 +37,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const TooltipLabel = ({ text }: { text: string }) => {
     if (!isHorizontal && !isArticleOpen) return null;
     return (
-      <span className={`hidden lg:block absolute ${position === 'top' || (isArticleOpen && !isHorizontal) ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} ${isArticleOpen && !isHorizontal ? 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2'} px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-500 ease-out whitespace-nowrap z-[100] shadow-sm transform group-hover:translate-y-0`}>
+      <span className={`hidden lg:block absolute ${position === 'top' || (isArticleOpen && !isHorizontal) ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} ${isArticleOpen && !isHorizontal ? 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2'} px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-150 ease-out whitespace-nowrap z-[100] shadow-sm transform-gpu group-hover:translate-y-0`}>
         {text}
       </span>
     );
   };
 
   const getBtnClass = (isActive: boolean) => `
-    flex items-center text-sm rounded-xl transition-all duration-500 ease-[cubic-bezier(0.16,1,0.3,1)] relative group
-    ${isHorizontal || isArticleOpen ? 'justify-center p-2.5 lg:hover:scale-[1.15] lg:hover:-translate-y-1 shrink-0' : 'w-full py-2.5 px-3 ' + (isExpanded ? '' : 'justify-center')}
+    flex items-center text-sm rounded-xl transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu relative group
+    ${isHorizontal || isArticleOpen ? 'justify-center p-2.5 lg:hover:scale-[1.12] lg:hover:-translate-y-0.5 shrink-0' : 'w-full py-2.5 px-3 ' + (isExpanded ? '' : 'justify-center')}
     ${isActive
       ? 'text-text-main font-semibold bg-stone-100 dark:bg-white/10 shadow-sm'
       : 'text-text-muted hover:text-text-main hover:bg-stone-50 dark:hover:bg-white/5 font-medium'}
@@ -63,14 +62,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
   return (
     <>
       <div
-        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-500 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+        className={`fixed inset-0 bg-black/60 backdrop-blur-sm z-[60] lg:hidden transition-opacity duration-150 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
         onClick={onClose}
       />
 
       <aside
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]
+        className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-180 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu
           lg:border lg:rounded-[2rem] flex
           ${desktopPosClass}
           ${mobilePosClass}
@@ -79,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <nav className={`flex-1 flex max-lg:flex-col max-lg:space-y-8 max-lg:overflow-y-auto no-scrollbar lg:overflow-visible ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-3' : 'lg:flex-col lg:space-y-4 lg:overflow-y-auto'}`} aria-label="Navegação principal">
           <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2' : 'lg:flex-col lg:space-y-1'}`}>
-            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Navegação</p>
+            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-250 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Navegação</p>
             <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`}>
               <button
                 onClick={() => { onSelect(null); }}
@@ -89,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 <div className="flex items-center gap-4">
                   <Home size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
-                  <span className={`transition-all duration-500 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>Acervo</span>
+                  <span className={`transition-all duration-250 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>Acervo</span>
                   {!isHorizontal && isExpanded && currentCat === null && !isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
                   <TooltipLabel text="Acervo" />
                 </div>
@@ -103,7 +102,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               >
                 <div className="flex items-center gap-4">
                   <Bookmark size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
-                  <div className={`flex items-center gap-2 transition-all duration-500 whitespace-nowrap max-lg:flex ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+                  <div className={`flex items-center gap-2 transition-all duration-250 whitespace-nowrap max-lg:flex ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
                     <span>Minha Lista</span>
                     {queueCount > 0 && (
                       <span className="text-[9px] font-black bg-[var(--text-main)] text-[var(--bg-main)] px-1.5 py-0.5 rounded-full ml-1" aria-label={`${queueCount} itens`}>
@@ -119,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
 
           <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2 lg:ml-2 lg:pl-5 lg:border-l lg:border-border' : 'lg:flex-col lg:space-y-1'}`}>
-            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-500 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Módulos</p>
+            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-250 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Módulos</p>
             <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`} role="menu">
               {Object.values(Category).map(cat => {
                 const Icon = getCategoryIcon(cat);
@@ -135,7 +134,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   >
                     <div className="flex items-center gap-4">
                       <Icon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
-                      <span className={`transition-all duration-500 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>{cat}</span>
+                      <span className={`transition-all duration-250 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>{cat}</span>
                       {!isHorizontal && isExpanded && isActive && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
                       <TooltipLabel text={cat} />
                     </div>
@@ -150,11 +149,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <button
             onClick={toggleDark}
             aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
+            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
           >
             <div className="flex items-center gap-4">
-              {isDarkMode ? <Sun size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-500" /> : <Moon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-500" />}
-              <span className={`transition-all duration-500 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+              {isDarkMode ? <Sun size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-150 transform-gpu" /> : <Moon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-150 transform-gpu" />}
+              <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
                 {isDarkMode ? 'Claro' : 'Escuro'}
               </span>
               <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} />
@@ -165,7 +164,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <button
               onClick={cyclePosition}
               aria-label="Alterar posição do menu"
-              className="ml-4 text-text-muted hover:text-text-main transition-all duration-500 hidden lg:block p-3 group relative lg:hover:scale-110 lg:hover:-translate-y-1"
+              className="ml-4 text-text-muted hover:text-text-main transition-all duration-150 hidden lg:block p-3 group relative lg:hover:scale-110 lg:hover:-translate-y-0.5 transform-gpu"
             >
               <Layout size={20} strokeWidth={1.5} aria-hidden="true" />
               <TooltipLabel text="Mudar Posição" />

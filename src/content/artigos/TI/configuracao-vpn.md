@@ -1,4 +1,3 @@
-
 ---
 title: Configuração de VPN Corporativa
 category: Tecnologia

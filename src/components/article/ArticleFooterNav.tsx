@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
-import { FAQItem } from '../types/index';
+import { FAQItem } from '../../types/index';
 
 interface ArticleFooterNavProps {
   nav: { prev: FAQItem | null; next: FAQItem | null };
@@ -29,7 +29,7 @@ export const ArticleFooterNav: React.FC<ArticleFooterNavProps> = ({ nav, onNavig
       <button
         onClick={() => onNavigateAttempt('next')}
         disabled={!nav.next}
-        className={`group text-right md:text-right space-y-3 p-6 -mr-6 rounded-2xl transition-all duration-300 block w-full flex flex-col items-end cursor-pointer disabled:opacity-40 disabled:grayscale disabled:hover:bg-transparent disabled:cursor-not-allowed hover:bg-bg-island`}
+        className={`group text-right md:text-right space-y-3 p-6 -mr-6 rounded-2xl transition-all duration-300 w-full flex flex-col items-end cursor-pointer disabled:opacity-40 disabled:grayscale disabled:hover:bg-transparent disabled:cursor-not-allowed hover:bg-bg-island`}
       >
         <span className="text-[10px] font-bold uppercase tracking-widest text-text-muted group-hover:text-text-main transition-colors flex items-center gap-2 justify-end">
           Próximo

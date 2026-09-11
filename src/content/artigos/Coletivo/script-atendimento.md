@@ -1,4 +1,3 @@
-
 ---
 title: Script e Etiqueta de Atendimento
 category: Coletivo

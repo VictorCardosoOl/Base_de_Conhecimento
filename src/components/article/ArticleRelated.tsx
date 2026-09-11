@@ -1,5 +1,5 @@
 import React from 'react';
-import { FAQItem } from '../types/index';
+import { FAQItem } from '../../types/index';
 
 interface ArticleRelatedProps {
   relatedArticles: FAQItem[];
@@ -17,11 +17,11 @@ export const ArticleRelated: React.FC<ArticleRelatedProps> = ({ relatedArticles,
           <button
             key={related.id}
             onClick={() => onNavigate(related)}
-            className="group flex flex-col items-start text-left p-8 rounded-2xl bg-gray-50/50 border border-transparent hover:bg-white hover:border-gray-100 hover:shadow-lg hover:shadow-gray-100/50 transition-all duration-500 w-full"
+            className="group flex flex-col items-start text-left p-8 rounded-2xl bg-bg-island/60 border border-border hover:bg-bg-island hover:border-text-main/20 hover:shadow-lg transition-all duration-500 w-full"
           >
-            <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600/60 mb-4">{related.category}</span>
-            <h4 className="font-serif text-xl leading-tight mb-3 text-gray-900 group-hover:text-blue-700 transition-colors">{related.question}</h4>
-            <p className="text-sm text-gray-500 line-clamp-2 leading-relaxed font-light">{related.answer}</p>
+            <span className="text-[10px] font-bold uppercase tracking-widest text-blue-600 dark:text-blue-400 mb-4">{related.category}</span>
+            <h4 className="font-serif text-xl leading-tight mb-3 text-text-main group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{related.question}</h4>
+            <p className="text-sm text-text-muted line-clamp-2 leading-relaxed font-light">{related.answer}</p>
           </button>
         ))}
       </div>

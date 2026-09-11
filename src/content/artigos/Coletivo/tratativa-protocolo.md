@@ -1,4 +1,3 @@
-
 ---
 title: A Arte da Tratativa de Protocolos
 category: Coletivo

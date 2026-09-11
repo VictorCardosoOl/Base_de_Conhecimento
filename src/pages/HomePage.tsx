@@ -1,7 +1,7 @@
 import React, { useMemo, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { SearchBar } from '../components/SearchBar';
-import { MasterDetailGrid } from '../components/MasterDetailGrid';
+import { SearchBar } from '../components/ui/SearchBar';
+import { MasterDetailGrid } from '../components/layout/MasterDetailGrid';
 import { FAQ_DATA } from '../constants/index';
 import { Category } from '../types/index';
 import { useOutletContext } from 'react-router-dom';
