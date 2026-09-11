@@ -5,6 +5,8 @@ import { CommandPalette } from '../components/ui/CommandPalette';
 import { Category, FAQItem } from '../types/index';
 import { useReadingQueue } from '../hooks/useReadingQueue';
 import { SmoothScroll } from '../components/ui/SmoothScroll';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Menu } from 'lucide-react';
 
 export const MainLayout: React.FC = () => {
@@ -114,12 +116,12 @@ export const MainLayout: React.FC = () => {
                 />
 
                 <main className={`flex-1 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${effectivelyArticleOpen ? 'z-50' : ''}`}>
-                    <div className={`max-w-[1600px] mx-auto w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
-                        px-5 sm:px-8 max-lg:pt-24 max-lg:pb-12 lg:py-12
-                        ${sidebarPos === 'left' ? 'lg:pl-[140px] lg:pr-12' : 
-                          sidebarPos === 'right' ? 'lg:pr-[140px] lg:pl-12' : 
-                          sidebarPos === 'top' ? 'lg:pt-[140px] lg:px-12' : 
-                          'lg:pb-[140px] lg:px-12'}
+                    <div className={`max-w-[2000px] 4xl:max-w-[2400px] mx-auto w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
+                        px-5 sm:px-8 2xl:px-16 3xl:px-24 4xl:px-32 max-lg:pt-24 max-lg:pb-12 lg:py-12 2xl:py-16 3xl:py-24
+                        ${sidebarPos === 'left' ? 'lg:pl-[140px] 2xl:lg:pl-[160px] 3xl:lg:pl-[180px] lg:pr-12 2xl:lg:pr-16 3xl:lg:pr-24' : 
+                          sidebarPos === 'right' ? 'lg:pr-[140px] 2xl:lg:pr-[160px] 3xl:lg:pr-[180px] lg:pl-12 2xl:lg:pl-16 3xl:lg:pl-24' : 
+                          sidebarPos === 'top' ? 'lg:pt-[140px] 2xl:lg:pt-[160px] 3xl:lg:pt-[180px] lg:px-12 2xl:lg:px-16 3xl:lg:px-24' : 
+                          'lg:pb-[140px] 2xl:lg:pb-[160px] 3xl:lg:pb-[180px] lg:px-12 2xl:lg:px-16 3xl:lg:px-24'}
                     `}>
                         <button
                             onClick={() => setIsSidebarOpen(true)}
@@ -130,6 +132,10 @@ export const MainLayout: React.FC = () => {
                         <Outlet context={{ currentCategory, setCurrentCategory, openCommandPalette: () => setIsCommandPaletteOpen(true), setIsArticleOpen }} />
                     </div>
                 </main>
+
+                {/* Vercel Real-Time Analytics & Core Web Vitals */}
+                <Analytics />
+                <SpeedInsights />
             </div>
         </SmoothScroll>
     );

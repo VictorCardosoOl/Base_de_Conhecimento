@@ -63,13 +63,30 @@ export const useReadingQueue = () => {
   };
 
   const addToQueue = (id: string) => {
-    if (!queue.includes(id)) {
-      saveQueue([...queue, id]);
-    }
+    setQueue(prev => {
+      if (prev.includes(id)) return prev;
+      const next = [...prev, id];
+      try {
+        localStorage.setItem('sstfaq_queue', JSON.stringify(next));
+        window.dispatchEvent(new CustomEvent('sstfaq-queue-sync'));
+      } catch (err) {
+        console.error('Falha ao persistir fila de leitura no localStorage:', err);
+      }
+      return next;
+    });
   };
 
   const removeFromQueue = (id: string) => {
-    saveQueue(queue.filter(itemId => itemId !== id));
+    setQueue(prev => {
+      const next = prev.filter(itemId => itemId !== id);
+      try {
+        localStorage.setItem('sstfaq_queue', JSON.stringify(next));
+        window.dispatchEvent(new CustomEvent('sstfaq-queue-sync'));
+      } catch (err) {
+        console.error('Falha ao persistir fila de leitura no localStorage:', err);
+      }
+      return next;
+    });
   };
 
   const toggleQueue = (id: string) => {
@@ -81,14 +98,22 @@ export const useReadingQueue = () => {
   };
 
   const moveItem = (id: string, direction: 'UP' | 'DOWN') => {
-    const index = queue.indexOf(id);
-    if (index === -1) return;
-    const targetIndex = direction === 'UP' ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= queue.length) return;
-    const newQueue = [...queue];
-    const [removed] = newQueue.splice(index, 1);
-    newQueue.splice(targetIndex, 0, removed);
-    saveQueue(newQueue);
+    setQueue(prev => {
+      const index = prev.indexOf(id);
+      if (index === -1) return prev;
+      const targetIndex = direction === 'UP' ? index - 1 : index + 1;
+      if (targetIndex < 0 || targetIndex >= prev.length) return prev;
+      const next = [...prev];
+      const [removed] = next.splice(index, 1);
+      next.splice(targetIndex, 0, removed);
+      try {
+        localStorage.setItem('sstfaq_queue', JSON.stringify(next));
+        window.dispatchEvent(new CustomEvent('sstfaq-queue-sync'));
+      } catch (err) {
+        console.error('Falha ao persistir fila de leitura no localStorage:', err);
+      }
+      return next;
+    });
   };
 
   return { queue, addToQueue, removeFromQueue, toggleQueue, moveItem };

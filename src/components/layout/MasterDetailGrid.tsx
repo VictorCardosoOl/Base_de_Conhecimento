@@ -118,9 +118,9 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.16, ease: [0.16, 1, 0.3, 1] } }}
             exit={{ opacity: 0, y: 8, transition: { duration: 0.10, ease: [0.2, 0, 0, 1] } }}
-            className="fixed inset-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2rem] h-[96vh] top-[4vh] border border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity]"
+            className="fixed inset-x-0 bottom-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2.5rem] h-[96vh] top-[4vh] max-w-[2000px] 4xl:max-w-[2400px] mx-auto border-x border-t border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity]"
           >
-            <div ref={modalContainerRef} className="h-full w-full overflow-y-auto no-scrollbar pb-20">
+            <div ref={modalContainerRef} className="h-full w-full overflow-y-auto no-scrollbar pb-24">
                <div ref={modalContentRef}>
                   {/* Header Section inside the Modal (No image placeholder) */}
                   <nav className="sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-150 transform-gpu">
@@ -129,22 +129,22 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
                       className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50"
                       style={{ scaleX }}
                     />
-                    <div className="w-full px-6 md:px-8 h-16 flex items-center justify-between">
-                      <div className="flex items-center gap-4 text-xs font-medium text-text-muted">
+                    <div className="w-full px-6 md:px-12 2xl:px-16 h-16 2xl:h-20 flex items-center justify-between">
+                      <div className="flex items-center gap-4 text-xs 2xl:text-sm font-medium text-text-muted">
                         <button
                           onClick={onClose}
                           aria-label="Voltar para a página anterior"
                           className="hover:text-blue-600 transition-colors flex items-center gap-1 min-h-[44px] min-w-[44px]"
                         >
-                          <ArrowLeft size={14} />
+                          <ArrowLeft size={16} />
                           <span className="hidden sm:inline">Voltar</span>
                         </button>
                         <span className="text-gray-300 dark:text-gray-700">|</span>
                         <button onClick={onClose} className="hover:text-blue-600 transition-colors">Início</button>
-                        <ChevronRight size={12} className="text-gray-400" />
+                        <ChevronRight size={14} className="text-gray-400" />
                         <span className="uppercase tracking-wide opacity-80">{item.category}</span>
-                        <ChevronRight size={12} className="text-gray-400 hidden sm:block" />
-                        <span className="font-semibold text-text-main truncate max-w-[150px] sm:max-w-xs hidden sm:block">
+                        <ChevronRight size={14} className="text-gray-400 hidden sm:block" />
+                        <span className="font-semibold text-text-main truncate max-w-[150px] sm:max-w-xs md:max-w-md hidden sm:block">
                           {item.question}
                         </span>
                       </div>
@@ -153,28 +153,28 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
                       <button 
                         onClick={onClose} 
                         aria-label="Fechar artigo"
-                        className="p-2 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors rounded-full text-text-muted hover:text-text-main min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        className="p-2.5 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors rounded-full text-text-muted hover:text-text-main min-h-[44px] min-w-[44px] flex items-center justify-center"
                       >
-                        <X size={20} />
+                        <X size={22} />
                       </button>
                     </div>
                   </nav>
 
-                  <div className="w-full pt-12 pb-6 px-6 md:px-12">
-                    <div className="max-w-4xl mx-auto text-center">
+                  <div className="w-full pt-12 2xl:pt-20 pb-6 px-6 md:px-16 2xl:px-24">
+                    <div className="max-w-5xl 2xl:max-w-6xl mx-auto text-center">
                         <h1 
-                          className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium text-text-main leading-tight mb-8"
+                          className="text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-serif font-medium text-text-main leading-tight mb-8 2xl:mb-12"
                         >
                           {item.question}
                         </h1>
                         
-                        <p className="text-xl md:text-2xl font-serif font-bold text-text-main leading-relaxed mb-8 max-w-3xl mx-auto">
+                        <p className="text-xl md:text-2xl 2xl:text-3xl font-serif font-bold text-text-main leading-relaxed mb-8 max-w-4xl mx-auto">
                             {item.answer}
                         </p>
                     </div>
                   </div>
 
-                  <div className="p-6 md:p-12">
+                  <div className="p-6 md:p-12 2xl:p-16 max-w-4xl 2xl:max-w-5xl mx-auto">
                     <ModalArticleContent article={item} />
                   </div>
                </div>
@@ -263,7 +263,7 @@ export const MasterDetailGrid = ({ items, onModalStateChange }: { items: FAQItem
 
   return (
     <div className="w-full">
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 lg:gap-x-12 gap-y-2">
+      <div className="grid grid-cols-1 md:grid-cols-2 3xl:grid-cols-3 gap-x-8 lg:gap-x-12 2xl:gap-x-16 3xl:gap-x-20 gap-y-4 2xl:gap-y-6">
         {items.map(item => (
           <CardItem 
             key={item.id} 

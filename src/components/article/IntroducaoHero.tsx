@@ -7,19 +7,19 @@ export const IntroducaoHero: React.FC = () => {
           Divide a tela em 2 metades (Esquerda e Direita).
           A metade Direita é dividida em 2 (Superior com a caixa de texto/scroll e Inferior vazia/livre).
       */}
-      <div className="relative w-full min-h-[520px] lg:h-[72vh] lg:max-h-[680px] grid grid-cols-1 lg:grid-cols-12 items-start overflow-visible pt-2">
+      <div className="relative w-full min-h-[520px] lg:h-[72vh] lg:max-h-[680px] 2xl:max-h-[800px] 3xl:max-h-[900px] grid grid-cols-1 lg:grid-cols-12 items-start overflow-visible pt-2 2xl:pt-6">
         
         {/* PARTE 1 (METADE ESQUERDA - 7 ou 8 cols):
             PALAVRAS GIGANTES FIXAS VINCULADAS AO PROJETO
             "Base de" e "Conhecimento" com tipografia monumental impactante,
             posicionada em direção ao footer (justify-end pb-8) e sem nenhum corte.
         */}
-        <div className="lg:col-span-8 h-full flex flex-col justify-end pb-6 lg:pb-10 pointer-events-none select-none z-10 overflow-visible">
+        <div className="lg:col-span-8 h-full flex flex-col justify-end pb-6 lg:pb-10 2xl:pb-14 pointer-events-none select-none z-10 overflow-visible">
           <h1 className="flex flex-col tracking-[-0.045em] font-serif font-normal leading-[0.76] text-text-main overflow-visible">
-            <span className="text-[clamp(4.2rem,10vw,10.8rem)] block transform -translate-x-1 lg:-translate-x-2">
+            <span className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2">
               Base de
             </span>
-            <span className="text-[clamp(4.2rem,10vw,10.8rem)] block transform -translate-x-1 lg:-translate-x-2 mt-1 lg:mt-2">
+            <span className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 mt-1 lg:mt-2">
               Conhecimento
             </span>
           </h1>
@@ -36,10 +36,10 @@ export const IntroducaoHero: React.FC = () => {
               Apenas esta caixinha possui scroll vertical interno.
               Conta a origem do projeto e as pessoas que o criaram.
           */}
-          <div className="w-full max-w-xs sm:max-w-sm flex flex-col items-end">
+          <div className="w-full max-w-xs sm:max-w-sm 2xl:max-w-md flex flex-col items-end">
             <div
               data-lenis-prevent
-              className="w-full max-h-[220px] lg:max-h-[240px] overflow-y-auto overscroll-contain pr-4 pl-2 space-y-8 no-scrollbar select-text border-l border-transparent hover:border-border/30 transition-colors"
+              className="w-full max-h-[220px] lg:max-h-[240px] 2xl:max-h-[300px] overflow-y-auto overscroll-contain pr-4 pl-2 space-y-8 no-scrollbar select-text border-l border-transparent hover:border-border/30 transition-colors"
             >
               {/* BLOCO 1: A Origem e Propósito */}
               <div className="space-y-3 pt-1">

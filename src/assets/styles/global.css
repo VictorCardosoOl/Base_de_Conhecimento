@@ -21,6 +21,10 @@
 
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'Playfair Display', serif;
+
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+  --breakpoint-4xl: 2560px;
 }
 
 @layer base {

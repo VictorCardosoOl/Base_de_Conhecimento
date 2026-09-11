@@ -7,7 +7,7 @@ export const AdminPage: React.FC = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="max-w-6xl mx-auto space-y-8 p-4">
+        <div className="max-w-screen-2xl 3xl:max-w-[2100px] mx-auto space-y-8 2xl:space-y-12 p-4 2xl:p-8">
             <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
                 <div>
                     <h1 className="text-3xl font-serif text-text-main">Painel Administrativo</h1>

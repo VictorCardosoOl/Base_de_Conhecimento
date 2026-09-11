@@ -35,17 +35,17 @@ export const HomePage: React.FC = () => {
     const isIntroducaoCategory = categoryParam === Category.INTRODUCAO;
 
     return (
-        <div className={isIntroducaoCategory ? "space-y-4 lg:space-y-6" : "space-y-12"}>
+        <div className={isIntroducaoCategory ? "space-y-4 lg:space-y-6 2xl:space-y-8" : "space-y-12 2xl:space-y-16 3xl:space-y-20"}>
             {/* Header com Arquivos 2026, Título da Categoria e Barra de Pesquisa */}
-            <header className={isIntroducaoCategory ? "space-y-2 text-center max-w-lg mx-auto" : "space-y-6 text-center max-w-2xl mx-auto"}>
-                <div className={isIntroducaoCategory ? "space-y-0.5" : "space-y-2"}>
-                    <div className="flex items-center justify-center gap-3 text-[9px] font-bold uppercase tracking-[0.2em] text-text-muted reveal">
-                        <div className="w-6 h-[1px] bg-stone-300 dark:bg-stone-700" />
+            <header className={isIntroducaoCategory ? "space-y-2 text-center max-w-lg 2xl:max-w-xl mx-auto" : "space-y-6 2xl:space-y-8 text-center max-w-3xl 2xl:max-w-4xl mx-auto"}>
+                <div className={isIntroducaoCategory ? "space-y-0.5" : "space-y-2 2xl:space-y-3"}>
+                    <div className="flex items-center justify-center gap-3 text-[9px] 2xl:text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted reveal">
+                        <div className="w-6 2xl:w-10 h-[1px] bg-stone-300 dark:bg-stone-700" />
                         <span>Arquivos 2026</span>
-                        <div className="w-6 h-[1px] bg-stone-300 dark:bg-stone-700" />
+                        <div className="w-6 2xl:w-10 h-[1px] bg-stone-300 dark:bg-stone-700" />
                     </div>
 
-                    <h1 className={isIntroducaoCategory ? "text-xl sm:text-2xl font-serif font-light leading-tight tracking-tight text-text-main reveal" : "text-4xl lg:text-5xl font-serif font-light leading-tight tracking-tight text-text-main reveal"}>
+                    <h1 className={isIntroducaoCategory ? "text-xl sm:text-2xl 2xl:text-3xl font-serif font-light leading-tight tracking-tight text-text-main reveal" : "text-4xl lg:text-5xl 2xl:text-6xl 3xl:text-7xl font-serif font-light leading-tight tracking-tight text-text-main reveal"}>
                         {categoryParam ? (
                             <span>{categoryParam}</span>
                         ) : (
@@ -55,7 +55,7 @@ export const HomePage: React.FC = () => {
                 </div>
 
                 <div className="reveal flex justify-center" style={{ animationDelay: '80ms' }}>
-                    <div className={isIntroducaoCategory ? "w-full max-w-sm scale-90" : "w-full max-w-xl"}>
+                    <div className={isIntroducaoCategory ? "w-full max-w-sm 2xl:max-w-md scale-90" : "w-full max-w-xl 2xl:max-w-2xl"}>
                         <SearchBar
                             onClick={() => openCommandPalette?.()} 
                         />
@@ -70,13 +70,13 @@ export const HomePage: React.FC = () => {
                 </div>
             ) : (
                 <>
-                    <div className="pt-4 max-w-6xl mx-auto">
+                    <div className="pt-4 w-full max-w-screen-2xl 3xl:max-w-[2100px] mx-auto">
                         <MasterDetailGrid items={displayedArticles} onModalStateChange={setIsArticleOpen} />
                     </div>
 
                     {displayedArticles.length === 0 && (
-                        <div className="py-12 border-t border-border reveal">
-                            <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl font-light">
+                        <div className="py-12 2xl:py-20 border-t border-border reveal">
+                            <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl 2xl:text-2xl font-light">
                                 Nenhum documento encontrado.
                             </p>
                         </div>

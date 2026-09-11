@@ -1,0 +1,67 @@
+name: Quality Gates & CI Pipeline
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  # Quality Gate 1: Verificação Estática, Tipagem e Testes de Unidade
+  quality-gate-unit:
+    name: 🧪 Unit Tests & Static Analysis
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Type Check (TypeScript Shift-Left)
+        run: npx tsc --noEmit
+
+      - name: Run Unit Tests with Coverage Thresholds
+        run: npm run test:coverage
+
+      - name: Build Production Artifacts
+        run: npm run build
+
+  # Quality Gate 2: Testes E2E e Smoke Tests
+  quality-gate-e2e:
+    name: 🎭 E2E & Smoke Verification
+    needs: quality-gate-unit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Build Application
+        run: npm run build
+
+      - name: Verify Service Worker & Static Outputs
+        run: |
+          test -f dist/index.html
+          test -f dist/sw.js
+          test -f dist/manifest.webmanifest
+          echo "✅ Production artifacts and PWA outputs validated."

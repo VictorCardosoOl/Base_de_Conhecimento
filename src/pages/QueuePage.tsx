@@ -15,26 +15,26 @@ export const QueuePage: React.FC = () => {
 
     return (
         <div className="space-y-6">
-            <header className="space-y-4">
-                <div className="space-y-1">
-                    <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300 reveal">
-                        <div className="w-6 h-[0.5px] bg-stone-400" />
+            <header className="space-y-4 2xl:space-y-6 max-w-3xl 2xl:max-w-4xl">
+                <div className="space-y-1 2xl:space-y-2">
+                    <div className="flex items-center gap-3 text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300 reveal">
+                        <div className="w-6 2xl:w-10 h-[0.5px] bg-stone-400" />
                         <span>SST FAQ</span>
                     </div>
 
-                    <h1 className="text-3xl lg:text-5xl font-serif font-light leading-tight tracking-tight text-text-main reveal">
+                    <h1 className="text-3xl lg:text-5xl 2xl:text-6xl font-serif font-light leading-tight tracking-tight text-text-main reveal">
                         <span className="italic">Minha Lista</span>
                     </h1>
                 </div>
             </header>
 
-            <div className="pt-4 max-w-6xl mx-auto">
+            <div className="pt-4 w-full max-w-screen-2xl 3xl:max-w-[2100px] mx-auto">
                 <MasterDetailGrid items={displayedArticles} onModalStateChange={setIsArticleOpen} />
             </div>
 
             {displayedArticles.length === 0 && (
-                <div className="py-12 border-t border-border reveal">
-                    <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl font-light">
+                <div className="py-12 2xl:py-20 border-t border-border reveal">
+                    <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl 2xl:text-2xl font-light">
                         Sua lista de leitura está vazia.
                     </p>
                 </div>

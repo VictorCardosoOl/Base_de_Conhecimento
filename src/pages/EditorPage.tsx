@@ -10,8 +10,8 @@ export const EditorPage: React.FC = () => {
     const [content, setContent] = useState('');
 
     return (
-        <div className="max-w-5xl mx-auto space-y-6 p-4">
-            <header className="flex items-center justify-between border-b border-border pb-6">
+        <div className="max-w-screen-2xl 3xl:max-w-[2100px] mx-auto space-y-6 2xl:space-y-10 p-4 2xl:p-8">
+            <header className="flex items-center justify-between border-b border-border pb-6 2xl:pb-8">
                 <div className="flex items-center gap-4">
                     <button 
                         onClick={() => navigate('/admin')}

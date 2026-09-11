@@ -8,11 +8,16 @@
     "dev": "npm run gen:catalog && vite",
     "build": "npm run gen:catalog && vite build",
     "preview": "vite preview",
-    "gen:catalog": "node scripts/generate-catalog.js"
+    "gen:catalog": "node scripts/generate-catalog.js",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "@gsap/react": "2.1.2",
     "@types/dompurify": "3.2.0",
+    "@vercel/analytics": "^2.0.1",
+    "@vercel/speed-insights": "^2.0.0",
     "cmdk": "1.1.1",
     "dompurify": "3.3.1",
     "framer-motion": "13.2.0",
@@ -30,11 +35,15 @@
   "devDependencies": {
     "@tailwindcss/postcss": "4.1.18",
     "@tailwindcss/typography": "0.5.19",
+    "@testing-library/dom": "^10.4.1",
+    "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "16.3.3",
     "@types/node": "22.14.0",
     "@vitejs/plugin-react": "5.0.0",
+    "@vitest/coverage-v8": "^5.0.0",
     "autoprefixer": "10.4.23",
     "gray-matter": "4.0.3",
+    "jsdom": "^30.0.1",
     "mammoth": "1.12.2",
     "pdf-parse": "2.4.5",
     "postcss": "8.5.6",
