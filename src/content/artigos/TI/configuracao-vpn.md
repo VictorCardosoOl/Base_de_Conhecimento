@@ -13,12 +13,13 @@ A segurança dos nossos dados é prioridade. O uso da VPN é obrigatório para q
 
 ### Passo a Passo
 
-1. **Download do Cliente:** Acesse o portal de software da TI e baixe o *FortiClient*.
+1. **Download do Cliente:** Acesse o portal de software da TI e baixe o _FortiClient_.
 2. **Configuração do Host:** Utilize o endereço `vpn.empresa.com.br`.
 3. **Autenticação:** Use suas credenciais do Azure AD (E-mail corporativo).
-4. **MFA:** Confirme a solicitação no seu aplicativo *Microsoft Authenticator*.
+4. **MFA:** Confirme a solicitação no seu aplicativo _Microsoft Authenticator_.
 
 > **Dica:** Se a conexão cair, verifique se o seu firewall local não está bloqueando a porta 443.
 
 ### Suporte
+
 Caso encontre erros de certificado, abra um chamado imediatamente com a tag **#BLOQUEIO-VPN**.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home } from 'lucide-react';
+import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home, Bell } from 'lucide-react';
 import { Category } from '../../types/index';
 import { getCategoryIcon } from '../../constants/navigation';
 
@@ -153,6 +153,40 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </nav>
 
         <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-border' : 'lg:pt-4 lg:mt-2 lg:border-t lg:border-border lg:px-2 lg:flex-col lg:items-stretch'}`}>
+          {/* Notificações Push PWA */}
+          <button
+            onClick={async () => {
+              if (!('Notification' in window)) {
+                alert('Seu navegador não possui suporte nativo a Web Push Notifications.');
+                return;
+              }
+              if (Notification.permission === 'granted') {
+                new Notification('SST FAQ Atualizações', {
+                  body: 'Notificações corporativas ativadas! Você receberá comunicados urgentes de normas e eSocial.',
+                  icon: '/pwa-192x192.png'
+                });
+              } else {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                  new Notification('SST FAQ Conectado', {
+                    body: 'Notificações ativadas com sucesso.',
+                    icon: '/pwa-192x192.png'
+                  });
+                }
+              }
+            }}
+            aria-label="Ativar Notificações Push do PWA"
+            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
+          >
+            <div className="flex items-center gap-4">
+              <Bell size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150" />
+              <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+                Alertas
+              </span>
+              <TooltipLabel text="Notificações Push (PWA)" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+            </div>
+          </button>
+
           <button
             onClick={toggleDark}
             aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}

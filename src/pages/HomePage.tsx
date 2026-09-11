@@ -1,15 +1,22 @@
-import React, { useMemo, useEffect } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { SearchBar } from '../components/ui/SearchBar';
 import { MasterDetailGrid } from '../components/layout/MasterDetailGrid';
 import { IntroducaoHero } from '../components/article/IntroducaoHero';
 import { FAQ_DATA } from '../constants/index';
-import { Category } from '../types/index';
+import { Category, FAQItem } from '../types/index';
 import { useOutletContext } from 'react-router-dom';
+import { ReadingExperienceService } from '../services/readingExperienceService';
 
 export const HomePage: React.FC = () => {
     const [searchParams] = useSearchParams();
     const categoryParam = searchParams.get('category');
+
+    const [recentSearches, setRecentSearches] = useState<string[]>(() => ReadingExperienceService.getRecentSearches());
+    const [recentArticles, setRecentArticles] = useState<FAQItem[]>(() => {
+        const ids = ReadingExperienceService.getRecentArticles();
+        return ids.map(id => FAQ_DATA.find(a => a.id === id)).filter(Boolean) as FAQItem[];
+    });
 
     const { setCurrentCategory, openCommandPalette, setIsArticleOpen } = useOutletContext<{ 
         setCurrentCategory: (c: Category | null) => void,
@@ -54,12 +61,59 @@ export const HomePage: React.FC = () => {
                     </h1>
                 </div>
 
-                <div className="reveal flex justify-center" style={{ animationDelay: '80ms' }}>
+                <div className="reveal flex flex-col items-center gap-3" style={{ animationDelay: '80ms' }}>
                     <div className={isIntroducaoCategory ? "w-full max-w-sm 2xl:max-w-md scale-90" : "w-full max-w-xl 2xl:max-w-2xl"}>
                         <SearchBar
                             onClick={() => openCommandPalette?.()} 
                         />
                     </div>
+
+                    {/* Acesso Rápido: Últimas Buscas e Artigos Recentes */}
+                    {!isIntroducaoCategory && (
+                        <div className="w-full max-w-xl 2xl:max-w-2xl flex flex-wrap items-center justify-center gap-2 pt-1">
+                            {/* Buscas Recentes */}
+                            {recentSearches.length > 0 && (
+                                <div className="flex flex-wrap items-center justify-center gap-1.5">
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-text-muted opacity-70">
+                                        Buscas:
+                                    </span>
+                                    {recentSearches.slice(0, 4).map((q) => (
+                                        <button
+                                            key={q}
+                                            onClick={() => openCommandPalette?.()}
+                                            className="px-2.5 py-0.5 text-xs rounded-full border border-border bg-bg-island/80 text-text-muted hover:text-text-main hover:border-text-main/40 transition-colors"
+                                        >
+                                            {q}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+
+                            {/* Artigos Recentes */}
+                            {recentArticles.length > 0 && (
+                                <div className="flex flex-wrap items-center justify-center gap-1.5 mt-1 sm:mt-0">
+                                    <span className="text-[10px] font-mono uppercase tracking-widest text-text-muted opacity-70">
+                                        Lidos:
+                                    </span>
+                                    {recentArticles.slice(0, 3).map((art) => (
+                                        <button
+                                            key={art.id}
+                                            onClick={() => {
+                                                // Abre via URL do artigo
+                                                window.location.hash = '';
+                                                window.history.pushState(null, '', `/artigo/${art.id}`);
+                                                window.dispatchEvent(new PopStateEvent('popstate'));
+                                            }}
+                                            title={art.question}
+                                            className="px-2.5 py-0.5 text-xs rounded-full border border-border bg-bg-island/80 text-text-main hover:border-text-main transition-colors max-w-[140px] truncate"
+                                        >
+                                            {art.question}
+                                        </button>
+                                    ))}
+                                </div>
+                            )}
+                        </div>
+                    )}
                 </div>
             </header>
 

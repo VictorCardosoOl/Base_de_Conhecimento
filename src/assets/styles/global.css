@@ -21,6 +21,7 @@
 
   --font-sans: 'Inter', sans-serif;
   --font-serif: 'Playfair Display', serif;
+  --font-dyslexic: 'Lexend', sans-serif;
 
   --breakpoint-2xl: 1536px;
   --breakpoint-3xl: 1920px;
@@ -354,6 +355,112 @@
     visibility: visible;
     transform: translateX(-50%) translateY(-8px);
   }
+
+  /* 
+   * PERSONALIZAÇÃO TIPOGRÁFICA DO LEITOR
+   * ------------------------------------
+   */
+  .article-font-serif p, .article-font-serif li {
+    font-family: var(--font-serif) !important;
+  }
+  .article-font-sans p, .article-font-sans li {
+    font-family: var(--font-sans) !important;
+  }
+  .article-font-dyslexic p, .article-font-dyslexic li {
+    font-family: var(--font-dyslexic) !important;
+    letter-spacing: 0.01em !important;
+    word-spacing: 0.05em !important;
+  }
+
+  .article-size-sm p, .article-size-sm li {
+    font-size: 1rem !important; /* 16px */
+  }
+  .article-size-base p, .article-size-base li {
+    font-size: 1.1875rem !important; /* 19px */
+  }
+  .article-size-lg p, .article-size-lg li {
+    font-size: 1.35rem !important; /* ~21.6px */
+  }
+  .article-size-xl p, .article-size-xl li {
+    font-size: 1.55rem !important; /* ~24.8px */
+  }
+
+  .article-leading-tight p, .article-leading-tight li {
+    line-height: 1.5 !important;
+  }
+  .article-leading-normal p, .article-leading-normal li {
+    line-height: 1.65 !important;
+  }
+  .article-leading-relaxed p, .article-leading-relaxed li {
+    line-height: 1.85 !important;
+  }
+  .article-leading-loose p, .article-leading-loose li {
+    line-height: 2.15 !important;
+  }
+
+  /* 
+   * BLOCOS DE CÓDIGO E MERMAID
+   * ------------------------------------
+   */
+  .article-content-render pre {
+    position: relative;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background: rgba(15, 15, 15, 0.04);
+    padding: 1.25rem;
+    overflow-x: auto;
+    margin: 2rem 0;
+  }
+
+  body.dark .article-content-render pre {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .article-content-render pre code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+    color: var(--text-main);
+  }
+
+  .mermaid-wrapper {
+    display: flex;
+    justify-content: center;
+    background: transparent;
+    padding: 1.5rem 0;
+    overflow-x: auto;
+  }
+
+  .mermaid-wrapper svg {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+
+  /* Destaques (Highlights) de texto persistidos */
+  mark.sst-highlight-yellow {
+    background-color: rgba(254, 240, 138, 0.45);
+    color: inherit;
+    padding: 0.1em 0.25em;
+    border-radius: 2px;
+  }
+  mark.sst-highlight-green {
+    background-color: rgba(187, 247, 208, 0.45);
+    color: inherit;
+    padding: 0.1em 0.25em;
+    border-radius: 2px;
+  }
+  mark.sst-highlight-blue {
+    background-color: rgba(191, 219, 254, 0.45);
+    color: inherit;
+    padding: 0.1em 0.25em;
+    border-radius: 2px;
+  }
+  mark.sst-highlight-pink {
+    background-color: rgba(251, 207, 232, 0.45);
+    color: inherit;
+    padding: 0.1em 0.25em;
+    border-radius: 2px;
+  }
 }
 
 @keyframes revealUp {
@@ -367,3 +474,41 @@
     transform: translateY(0);
   }
 }
+
+@media print {
+  @page {
+    margin: 1.5cm;
+    size: A4 portrait;
+  }
+
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  .no-print,
+  nav,
+  aside,
+  button,
+  .glossary-term::after,
+  .glossary-term::before {
+    display: none !important;
+  }
+
+  .article-content-render {
+    max-width: 100% !important;
+    font-size: 11pt !important;
+    line-height: 1.6 !important;
+    color: #111111 !important;
+  }
+
+  h1, h2, h3, h4 {
+    page-break-after: avoid;
+    break-after: avoid;
+  }
+
+  table, pre, blockquote {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+}

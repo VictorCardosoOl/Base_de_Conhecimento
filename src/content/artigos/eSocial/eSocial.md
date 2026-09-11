@@ -1,14 +1,14 @@
 ---
-id: "esocial"
-question: "eSocial"
-category: "eSocial"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'esocial'
+question: 'eSocial'
+category: 'eSocial'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
-**eSocial**  
-  
+**eSocial**
+
 **eSocial** – **Sistema de Escrituração Digital das Obrigações Fiscais**, **Previdenciárias e Trabalhistas**
 
 **Conceitos, fundação, finalidade:**
@@ -17,8 +17,8 @@ Fundado em 11 de dezembro de 2014, é um sistema do Governo Federal do Brasil qu
 
 O uso do sistema eSocial é obrigatório desde 08 de janeiro de 2018, exceto para os eventos de Segurança e Saúde no Trabalho.
 
-A Portaria Conjunta SEPRT/RFB/ME nº 71, de 29 de junho de 2021 estabeleceu um novo cronograma para início de obrigatoriedade de transmissão dos eventos relativos à Saúde e Segurança do Trabalho (SST) ao sistema eSocial.  
-  
+A Portaria Conjunta SEPRT/RFB/ME nº 71, de 29 de junho de 2021 estabeleceu um novo cronograma para início de obrigatoriedade de transmissão dos eventos relativos à Saúde e Segurança do Trabalho (SST) ao sistema eSocial.
+
 Criado pelo governo federal para centralizar em uma única plataforma os dados que antes eram enviados separadamente a diferentes órgãos, como Receita Federal, INSS, Caixa Econômica Federal e Ministério do Trabalho. De forma clara e objetiva, o **eSocial** é um projeto do governo federal, que instituiu uma plataforma online na qual as empresas e pessoas físicas devem se cadastrar e enviar suas obrigações trabalhistas. O **eSocial** é obrigatório para empresas, empregadores e entidades públicas, abrangendo informações sobre vínculos empregatícios, folhas de pagamento, contribuições sociais, eventos trabalhistas (como admissões, demissões, afastamentos) e dados de saúde e segurança do trabalho. A construção do **eSocial** envolveu múltiplos órgãos governamentais e representou um grande avanço na **digitalização da gestão trabalhista** no Brasil. Sua estrutura se baseia na filosofia do SPED: **um único envio de dados, compartilhado entre vários entes do governo**.
 
 Cronograma de Implantação dos eventos de SST

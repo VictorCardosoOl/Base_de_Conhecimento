@@ -1,10 +1,10 @@
 ---
-id: "introdu--o---sst--conclu-do"
-question: "Introdução à SST- Concluído"
-category: "GRO"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'introdu--o---sst--conclu-do'
+question: 'Introdução à SST- Concluído'
+category: 'GRO'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 **Introdução à SST**
@@ -13,10 +13,10 @@ A Segurança e Saúde no Trabalho (SST) é uma área essencial para garantir um 
 
 Benefícios da SST para as Empresas
 
-*   Redução de acidentes e afastamentos
-*   Cumprimento das normas legais, evitando penalidades
-*   Melhoria da produtividade e clima organizacional
-*   Proteção da imagem da empresa perante clientes e mercado
+- Redução de acidentes e afastamentos
+- Cumprimento das normas legais, evitando penalidades
+- Melhoria da produtividade e clima organizacional
+- Proteção da imagem da empresa perante clientes e mercado
 
 Normas Regulamentadoras (NRs)
 
@@ -51,9 +51,9 @@ Principais NRs e Suas Aplicações
 
 **Outros Documentos Importantes em SST**
 
-*   **LTCAT** (Laudo Técnico das Condições Ambientais de Trabalho): Usado para aposentadoria especial.
-*   **PPP** (Perfil Profissiográfico Previdenciário): Histórico de exposição a riscos.
-*   **AET** (Análise Ergonômica do Trabalho): Avalia postura e esforço físico.
+- **LTCAT** (Laudo Técnico das Condições Ambientais de Trabalho): Usado para aposentadoria especial.
+- **PPP** (Perfil Profissiográfico Previdenciário): Histórico de exposição a riscos.
+- **AET** (Análise Ergonômica do Trabalho): Avalia postura e esforço físico.
 
 **Detalhamento dos Principais Programas e Laudos**
 

@@ -1,6 +1,6 @@
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
-import { ArrowUpRight, X, Plus, Check, ArrowLeft, ChevronRight } from 'lucide-react';
+import { ArrowUpRight, X, Plus, Check, ArrowLeft, ChevronRight, Printer, ShieldCheck, Calendar, Bell, Share2, Award } from 'lucide-react';
 import { createPortal } from 'react-dom';
 import { useLocation } from 'react-router-dom';
 import Lenis from 'lenis';
@@ -9,12 +9,13 @@ import { useArticleContent } from '../../hooks/useArticleContent';
 import { useReadingQueue } from '../../hooks/useReadingQueue';
 import { ArticleContent } from '../article/ArticleContent';
 import { ArticleSkeleton } from '../article/ArticleSkeleton';
+import { ArticleFeedback } from '../article/ArticleFeedback';
+import { ArticleReadingControls } from '../article/ArticleReadingControls';
+import { TableOfContents } from '../article/TableOfContents';
+import { ReadingExperienceService, TypographyPreferences } from '../../services/readingExperienceService';
 
-const ModalArticleContent = ({ article }: { article: FAQItem }) => {
+const ModalArticleContent = ({ article, typography }: { article: FAQItem; typography?: any }) => {
   const { htmlContent, isLoading } = useArticleContent(article);
-
-  // Tempo de leitura estimado baseado em 200 palavras por minuto (usando o tamanho aproximado)
-  const readingTime = Math.max(1, Math.ceil((article.searchText?.length || 1000) / 1000));
 
   if (isLoading) {
     return <ArticleSkeleton />;
@@ -24,7 +25,8 @@ const ModalArticleContent = ({ article }: { article: FAQItem }) => {
     <div className="max-w-4xl mx-auto flex flex-col gap-8">
       {/* Main Article Content */}
       <div className="flex-1 min-w-0">
-        <ArticleContent htmlContent={htmlContent} />
+        <ArticleContent htmlContent={htmlContent} articleId={article.id} typography={typography} />
+        <ArticleFeedback articleId={article.id} question={article.question} />
       </div>
     </div>
   );
@@ -42,6 +44,12 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
   const modalContentRef = useRef<HTMLDivElement>(null);
   const scopedLenisRef = useRef<Lenis | null>(null);
 
+  // Estados da nova experiência de leitura
+  const [isZenMode, setIsZenMode] = useState(false);
+  const [typography, setTypography] = useState<TypographyPreferences>(() => ReadingExperienceService.getTypography());
+  const [goalReachedBanner, setGoalReachedBanner] = useState(false);
+  const [shareFeedback, setShareFeedback] = useState(false);
+
   // Barra de progresso de leitura
   const { scrollYProgress } = useScroll({
     container: modalContainerRef
@@ -51,6 +59,73 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
     damping: 35,
     restDelta: 0.001
   });
+
+  // 1. Rastreamento Silencioso da Meta de Leitura (apenas dentro do artigo)
+  useEffect(() => {
+    if (!isOpen) return;
+
+    // Registra artigo lido recentemente
+    ReadingExperienceService.addRecentArticle(item.id);
+
+    let interval: NodeJS.Timeout | null = null;
+    interval = setInterval(() => {
+      // Contabiliza apenas se a aba estiver visível e focada
+      if (document.visibilityState === 'visible') {
+        const { completedNow } = ReadingExperienceService.addReadingTime(1);
+        if (completedNow) {
+          setGoalReachedBanner(true);
+        }
+      }
+    }, 1000);
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isOpen, item.id]);
+
+  // Escuta tecla ESC para sair do Zen Mode ou fechar modal
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        if (isZenMode) {
+          setIsZenMode(false);
+        } else {
+          onClose();
+        }
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, isZenMode, onClose]);
+
+  // Compartilhamento nativo via Web Share API
+  const handleShare = async () => {
+    const shareData = {
+      title: item.question,
+      text: item.answer,
+      url: window.location.href,
+    };
+
+    if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
+      try {
+        await navigator.share(shareData);
+      } catch (err) {
+        if ((err as Error).name !== 'AbortError') {
+          console.warn('Erro ao compartilhar:', err);
+        }
+      }
+    } else {
+      // Fallback: Copiar URL para o clipboard
+      try {
+        await navigator.clipboard.writeText(window.location.href);
+        setShareFeedback(true);
+        setTimeout(() => setShareFeedback(false), 2000);
+      } catch {
+        alert('Link copiado para a área de transferência!');
+      }
+    }
+  };
 
   useEffect(() => {
     let rafId: number | null = null;
@@ -118,12 +193,16 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0, transition: { duration: 0.16, ease: [0.16, 1, 0.3, 1] } }}
             exit={{ opacity: 0, y: 8, transition: { duration: 0.10, ease: [0.2, 0, 0, 1] } }}
-            className="fixed inset-x-0 bottom-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2.5rem] h-[96vh] top-[4vh] max-w-[2000px] 4xl:max-w-[2400px] mx-auto border-x border-t border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity]"
+            className={`fixed inset-x-0 bottom-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2.5rem] h-[96vh] top-[4vh] ${
+              isZenMode ? 'max-w-4xl' : 'max-w-[2000px] 4xl:max-w-[2400px]'
+            } mx-auto border-x border-t border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity] transition-all duration-300`}
           >
             <div ref={modalContainerRef} className="h-full w-full overflow-y-auto no-scrollbar pb-24">
                <div ref={modalContentRef}>
-                  {/* Header Section inside the Modal (No image placeholder) */}
-                  <nav className="sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-150 transform-gpu">
+                  {/* Header Section inside the Modal (Zen Mode minimiza distrações) */}
+                  <nav className={`sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-150 transform-gpu ${
+                    isZenMode ? 'py-1' : ''
+                  }`}>
                     {/* Magnetic Reading Progress Bar */}
                     <motion.div 
                       className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50"
@@ -139,43 +218,132 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
                           <ArrowLeft size={16} />
                           <span className="hidden sm:inline">Voltar</span>
                         </button>
-                        <span className="text-gray-300 dark:text-gray-700">|</span>
-                        <button onClick={onClose} className="hover:text-blue-600 transition-colors">Início</button>
-                        <ChevronRight size={14} className="text-gray-400" />
-                        <span className="uppercase tracking-wide opacity-80">{item.category}</span>
-                        <ChevronRight size={14} className="text-gray-400 hidden sm:block" />
-                        <span className="font-semibold text-text-main truncate max-w-[150px] sm:max-w-xs md:max-w-md hidden sm:block">
-                          {item.question}
-                        </span>
+                        {!isZenMode && (
+                          <>
+                            <span className="text-gray-300 dark:text-gray-700">|</span>
+                            <button onClick={onClose} className="hover:text-blue-600 transition-colors">Início</button>
+                            <ChevronRight size={14} className="text-gray-400" />
+                            <span className="uppercase tracking-wide opacity-80">{item.category}</span>
+                            <ChevronRight size={14} className="text-gray-400 hidden sm:block" />
+                            <span className="font-semibold text-text-main truncate max-w-[150px] sm:max-w-xs md:max-w-md hidden sm:block">
+                              {item.question}
+                            </span>
+                          </>
+                        )}
                       </div>
                       
-                      {/* Botão X para fechar */}
-                      <button 
-                        onClick={onClose} 
-                        aria-label="Fechar artigo"
-                        className="p-2.5 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors rounded-full text-text-muted hover:text-text-main min-h-[44px] min-w-[44px] flex items-center justify-center"
-                      >
-                        <X size={22} />
-                      </button>
+                      {/* Ações do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
+                      <div className="flex items-center gap-2">
+                        {/* Controles de Leitura e Modo Foco */}
+                        <ArticleReadingControls
+                          isZenMode={isZenMode}
+                          onToggleZenMode={() => setIsZenMode(!isZenMode)}
+                          onTypographyChange={setTypography}
+                        />
+
+                        {/* Botão de Compartilhamento Nativo */}
+                        <button
+                          onClick={handleShare}
+                          title="Compartilhar Artigo"
+                          aria-label="Compartilhar Artigo"
+                          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                        >
+                          <Share2 size={14} />
+                          <span className="hidden sm:inline">{shareFeedback ? 'Copiado!' : 'Compartilhar'}</span>
+                        </button>
+
+                        <button
+                          onClick={() => window.print()}
+                          title="Exportar Procedimento em PDF / Imprimir"
+                          aria-label="Exportar Procedimento em PDF ou Imprimir"
+                          className="hidden md:flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
+                        >
+                          <Printer size={14} />
+                          <span className="hidden sm:inline">PDF</span>
+                        </button>
+
+                        <button 
+                          onClick={onClose} 
+                          aria-label="Fechar artigo"
+                          className="p-2.5 hover:bg-stone-200 dark:hover:bg-stone-800 transition-colors rounded-full text-text-muted hover:text-text-main min-h-[44px] min-w-[44px] flex items-center justify-center"
+                        >
+                          <X size={22} />
+                        </button>
+                      </div>
                     </div>
                   </nav>
 
-                  <div className="w-full pt-12 2xl:pt-20 pb-6 px-6 md:px-16 2xl:px-24">
-                    <div className="max-w-5xl 2xl:max-w-6xl mx-auto text-center">
+                  {/* Banner Elegante de Meta de Leitura Atingida */}
+                  {goalReachedBanner && (
+                    <div className="bg-text-main text-bg-main px-6 py-3 border-b border-border flex items-center justify-between animate-fade-in-up">
+                      <div className="flex items-center gap-2.5 text-xs font-medium">
+                        <Award size={16} className="text-amber-400 shrink-0" />
+                        <span>Parabéns! Você alcançou sua <strong>Meta de Leitura</strong> programada na lista.</span>
+                      </div>
+                      <button
+                        onClick={() => setGoalReachedBanner(false)}
+                        className="text-bg-main/80 hover:text-bg-main p-1"
+                        aria-label="Fechar notificação de meta"
+                      >
+                        <X size={14} />
+                      </button>
+                    </div>
+                  )}
+
+                  {/* Cabeçalho oficial visível apenas na impressão/PDF */}
+                  <div className="hidden print:block p-8 border-b-2 border-stone-800 text-stone-900 mb-8">
+                    <div className="flex items-center justify-between">
+                      <div>
+                        <h2 className="text-xl font-bold uppercase tracking-wider">Base Corporativa de Conhecimento SST</h2>
+                        <p className="text-xs text-stone-600">Diretoria de Governança, Saúde e Segurança do Trabalho</p>
+                      </div>
+                      <div className="text-right text-xs text-stone-500">
+                        <p>Documento Rastreável</p>
+                        <p>Impresso em: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}</p>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="w-full pt-10 pb-6 px-6 md:px-16 2xl:px-24">
+                    <div className="max-w-4xl mx-auto text-center space-y-6">
+                        {/* Selo Editorial de Gestão de Validade e Auditoria */}
+                        <div className="inline-flex items-center gap-3 py-1 px-3 border-y border-border text-[11px] uppercase tracking-[0.18em] text-text-muted">
+                          <span className="flex items-center gap-1.5 font-medium">
+                            <ShieldCheck size={13} className="text-emerald-600 dark:text-emerald-400 stroke-[1.75]" />
+                            <span>Auditado: <span className="font-semibold text-text-main">{item.lastReviewed || item.date}</span></span>
+                          </span>
+                          <span className="w-1 h-1 rounded-full bg-border" />
+                          <span>Ciclo: <span className="font-semibold text-text-main">{item.validityMonths || 12}M</span></span>
+                          <span className="w-1 h-1 rounded-full bg-border hidden sm:inline" />
+                          <span className="opacity-75 hidden sm:inline">{item.verifiedBy || 'Engenharia de SST'}</span>
+                        </div>
+
                         <h1 
-                          className="text-3xl md:text-5xl lg:text-6xl 2xl:text-7xl font-serif font-medium text-text-main leading-tight mb-8 2xl:mb-12"
+                          className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium text-text-main leading-tight mb-8"
                         >
                           {item.question}
                         </h1>
                         
-                        <p className="text-xl md:text-2xl 2xl:text-3xl font-serif font-bold text-text-main leading-relaxed mb-8 max-w-4xl mx-auto">
+                        <p className="text-xl md:text-2xl font-serif font-bold text-text-main leading-relaxed mb-8 max-w-3xl mx-auto">
                             {item.answer}
                         </p>
                     </div>
                   </div>
 
-                  <div className="p-6 md:p-12 2xl:p-16 max-w-4xl 2xl:max-w-5xl mx-auto">
-                    <ModalArticleContent article={item} />
+                  {/* Grid de Conteúdo Principal + Índice Dinâmico (ToC) */}
+                  <div className="p-6 md:p-12 2xl:p-16 max-w-6xl mx-auto">
+                    <div className={`grid grid-cols-1 ${!isZenMode ? 'xl:grid-cols-[1fr_260px]' : ''} gap-12 items-start`}>
+                      <div className="min-w-0">
+                        <ModalArticleContent article={item} typography={typography} />
+                      </div>
+
+                      {/* Índice Dinâmico à Direita (oculto no Modo Zen) */}
+                      {!isZenMode && (
+                        <div className="hidden xl:block">
+                          <TableOfContents containerRef={modalContainerRef} />
+                        </div>
+                      )}
+                    </div>
                   </div>
                </div>
             </div>

@@ -1,10 +1,10 @@
 ---
-id: "funcionarios-declarantes-esocial"
-question: "Funcionários e Declarantes"
+id: 'funcionarios-declarantes-esocial'
+question: 'Funcionários e Declarantes'
 category: eSocial
-date: "04 Sep 2026"
-tags: ["Cadastro","Matrícula","Declarante"]
-answer: "Regras de matrícula, identificação e cadastro de declarantes no eSocial."
+date: '04 Sep 2026'
+tags: ['Cadastro', 'Matrícula', 'Declarante']
+answer: 'Regras de matrícula, identificação e cadastro de declarantes no eSocial.'
 ---
 
 Identificação no eSocial

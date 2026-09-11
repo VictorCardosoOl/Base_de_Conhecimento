@@ -6,6 +6,8 @@ import { useGSAP } from '@gsap/react';
 import { FAQItem, Category } from '../../types/index';
 import { FAQ_DATA } from '../../constants/index';
 import { useSearch } from '../../hooks/useSearch';
+import { AnalyticsService } from '../../services/analyticsService';
+import { ReadingExperienceService } from '../../services/readingExperienceService';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -45,6 +47,18 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       setInputValue('');
     }
   }, [isOpen]);
+
+  // Telemetria de buscas: registra consultas com debounce para capturar Zero-Result Searches e salvar recentes
+  useEffect(() => {
+    if (!inputValue || inputValue.trim().length < 2) return;
+
+    const timer = setTimeout(() => {
+      AnalyticsService.logSearch(inputValue, filteredArticles.length);
+      ReadingExperienceService.addRecentSearch(inputValue);
+    }, 600);
+
+    return () => clearTimeout(timer);
+  }, [inputValue, filteredArticles.length]);
 
   useGSAP(() => {
     if (isOpen) {

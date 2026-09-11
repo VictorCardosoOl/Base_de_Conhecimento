@@ -1,10 +1,10 @@
 ---
-id: "finalidade-esocial"
-question: "Finalidade_eSocial"
-category: "eSocial"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'finalidade-esocial'
+question: 'Finalidade_eSocial'
+category: 'eSocial'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 ### O eSocial: Fundação, Estrutura e Impacto nas Relações de Trabalho no Brasil
@@ -78,25 +78,25 @@ O eSocial tem um impacto profundo e direto na vida do trabalhador brasileiro, fu
 
 **Impactos Positivos:**
 
-*   **Transparência e Garantia de Direitos:** Com o registro imediato de informações como admissão, alterações salariais e afastamentos, o trabalhador tem maior segurança de que seus direitos (FGTS, INSS, seguro-desemprego) estão sendo corretamente administrados.
-*   **Histórico Laboral Unificado:** O sistema cria um registro cronológico detalhado da vida profissional, o que facilita a comprovação de tempo de contribuição e exposição a riscos para fins de aposentadoria, especialmente a especial.
-*   **Fiscalização Eficiente:** A centralização dos dados permite que o governo cruze informações e identifique irregularidades com mais facilidade, combatendo a sonegação e o descumprimento de leis trabalhistas e previdenciárias.
+- **Transparência e Garantia de Direitos:** Com o registro imediato de informações como admissão, alterações salariais e afastamentos, o trabalhador tem maior segurança de que seus direitos (FGTS, INSS, seguro-desemprego) estão sendo corretamente administrados.
+- **Histórico Laboral Unificado:** O sistema cria um registro cronológico detalhado da vida profissional, o que facilita a comprovação de tempo de contribuição e exposição a riscos para fins de aposentadoria, especialmente a especial.
+- **Fiscalização Eficiente:** A centralização dos dados permite que o governo cruze informações e identifique irregularidades com mais facilidade, combatendo a sonegação e o descumprimento de leis trabalhistas e previdenciárias.
 
 Âmbito do Acesso e Tratamento de Dados:
 
 O eSocial coleta uma vasta gama de informações sobre o cidadão, incluindo:
 
-*   **Dados Pessoais:** CPF, nome, data de nascimento, endereço.
-*   **Dados Contratuais:** Data de admissão, cargo, salário, jornada de trabalho.
-*   **Dados de Remuneração:** Folhas de pagamento detalhadas.
-*   **Dados de Saúde e Segurança:** Informações sobre exames médicos (ASO), condições do ambiente de trabalho (exposição a ruído, calor, agentes químicos) e acidentes de trabalho (CAT).
+- **Dados Pessoais:** CPF, nome, data de nascimento, endereço.
+- **Dados Contratuais:** Data de admissão, cargo, salário, jornada de trabalho.
+- **Dados de Remuneração:** Folhas de pagamento detalhadas.
+- **Dados de Saúde e Segurança:** Informações sobre exames médicos (ASO), condições do ambiente de trabalho (exposição a ruído, calor, agentes químicos) e acidentes de trabalho (CAT).
 
 O tratamento desses dados é de responsabilidade do Governo Federal. Com a vigência da **Lei Geral de Proteção de Dados (LGPD)**, a gestão dessas informações deve seguir rigorosos princípios de segurança, finalidade e transparência, garantindo que os dados sejam usados apenas para os fins previstos em lei e protegidos contra acessos não autorizados e vazamentos.
 
 Vale ressaltar que dentro do software Sigo Web, realizaremos apenas a transmissão de alguns eventos pertinente ao SST ao eSocial, que são:
 
-*   **Evento:** S-2210 – Comunicação de Acidente de Trabalho
-*   **Evento:** S-2220 – Monitoramento da Saúde do Trabalhador
-*   **Evento:** S-2221 – Exame Toxicológico do Motorista Profissional
-*   **Evento:** S-2240 – Condições Ambientais do Trabalho - Agentes Nocivos
-*   **Evento:** S-3000 - Exclusão dos eventos
+- **Evento:** S-2210 – Comunicação de Acidente de Trabalho
+- **Evento:** S-2220 – Monitoramento da Saúde do Trabalhador
+- **Evento:** S-2221 – Exame Toxicológico do Motorista Profissional
+- **Evento:** S-2240 – Condições Ambientais do Trabalho - Agentes Nocivos
+- **Evento:** S-3000 - Exclusão dos eventos

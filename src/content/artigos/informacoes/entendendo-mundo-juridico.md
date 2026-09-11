@@ -1,19 +1,19 @@
 ---
-id: "entendendo-o-mundo-jur-dico---conclu-do"
-question: "Entendendo o Mundo Jurídico - Concluído"
-category: "Informações"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'entendendo-o-mundo-jur-dico---conclu-do'
+question: 'Entendendo o Mundo Jurídico - Concluído'
+category: 'Informações'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 **Entendo o Mundo Jurídico**
 
 **A Natureza jurídica** é como a lei classifica um negócio ou empresa. Ela define coisas importantes, como:
 
-*   **Responsabilidade legal**: Quem é responsável em caso de problemas (por exemplo, dívidas ou acidentes).
-*   **Carga tributária**: Quais impostos a empresa precisa pagar.
-*   **Funcionamento operacional**: Como a empresa pode operar de acordo com a lei.
+- **Responsabilidade legal**: Quem é responsável em caso de problemas (por exemplo, dívidas ou acidentes).
+- **Carga tributária**: Quais impostos a empresa precisa pagar.
+- **Funcionamento operacional**: Como a empresa pode operar de acordo com a lei.
 
 Esses aspectos dependem **da natureza jurídica** escolhida, que pode ser, por exemplo, uma **empresa individual** ou uma **sociedade**.
 
@@ -32,7 +32,7 @@ Esses aspectos dependem **da natureza jurídica** escolhida, que pode ser, por e
 **O contribuinte individual é quem trabalha por conta própria, sem ter vínculo com uma empresa. Ele tem a obrigação de pagar a contribuição previdenciária.
 
 **Sociedade Comandita Simples:  
-**A sociedade em comandita simples é um tipo de empresa que tem dois tipos de sócios: sócios comanditários e sócios comanditados. Os comanditários só arriscam o valor que investem, enquanto os comanditados têm uma responsabilidade maior, tanto pelo capital quanto pela administração e pelas dívidas da empresa.  
+**A sociedade em comandita simples é um tipo de empresa que tem dois tipos de sócios: sócios comanditários e sócios comanditados. Os comanditários só arriscam o valor que investem, enquanto os comanditados têm uma responsabilidade maior, tanto pelo capital quanto pela administração e pelas dívidas da empresa.
 
 **Sociedades Nome Coletivo:  
 **A sociedade em nome coletivo é uma modalidade social da qual somente pessoas físicas podem participar, respondendo todos os sócios, solidária e ilimitadamente, pelas obrigações sociais.  
@@ -50,20 +50,20 @@ Para uma pessoa física realizar a criação de um CNPJ, os seguintes passos ter
 
 Algumas das obrigações legais que o empregador possui com os colaboradores são:
 
-*   Obrigações financeiras:
-    *   Pagamento de salário;
-    *   Pagamento de encargos sociais.
-*   Obrigações legais e trabalhistas:
-    *   Cumprimento da CLT;
-    *   Emissão de documentos (É necessário emitir a carteira de trabalho, contrato de trabalho, recibos de pagamento e outros documentos);
-    *   Comunicação de informações de seus direitos;
-    *   Segurança e saúde no trabalho.
+- Obrigações financeiras:
+  - Pagamento de salário;
+  - Pagamento de encargos sociais.
+- Obrigações legais e trabalhistas:
+  - Cumprimento da CLT;
+  - Emissão de documentos (É necessário emitir a carteira de trabalho, contrato de trabalho, recibos de pagamento e outros documentos);
+  - Comunicação de informações de seus direitos;
+  - Segurança e saúde no trabalho.
 
 **Deduções de Impostos**
 
 **ISS:  
 **O **Imposto Sobre Serviços** se aplica a empresas ou profissionais autônomos que realizam a prestação de serviços. É um dos principais tributos municipais, se não o principal!  
-Ele funciona como um tributo municipal, cobrado das empresas que prestam serviços pelas prefeituras dos municípios em que o serviço é realizado. 
+Ele funciona como um tributo municipal, cobrado das empresas que prestam serviços pelas prefeituras dos municípios em que o serviço é realizado.
 
 **IR:**  
 O **Imposto de Renda** é uma tributação federal cobrada a cada ano sobre os ganhos de uma pessoa física ou jurídica. O valor que precisa ser pago se dá conforme a renda declarada, consistindo em uma porcentagem do valor total.

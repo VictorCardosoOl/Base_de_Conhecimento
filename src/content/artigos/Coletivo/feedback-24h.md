@@ -16,6 +16,7 @@ Recomendamos o toque humano a cada ciclo solar (24h), garantindo que o cliente s
 > Silêncio é ausência de cuidado. Informação é presença de valor.
 
 ### Protocolo de Contato
+
 1. **Manhã:** Verificação de status interno.
 2. **Tarde:** Envio de mensagem/e-mail de "Em andamento".
 3. **Fechamento:** Registro no CRM da interação realizada.

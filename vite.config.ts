@@ -67,13 +67,44 @@ export default defineConfig(({ mode }) => {
         workbox: {
           globPatterns: ['**/*.{js,css,html,ico,png,svg,json}'],
           runtimeCaching: [
+            // Estratégia StaleWhileRevalidate para dados do catálogo e chunks de artigos (sempre atualizado em background, instantâneo offline)
             {
-              urlPattern: /^https:\/\/fonts\.googleapis\.com\/.*/i,
+              urlPattern: /.*(?:catalog\.json|chunks\/.*\.json)$/i,
+              handler: 'StaleWhileRevalidate',
+              options: {
+                cacheName: 'sst-knowledge-content-cache',
+                expiration: {
+                  maxEntries: 100,
+                  maxAgeSeconds: 60 * 60 * 24 * 30 // 30 dias
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            },
+            // Estratégia CacheFirst para imagens e assets de interface
+            {
+              urlPattern: /\.(?:png|jpg|jpeg|svg|gif|webp|avif|ico)$/i,
+              handler: 'CacheFirst',
+              options: {
+                cacheName: 'sst-ui-images-cache',
+                expiration: {
+                  maxEntries: 60,
+                  maxAgeSeconds: 60 * 60 * 24 * 60 // 60 dias
+                },
+                cacheableResponse: {
+                  statuses: [0, 200]
+                }
+              }
+            },
+            // Estratégia CacheFirst para Web Fonts (Google Fonts & gstatic)
+            {
+              urlPattern: /^https:\/\/(?:fonts\.googleapis\.com|fonts\.gstatic\.com)\/.*/i,
               handler: 'CacheFirst',
               options: {
                 cacheName: 'google-fonts-cache',
                 expiration: {
-                  maxEntries: 10,
+                  maxEntries: 20,
                   maxAgeSeconds: 60 * 60 * 24 * 365
                 },
                 cacheableResponse: {
@@ -93,7 +124,7 @@ export default defineConfig(({ mode }) => {
           manualChunks: {
             'react-vendor': ['react', 'react-dom', 'react-router-dom', 'react-helmet-async'],
             'ui-vendor': ['gsap', '@gsap/react', 'lucide-react', 'cmdk'],
-            'utils-vendor': ['fuse.js', 'dompurify', 'marked']
+            'utils-vendor': ['minisearch', 'dompurify', 'marked']
           }
         }
       },

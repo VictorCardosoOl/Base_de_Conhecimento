@@ -1,10 +1,10 @@
 ---
-id: "informa--es-sobre-o-xml"
-question: "Informações sobre o XML"
-category: "Informações"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'informa--es-sobre-o-xml'
+question: 'Informações sobre o XML'
+category: 'Informações'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 **XML**
@@ -52,6 +52,6 @@ Esse layout segue **padrões técnicos específicos**, definidos pelo município
 
 O processo de geração do XML se comporta da seguinte maneira: **Identificação das tags exigidas** pelo layout do evento do eSocial. Para cada tag:
 
-*   O sistema verifica se há informações preenchidas para aquele campo no banco de dados.
-*   Caso exista, o valor correspondente é inserido na tag correta dentro da estrutura do XML.
-*   Se não houver dado disponível e a tag for obrigatória, o sistema poderá acusar erro ou impedir a geração do evento.
+- O sistema verifica se há informações preenchidas para aquele campo no banco de dados.
+- Caso exista, o valor correspondente é inserido na tag correta dentro da estrutura do XML.
+- Se não houver dado disponível e a tag for obrigatória, o sistema poderá acusar erro ou impedir a geração do evento.

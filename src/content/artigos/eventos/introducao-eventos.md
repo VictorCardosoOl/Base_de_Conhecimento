@@ -1,10 +1,10 @@
 ---
-id: "introdu--o-aos-eventos"
-question: "Introdução aos eventos"
-category: "Eventos"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'introdu--o-aos-eventos'
+question: 'Introdução aos eventos'
+category: 'Eventos'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 Eventos eSocial SST
@@ -12,10 +12,10 @@ Eventos eSocial SST
 
 São definidos como eventos de Segurança e Saúde no Trabalho – SST os adiante elencados:
 
-*   S-2210 - Comunicação de Acidente de Trabalho;
-*   S-2220 - Monitoramento da Saúde do Trabalhador;  
-    S-2221 – Exame toxicologico (detalhar abaixo o que é o S-2221)
-*   S-2240 - Condições Ambientais do Trabalho - Agentes Nocivos.
+- S-2210 - Comunicação de Acidente de Trabalho;
+- S-2220 - Monitoramento da Saúde do Trabalhador;  
+  S-2221 – Exame toxicologico (detalhar abaixo o que é o S-2221)
+- S-2240 - Condições Ambientais do Trabalho - Agentes Nocivos.
 
 Os eventos de SST estruturado em xml foram desenvolvidos com a finalidade principal de substituição dos formulários antigos utilizados para envio da CAT (Comunicado de Acidente de Trabalho) e do PPP(Perfil Profissiografico Previdenciario).
 
@@ -23,9 +23,9 @@ Tais eventos estão diretamente relacionados à SST, porém, existem dados em ou
 
 Os eventos de SST estão estruturados na forma adiante descrita
 
-*   Evento S-2210: utilizado para o envio da CAT pelo empregador/tomador de mão-de-obra de trabalhador avulso e empregador doméstico.
-*   Evento S-2220: neste evento é feito o acompanhamento da saúde do trabalhador durante o seu contrato de trabalho, com as informações relativas aos ASO e seus exames complementares. Tais informações correspondem àquelas exigidas no PPP.
-*   Evento S-2240: são prestadas as informações da exposição do trabalhador aos agentes nocivos, conforme “Tabela 24 – Agentes Nocivos e Atividades - Aposentadoria Especial” do eSocial e identificados os agentes nocivos aos quais o trabalhador está exposto. Deve também ser declarada a existência de EPC instalados, bem como os EPI disponibilizados. A informação relativa aos EPIs não substitui a obrigatoriedade do registro de entrega destes equipamentos conforme disposição normativa.
+- Evento S-2210: utilizado para o envio da CAT pelo empregador/tomador de mão-de-obra de trabalhador avulso e empregador doméstico.
+- Evento S-2220: neste evento é feito o acompanhamento da saúde do trabalhador durante o seu contrato de trabalho, com as informações relativas aos ASO e seus exames complementares. Tais informações correspondem àquelas exigidas no PPP.
+- Evento S-2240: são prestadas as informações da exposição do trabalhador aos agentes nocivos, conforme “Tabela 24 – Agentes Nocivos e Atividades - Aposentadoria Especial” do eSocial e identificados os agentes nocivos aos quais o trabalhador está exposto. Deve também ser declarada a existência de EPC instalados, bem como os EPI disponibilizados. A informação relativa aos EPIs não substitui a obrigatoriedade do registro de entrega destes equipamentos conforme disposição normativa.
 
 Importante esclarecer que nos eventos acima elencados é constituído o histórico das exposições a agentes nocivos para fins de aposentadoria especial, sendo que a declaração relativa ao adicional para o financiamento da aposentadoria especial é feita quando informado pelo RH/Folha de Pagamento o grau de exposição no evento S-1200, utilizando-se dos códigos previstos na “Tabela 02 - Financiamento da Aposentadoria Especial e Redução do Tempo de Contribuição, do eSocial”.
 

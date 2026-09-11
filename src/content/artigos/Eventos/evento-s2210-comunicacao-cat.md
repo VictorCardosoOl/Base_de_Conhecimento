@@ -1,10 +1,10 @@
 ---
-id: "evento-s2210-comunicacao-cat"
-question: "S-2210: Comunicação de Acidente de Trabalho"
-category: "Eventos"
-date: "04 Sep 2026"
-tags: ["S-2210", "CAT", "Acidente", "eSocial"]
-answer: "Guia técnico detalhado sobre a transmissão da Comunicação de Acidente de Trabalho (CAT) no eSocial, incluindo prazos, multas e tabelas relacionadas."
+id: 'evento-s2210-comunicacao-cat'
+question: 'S-2210: Comunicação de Acidente de Trabalho'
+category: 'Eventos'
+date: '04 Sep 2026'
+tags: ['S-2210', 'CAT', 'Acidente', 'eSocial']
+answer: 'Guia técnico detalhado sobre a transmissão da Comunicação de Acidente de Trabalho (CAT) no eSocial, incluindo prazos, multas e tabelas relacionadas.'
 ---
 
 ## 1. O que é o Evento S-2210 no eSocial?
@@ -14,10 +14,11 @@ O evento **S-2210** é utilizado no eSocial para comunicar oficialmente a ocorr�
 A principal mudança trazida pelo eSocial é que o número do recibo de entrega do evento S-2210 passa a ser o **número oficial da Comunicação de Acidente de Trabalho (CAT)**, eliminando o preenchimento de formulários paralelos ou em papel e centralizando a prestação de informações na base governamental.
 
 ### 1.1 Quem está obrigado a enviar?
-* **Empregadores** em geral (celetistas);
-* **Órgãos Públicos** em relação aos seus servidores vinculados ao Regime Geral de Previdência Social (RGPS);
-* **Órgão Gestor de Mão de Obra (OGMO)**;
-* **Sindicatos** de trabalhadores avulsos.
+
+- **Empregadores** em geral (celetistas);
+- **Órgãos Públicos** em relação aos seus servidores vinculados ao Regime Geral de Previdência Social (RGPS);
+- **Órgão Gestor de Mão de Obra (OGMO)**;
+- **Sindicatos** de trabalhadores avulsos.
 
 ---
 
@@ -26,19 +27,21 @@ A principal mudança trazida pelo eSocial é que o número do recibo de entrega 
 A transmissão do evento S-2210 requer atenção extrema aos prazos e regramentos, sob pena de multas severas geradas automaticamente pelo cruzamento de dados.
 
 ### 2.1 Prazo de Envio
+
 O prazo de transmissão do evento S-2210 depende da natureza e gravidade da ocorrência, conforme regulamentação da Previdência Social e disposições do Manual de Orientação do eSocial (MoS):
 
-* **Regra Geral (Acidente sem óbito):** Deve ser transmitido, obrigatoriamente, até o **1º dia útil seguinte** ao da ocorrência do acidente.
-* **Óbito:** O evento deve ser transmitido **imediatamente** após o óbito (mesmo que o falecimento ocorra dias após o acidente original).
-* **Doença Ocupacional:** O prazo conta-se a partir da data do diagnóstico médico conclusivo ou do início da incapacidade (o que ocorrer primeiro), devendo ser enviado até o 1º dia útil seguinte.
+- **Regra Geral (Acidente sem óbito):** Deve ser transmitido, obrigatoriamente, até o **1º dia útil seguinte** ao da ocorrência do acidente.
+- **Óbito:** O evento deve ser transmitido **imediatamente** após o óbito (mesmo que o falecimento ocorra dias após o acidente original).
+- **Doença Ocupacional:** O prazo conta-se a partir da data do diagnóstico médico conclusivo ou do início da incapacidade (o que ocorrer primeiro), devendo ser enviado até o 1º dia útil seguinte.
 
 ### 2.2 Multas e Penalidades (Portaria MTE nº 1.131/2025)
+
 A inobservância dos prazos de envio (atraso) ou a omissão na comunicação sujeitam a empresa a sanções. Com a automatização da fiscalização, o próprio eSocial detecta a discrepância entre a data do acidente e a data do envio.
 
-* As penalidades são baseadas no Art. 286 e 336 do Decreto nº 3.048/1999 e foram endurecidas.
-* A multa varia entre o limite mínimo e o limite máximo do **salário de contribuição** por trabalhador afetado.
-* Em caso de reincidência, a legislação prevê a majoração da penalidade.
-* É fundamental observar que o pagamento de multas não isenta a empresa da obrigação de envio da informação correta.
+- As penalidades são baseadas no Art. 286 e 336 do Decreto nº 3.048/1999 e foram endurecidas.
+- A multa varia entre o limite mínimo e o limite máximo do **salário de contribuição** por trabalhador afetado.
+- Em caso de reincidência, a legislação prevê a majoração da penalidade.
+- É fundamental observar que o pagamento de multas não isenta a empresa da obrigação de envio da informação correta.
 
 ---
 
@@ -46,10 +49,10 @@ A inobservância dos prazos de envio (atraso) ou a omissão na comunicação suj
 
 A emissão e transmissão correta da CAT pelo evento S-2210 é o ato jurídico que formaliza o nexo causal entre o dano à saúde e a atividade ocupacional, acionando uma série de proteções legais ao empregado:
 
-* **Auxílio por Incapacidade Temporária Acidentária (B91):** Antigo auxílio-doença acidentário. Garante a cobertura previdenciária a partir do 16º dia de afastamento (os 15 primeiros dias são de responsabilidade do empregador).
-* **Estabilidade Provisória:** Conforme a lei, o trabalhador que retornar de um afastamento acidentário superior a 15 dias detém estabilidade no emprego por no mínimo **12 meses**.
-* **Manutenção do FGTS:** Durante todo o período de afastamento decorrente de acidente de trabalho, o empregador permanece obrigado a depositar regularmente o Fundo de Garantia do Tempo de Serviço (FGTS).
-* **Aposentadoria por Incapacidade Permanente e Pensão por Morte:** Em cenários críticos de invalidez permanente ou falecimento, a CAT consolida a base probatória para a concessão desses benefícios ao titular ou aos seus dependentes legais.
+- **Auxílio por Incapacidade Temporária Acidentária (B91):** Antigo auxílio-doença acidentário. Garante a cobertura previdenciária a partir do 16º dia de afastamento (os 15 primeiros dias são de responsabilidade do empregador).
+- **Estabilidade Provisória:** Conforme a lei, o trabalhador que retornar de um afastamento acidentário superior a 15 dias detém estabilidade no emprego por no mínimo **12 meses**.
+- **Manutenção do FGTS:** Durante todo o período de afastamento decorrente de acidente de trabalho, o empregador permanece obrigado a depositar regularmente o Fundo de Garantia do Tempo de Serviço (FGTS).
+- **Aposentadoria por Incapacidade Permanente e Pensão por Morte:** Em cenários críticos de invalidez permanente ou falecimento, a CAT consolida a base probatória para a concessão desses benefícios ao titular ou aos seus dependentes legais.
 
 ---
 
@@ -57,19 +60,19 @@ A emissão e transmissão correta da CAT pelo evento S-2210 é o ato jurídico q
 
 O sucesso na transmissão do evento S-2210 exige o preenchimento acurado de variáveis técnicas balizadas por tabelas padronizadas do próprio sistema do eSocial. A inconsistência nesses campos resulta em rejeição do evento. As principais tabelas são:
 
-* **Tabela 01 (Categoria de Trabalhadores):** Identifica a modalidade do vínculo (Ex: Empregado geral, Trabalhador Temporário).
-* **Tabela 05 (Tipos de Inscrição):** Especifica a natureza do local onde o acidente ocorreu (CNPJ, CNO, CAEPF).
-* **Tabela 13 (Parte do Corpo Atingida):** Detalha com precisão a área corporal lesada (ex: membro superior, tronco, membros inferiores).
-* **Tabela 14 (Agente Causador):** Determina o objeto, substância ou máquina diretamente responsável pela lesão.
-* **Tabela 15 (Situação Geradora):** Qualifica as circunstâncias operacionais no momento do evento adverso (ex: queda em mesmo nível, exposição à carga elétrica).
-* **Tabela 17 (Natureza da Lesão):** Classifica clinicamente o dano sofrido (ex: fratura, queimadura, luxação).
-* **Tabela 20 (Tipos de Logradouro):** Fornece o código correto para estruturar o endereço da ocorrência caso ela não tenha sido no interior do estabelecimento principal.
+- **Tabela 01 (Categoria de Trabalhadores):** Identifica a modalidade do vínculo (Ex: Empregado geral, Trabalhador Temporário).
+- **Tabela 05 (Tipos de Inscrição):** Especifica a natureza do local onde o acidente ocorreu (CNPJ, CNO, CAEPF).
+- **Tabela 13 (Parte do Corpo Atingida):** Detalha com precisão a área corporal lesada (ex: membro superior, tronco, membros inferiores).
+- **Tabela 14 (Agente Causador):** Determina o objeto, substância ou máquina diretamente responsável pela lesão.
+- **Tabela 15 (Situação Geradora):** Qualifica as circunstâncias operacionais no momento do evento adverso (ex: queda em mesmo nível, exposição à carga elétrica).
+- **Tabela 17 (Natureza da Lesão):** Classifica clinicamente o dano sofrido (ex: fratura, queimadura, luxação).
+- **Tabela 20 (Tipos de Logradouro):** Fornece o código correto para estruturar o endereço da ocorrência caso ela não tenha sido no interior do estabelecimento principal.
 
 ---
 
 ### Referências Consultadas
 
-* Governo Federal: [Portal do eSocial - Manual de Orientação do eSocial (MoS)](https://www.gov.br/esocial)
-* Legislação Planalto: [Lei nº 8.213/1991 (Benefícios da Previdência Social)](http://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm)
-* Ministério do Trabalho e Emprego: Portaria MTE nº 1.131/2025.
-* INSS: [Decreto nº 3.048/1999 (Regulamento da Previdência Social)](https://www.planalto.gov.br/ccivil_03/decreto/d3048.htm)
+- Governo Federal: [Portal do eSocial - Manual de Orientação do eSocial (MoS)](https://www.gov.br/esocial)
+- Legislação Planalto: [Lei nº 8.213/1991 (Benefícios da Previdência Social)](http://www.planalto.gov.br/ccivil_03/leis/l8213cons.htm)
+- Ministério do Trabalho e Emprego: Portaria MTE nº 1.131/2025.
+- INSS: [Decreto nº 3.048/1999 (Regulamento da Previdência Social)](https://www.planalto.gov.br/ccivil_03/decreto/d3048.htm)

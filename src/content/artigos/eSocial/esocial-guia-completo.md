@@ -1,10 +1,10 @@
 ---
-id: "esocial-guia-completo"
-question: "eSocial: Guia Completo"
+id: 'esocial-guia-completo'
+question: 'eSocial: Guia Completo'
 category: eSocial
-date: "04 Sep 2026"
-tags: ["eSocial","Governo","Cronograma"]
-answer: "Tudo sobre a plataforma federal: Histórico, Cronograma de Fases, Simplificado (S-1.0) e Impactos."
+date: '04 Sep 2026'
+tags: ['eSocial', 'Governo', 'Cronograma']
+answer: 'Tudo sobre a plataforma federal: Histórico, Cronograma de Fases, Simplificado (S-1.0) e Impactos.'
 ---
 
 eSocial

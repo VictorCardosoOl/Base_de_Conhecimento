@@ -19,8 +19,21 @@ export interface FAQItem {
   tags?: string[];
   searchText?: string;
   content?: any;
+  // Gestão de Validade e Auditoria de Conteúdo
+  validityMonths?: number;
+  lastReviewed?: string;
+  verifiedBy?: string;
 }
 
 export interface FAQItemExtended extends FAQItem {
   fileName?: string;
+}
+
+export interface LearningTrack {
+  id: string;
+  title: string;
+  description: string;
+  badge: string;
+  estimatedMinutes: number;
+  articleIds: string[];
 }

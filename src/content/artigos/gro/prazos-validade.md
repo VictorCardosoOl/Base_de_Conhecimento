@@ -1,14 +1,14 @@
 ---
-id: "prazos-de-validade"
-question: "Prazos de Validade"
-category: "GRO"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'prazos-de-validade'
+question: 'Prazos de Validade'
+category: 'GRO'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
-*   **Prazos de Validade, Elaboração e Tipos de Atualização em Documentos de SST  
-    **
+- **Prazos de Validade, Elaboração e Tipos de Atualização em Documentos de SST  
+  **
 
 **Resumo prático – Quando agir**
 

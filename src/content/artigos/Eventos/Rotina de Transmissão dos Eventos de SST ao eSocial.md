@@ -1,10 +1,10 @@
 ---
-id: "rotina-de-transmiss-o-dos-eventos-de-sst-ao-esocial"
-question: "Rotina de Transmissão dos Eventos de SST ao eSocial"
-category: "Eventos"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'rotina-de-transmiss-o-dos-eventos-de-sst-ao-esocial'
+question: 'Rotina de Transmissão dos Eventos de SST ao eSocial'
+category: 'Eventos'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 Rotina de Transmissão dos Eventos de SST ao eSocial
@@ -40,7 +40,7 @@ Podendo chegar até R$ 10.037,35 ou mais.
 
 • Ações judiciais.
 
-• Impacto no FAP da empresa.  
+• Impacto no FAP da empresa.
 
 **Evento:** S-2220 – Monitoramento da Saúde do Trabalhador
 
@@ -96,9 +96,6 @@ Do empregador. Frequentemente delegado à empresa de saúde ocupacional (SST) po
 
 • Impacto no reconhecimento de direito à aposentadoria especial pelo trabalhador.
 
-  
-
-  
 Atenção:  
 **Todos os eventos de SST devem ser enviados dentro dos prazos legais, utilizando-se de certificado digital válido ou procuração eletrônica no eCAC.**
 

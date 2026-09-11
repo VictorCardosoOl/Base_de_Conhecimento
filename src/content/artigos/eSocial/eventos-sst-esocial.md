@@ -1,10 +1,10 @@
 ---
-id: "eventos-sst-esocial"
-question: "Eventos de SST (S-2210, S-2220, S-2240)"
+id: 'eventos-sst-esocial'
+question: 'Eventos de SST (S-2210, S-2220, S-2240)'
 category: eSocial
-date: "04 Sep 2026"
-tags: ["S-2210","S-2220","S-2240","SST"]
-answer: "Detalhes técnicos, prazos e multas dos eventos de Saúde e Segurança no Trabalho."
+date: '04 Sep 2026'
+tags: ['S-2210', 'S-2220', 'S-2240', 'SST']
+answer: 'Detalhes técnicos, prazos e multas dos eventos de Saúde e Segurança no Trabalho.'
 ---
 
 Eventos de SST no eSocial
@@ -183,7 +183,7 @@ Obrigatoriedade por Categoria de Trabalhador
 
 ))}
 
-* Condicional: Obrigatório apenas para motoristas profissionais (Lei 13.103/2015)
+- Condicional: Obrigatório apenas para motoristas profissionais (Lei 13.103/2015)
 
 Fonte: Instrução Normativa RFB nº 2.100/2022 e Manual do eSocial v. 1.7
 

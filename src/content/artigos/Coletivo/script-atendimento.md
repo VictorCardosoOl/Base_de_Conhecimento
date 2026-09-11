@@ -14,7 +14,8 @@ Atender até o terceiro toque não é apenas agilidade, é prontidão. Sorrir co
 O script SST FAQ serve como bússola, não como gesso. A elegância reside em adaptar o protocolo à necessidade específica do interlocutor sem perder a autoridade técnica.
 
 ### Glossário de Ouro
-* **Evite:** "Vou estar verificando".
-* **Prefira:** "Verificarei agora mesmo para você".
-* **Evite:** "Não podemos fazer nada".
-* **Prefira:** "Dentro das nossas diretrizes, a solução mais adequada é...".
+
+- **Evite:** "Vou estar verificando".
+- **Prefira:** "Verificarei agora mesmo para você".
+- **Evite:** "Não podemos fazer nada".
+- **Prefira:** "Dentro das nossas diretrizes, a solução mais adequada é...".

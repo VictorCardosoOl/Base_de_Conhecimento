@@ -1,10 +1,10 @@
 ---
-id: "ecac-esocial-advanced-guide"
-question: "e-CAC e Procuração Eletrônica"
+id: 'ecac-esocial-advanced-guide'
+question: 'e-CAC e Procuração Eletrônica'
 category: eSocial
-date: "04 Sep 2026"
-tags: ["e-CAC","Procuração","Certificado"]
-answer: "Como utilizar o portal e-CAC para gerenciar procurações e permitir o envio de eventos pela Wise System."
+date: '04 Sep 2026'
+tags: ['e-CAC', 'Procuração', 'Certificado']
+answer: 'Como utilizar o portal e-CAC para gerenciar procurações e permitir o envio de eventos pela Wise System.'
 ---
 
 Domine o e-CAC: Guia Completo para Colaboradores Wise
@@ -84,7 +84,7 @@ Módulo de Procurações
 
 - Buscar "procuração" na pesquisa
 
-- Selecionar: *"CADASTRO, CONSULTA E CANCELAMENTO..."*
+- Selecionar: _"CADASTRO, CONSULTA E CANCELAMENTO..."_
 
 - Cancelar procurações antigas não usadas
 

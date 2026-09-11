@@ -1,10 +1,10 @@
 ---
-id: "smtp"
-question: "SMTP"
-category: "Informações"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'smtp'
+question: 'SMTP'
+category: 'Informações'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 Configuração do Servidor SMTP
@@ -46,10 +46,10 @@ Dados necessários para o preenchimento
 
 Preencha o campo “Servidor SMTP” com as seguintes informações:
 
-*   Endereço do servidor SMTP
-*   Porta SMTP
-*   Login e senha do e-mail
-*   Definição se o servidor exige autenticação e se requer o uso da conexão SSL
+- Endereço do servidor SMTP
+- Porta SMTP
+- Login e senha do e-mail
+- Definição se o servidor exige autenticação e se requer o uso da conexão SSL
 
 Orientações para Provedores de E-mail
 -------------------------------------
@@ -66,12 +66,12 @@ Após gerar a sua “senha de app” vai ser necessário utiliza-la dentro do si
 
 parâmetro “Senha SMTP”.
 
-*   1.  Configuração para Domínios Públicos e Privados
+- 1.  Configuração para Domínios Públicos e Privados
 
 Para domínios públicos, as orientações gerais permanecem as mesmas. No entanto, para domínios privados, houve mudanças significativas no preenchimento dos campos do servidor SMTP e do login SMTP. Atualize os campos com os novos dados pertinentes ao domínio privado. Por exemplo:
 
-*   *   *   Servidor SMTP: smtp.meuprovedor.com.br
-        *   Login SMTP: [wisesystem@meuprovedor.com.br](mailto:wisesystem@meuprovedor.com.br)
+- - - Servidor SMTP: smtp.meuprovedor.com.br
+    - Login SMTP: [wisesystem@meuprovedor.com.br](mailto:wisesystem@meuprovedor.com.br)
 
 Para as configurações necessárias que devem ser realizadas no seu provedor de e- mails, é recomendável consultar os manuais fornecidos pelo provedor ou entrar em contato com o suporte técnico para assistência adequada.
 
@@ -99,13 +99,13 @@ Como contratar um serviço de e-mail SMTP
 
 Para utilizar um serviço SMTP, é necessário contratar um provedor de e-mail que ofereça suporte a esse protocolo. Algumas opções incluem:
 
-*   **Google (Gmail SMTP)**
-*   **Microsoft (Outlook/Office 365 SMTP)**
-*   **Zoho Mail**
-*   **SendGrid**
-*   **Amazon SES**
-*   **Mailgun**
-*   **Postmark**
+- **Google (Gmail SMTP)**
+- **Microsoft (Outlook/Office 365 SMTP)**
+- **Zoho Mail**
+- **SendGrid**
+- **Amazon SES**
+- **Mailgun**
+- **Postmark**
 
 O processo de contratação normalmente envolve a criação de uma conta no provedor, configuração do domínio (caso seja um e-mail corporativo) e ativação do serviço SMTP.
 
@@ -114,19 +114,19 @@ Como funciona o login SMTP?
 
 O login SMTP é o processo de autenticação necessário para enviar e-mails pelo servidor SMTP. Ele normalmente exige as seguintes credenciais:
 
-*   **Servidor SMTP**: O endereço do servidor (exemplo: smtp.gmail.com, smtp.office365.com)
-*   **Porta**: Geralmente 587 (TLS) ou 465 (SSL)
-*   **Usuário**: O endereço de e-mail
-*   **Senha**: A senha da conta de e-mail
-*   **Método de autenticação**: Normalmente PLAIN, LOGIN ou OAuth 2.0
+- **Servidor SMTP**: O endereço do servidor (exemplo: smtp.gmail.com, smtp.office365.com)
+- **Porta**: Geralmente 587 (TLS) ou 465 (SSL)
+- **Usuário**: O endereço de e-mail
+- **Senha**: A senha da conta de e-mail
+- **Método de autenticação**: Normalmente PLAIN, LOGIN ou OAuth 2.0
 
 Após a autenticação bem-sucedida, o servidor SMTP permite que o e-mail seja enviado para os destinatários.
 
-*   1.  Preferência por autenticação sem verificação em duas etapas
+- 1.  Preferência por autenticação sem verificação em duas etapas
 
 Para integração com nosso sistema, recomendamos o uso de um e-mail SMTP que utilize autenticação normal, sem verificação em duas etapas. Isso ocorre porque a verificação em duas etapas pode impedir que o sistema faça login automaticamente no servidor SMTP. Caso o provedor exija verificação em duas etapas, pode ser necessário gerar uma senha específica para aplicativos.
 
-*   1.  Provedores SMTP mais conhecidos
+- 1.  Provedores SMTP mais conhecidos
 
 Aqui estão alguns dos provedores SMTP mais utilizados:
 

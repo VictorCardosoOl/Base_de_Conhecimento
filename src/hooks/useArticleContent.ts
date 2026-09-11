@@ -3,6 +3,7 @@ import { marked } from 'marked';
 import DOMPurify from 'dompurify';
 import { FAQItem } from '../types/index';
 import glossaryData from '../data/glossary.json';
+import { reportContentError } from '../lib/telemetry';
 
 export const useArticleContent = (article: FAQItem) => {
     const [content, setContent] = useState<string | null>(null);
@@ -24,7 +25,7 @@ export const useArticleContent = (article: FAQItem) => {
                     if (mounted) setContent((article.content as string) || article.answer);
                 }
             } catch (err) {
-                console.error('Failed to load article content', err);
+                reportContentError(err, { articleId: article.id, question: article.question });
                 if (mounted) {
                     setError(err instanceof Error ? err : new Error('Failed to load content'));
                     setContent(article.answer);

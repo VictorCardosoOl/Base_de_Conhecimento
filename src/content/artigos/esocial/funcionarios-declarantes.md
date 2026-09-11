@@ -1,10 +1,10 @@
 ---
-id: "funcion-rios-e-declarantes-no-esocial---regras-de-identifica--o"
-question: "Funcionários e Declarantes no eSocial - Regras de Identificação"
-category: "eSocial"
-date: "04 Sep 2026"
-tags: ["Importado"]
-answer: "Artigo importado automaticamente."
+id: 'funcion-rios-e-declarantes-no-esocial---regras-de-identifica--o'
+question: 'Funcionários e Declarantes no eSocial - Regras de Identificação'
+category: 'eSocial'
+date: '04 Sep 2026'
+tags: ['Importado']
+answer: 'Artigo importado automaticamente.'
 ---
 
 Funcionário

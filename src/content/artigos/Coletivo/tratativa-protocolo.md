@@ -16,6 +16,7 @@ O atendimento não se inicia na fala, mas no registro. Ao acolher um cliente, a 
 Nossa metodologia exige que cada interação seja documentada com precisão cirúrgica, garantindo que o próximo agente tenha clareza absoluta do histórico.
 
 ### Pontos de Atenção
-* Sempre valide o CPF/CNPJ antes de abrir o protocolo.
-* O resumo deve conter a dor do cliente, não apenas "problema no sistema".
-* Verifique se já existe um protocolo aberto nas últimas 48h.
+
+- Sempre valide o CPF/CNPJ antes de abrir o protocolo.
+- O resumo deve conter a dor do cliente, não apenas "problema no sistema".
+- Verifique se já existe um protocolo aberto nas últimas 48h.

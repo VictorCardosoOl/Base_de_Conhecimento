@@ -3,6 +3,10 @@ import ReactDOM from 'react-dom/client';
 import { HelmetProvider } from 'react-helmet-async';
 import './assets/styles/global.css';
 import App from './App';
+import { initTelemetry } from './lib/telemetry';
+
+// Inicializa telemetria, Real User Monitoring (RUM) e rastreamento de exceções
+initTelemetry();
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {

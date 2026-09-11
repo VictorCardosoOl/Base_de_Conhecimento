@@ -8,6 +8,8 @@ import { SmoothScroll } from '../components/ui/SmoothScroll';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/react';
 import { Menu } from 'lucide-react';
+import { OfflineIndicator } from '../components/ui/OfflineIndicator';
+import { BackToTopButton } from '../components/ui/BackToTopButton';
 
 export const MainLayout: React.FC = () => {
     const [isDarkMode, setIsDarkMode] = useState(() => {
@@ -52,17 +54,26 @@ export const MainLayout: React.FC = () => {
         }
     }, [isDarkMode]);
 
-    // Global keyboard shortcuts
+    // Global keyboard shortcuts (Ctrl+K, '/', Esc)
     useEffect(() => {
         const handleGlobalKeys = (e: KeyboardEvent) => {
+            // Não intercepta se o usuário estiver digitando em um input ou textarea comum
+            const activeTag = document.activeElement?.tagName.toLowerCase();
+            const isEditing = activeTag === 'input' || activeTag === 'textarea';
+
             if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
                 e.preventDefault();
                 setIsCommandPaletteOpen(prev => !prev);
+            } else if (e.key === '/' && !isEditing && !effectivelyArticleOpen) {
+                e.preventDefault();
+                setIsCommandPaletteOpen(true);
+            } else if (e.key === 'Escape' && isCommandPaletteOpen) {
+                setIsCommandPaletteOpen(false);
             }
         };
         window.addEventListener('keydown', handleGlobalKeys);
         return () => window.removeEventListener('keydown', handleGlobalKeys);
-    }, []);
+    }, [isCommandPaletteOpen, effectivelyArticleOpen]);
 
     const handleCategorySelect = (cat: Category | null) => {
         setCurrentCategory(cat);
@@ -136,6 +147,10 @@ export const MainLayout: React.FC = () => {
                 {/* Vercel Real-Time Analytics & Core Web Vitals */}
                 <Analytics />
                 <SpeedInsights />
+
+                {/* Utilitários PWA e Acessibilidade */}
+                <OfflineIndicator />
+                <BackToTopButton />
             </div>
         </SmoothScroll>
     );
