@@ -35,6 +35,8 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
         "description": description
     };
 
+    const safeJsonLd = JSON.stringify(schemaOrgJSONLD).replace(/</g, '\\u003c');
+
     return (
         <Helmet>
             <title>{title}</title>
@@ -53,7 +55,7 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
             <meta name="twitter:image" content={defaultImage} />
 
             <script type="application/ld+json">
-                {JSON.stringify(schemaOrgJSONLD)}
+                {safeJsonLd}
             </script>
         </Helmet>
     );

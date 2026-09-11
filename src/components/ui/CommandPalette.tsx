@@ -80,64 +80,70 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       {/* Backdrop */}
       <div
         ref={backdropRef}
-        className="fixed inset-0 bg-stone-900/60 dark:bg-black/80 backdrop-blur-md opacity-0"
+        className="fixed inset-0 bg-stone-900/40 dark:bg-black/80 backdrop-blur-md opacity-0"
         onClick={onClose}
       />
 
       {/* Modal Content */}
       <div
         ref={modalRef}
-        className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/40 dark:shadow-black/50 rounded-2xl overflow-hidden opacity-0"
+        className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/20 dark:shadow-black/60 rounded-3xl overflow-hidden opacity-0 border border-border bg-bg-island backdrop-blur-2xl"
       >
         <Command
-          className="w-full bg-gradient-to-b from-stone-900/95 via-stone-900/90 to-stone-900/80 backdrop-blur-3xl border-[1px] border-white/10 rounded-2xl overflow-hidden"
+          className="w-full bg-transparent overflow-hidden"
           loop
           shouldFilter={false} // We handle filtering manually via useSearch
         >
-          <div className="flex items-center border-b border-white/10 px-5 relative">
-            <Search className="w-5 h-5 text-white/50 mr-3 shrink-0" strokeWidth={2.5} />
+          {/* Campo de Busca Superior */}
+          <div className="flex items-center border-b border-border px-5 py-1 relative">
+            <Search className="w-5 h-5 text-text-muted mr-3.5 shrink-0" strokeWidth={1.5} />
             <Command.Input
               ref={inputRef}
               value={inputValue}
               onValueChange={setInputValue}
               placeholder="O que você procura?"
-              className="flex-1 h-16 bg-transparent outline-none text-lg text-white placeholder:text-white/30 font-medium font-serif"
+              className="flex-1 h-14 bg-transparent outline-none text-base sm:text-lg text-text-main placeholder:text-text-muted font-serif font-light"
             />
-            <div className="hidden sm:flex items-center gap-2 text-[10px] font-bold text-white/40 uppercase tracking-widest bg-white/5 px-2 py-1 rounded-md border border-white/10">
-              <span className="text-xs">ESC</span> para fechar
+            <div className="hidden sm:flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-text-muted bg-stone-100 dark:bg-white/10 px-2 py-1 rounded-md border border-border">
+              <span className="font-bold">ESC</span>
             </div>
-            <button onClick={onClose} className="sm:hidden p-2 text-stone-400">
-              <X size={20} />
+            <button
+              onClick={onClose}
+              aria-label="Fechar busca"
+              className="sm:hidden p-2 text-text-muted hover:text-text-main transition-colors ml-1"
+            >
+              <X size={18} />
             </button>
           </div>
 
+          {/* Lista de Resultados */}
           <Command.List
-            className="max-h-[60vh] overflow-y-auto p-3 scroll-py-3"
-            data-lenis-prevent // Impede que o Lenis sequestre o scroll desta área
+            className="max-h-[60vh] overflow-y-auto p-3 scroll-py-2 no-scrollbar"
+            data-lenis-prevent
           >
-            <Command.Empty className="py-12 text-center text-stone-500 dark:text-stone-400">
-              <p className="font-serif italic text-lg">Nenhum resultado encontrado.</p>
+            <Command.Empty className="py-12 text-center text-text-muted">
+              <p className="font-serif italic text-base">Nenhum resultado encontrado para sua busca.</p>
             </Command.Empty>
 
             {!inputValue && (
-              <div className="px-3 py-2 text-[10px] font-black uppercase tracking-[0.2em] text-stone-400 dark:text-stone-600 mb-1">
-                Sugestões Rápidas
+              <div className="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-70">
+                Navegação & Atalhos
               </div>
             )}
 
             {(showLibrary || showQueue) && (
-              <Command.Group heading="Navegação">
+              <Command.Group heading="" className="space-y-1">
                 {showLibrary && (
                   <Command.Item
                     onSelect={() => { onSelectCategory(null); onClose(); }}
-                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 cursor-pointer text-white/90 transition-colors group aria-selected:bg-white/15"
+                    className="flex items-center gap-3.5 p-3 rounded-2xl cursor-pointer text-text-main hover:bg-stone-100/80 dark:hover:bg-white/10 transition-colors duration-150 group aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-indigo-500/20 flex items-center justify-center text-indigo-300 group-hover:scale-110 transition-transform duration-300">
-                      <Archive size={20} strokeWidth={2} />
+                    <div className="w-9 h-9 rounded-xl bg-stone-100 dark:bg-white/10 border border-border flex items-center justify-center text-text-main group-hover:scale-105 transition-transform duration-150 shrink-0">
+                      <Archive size={17} strokeWidth={1.5} />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-sm">Biblioteca Completa</span>
-                      <span className="text-xs text-white/50">Visualizar todos os documentos</span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-medium text-sm text-text-main">Biblioteca Completa</span>
+                      <span className="text-xs text-text-muted truncate">Visualizar todos os documentos e diretrizes</span>
                     </div>
                   </Command.Item>
                 )}
@@ -145,14 +151,14 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 {showQueue && (
                   <Command.Item
                     onSelect={() => { onSelectQueue(); onClose(); }}
-                    className="flex items-center gap-4 p-3 rounded-xl hover:bg-white/10 cursor-pointer text-white/90 transition-colors group aria-selected:bg-white/15"
+                    className="flex items-center gap-3.5 p-3 rounded-2xl cursor-pointer text-text-main hover:bg-stone-100/80 dark:hover:bg-white/10 transition-colors duration-150 group aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                   >
-                    <div className="w-10 h-10 rounded-lg bg-emerald-500/20 flex items-center justify-center text-emerald-300 group-hover:scale-110 transition-transform duration-300">
-                      <Bookmark size={20} strokeWidth={2} />
+                    <div className="w-9 h-9 rounded-xl bg-stone-100 dark:bg-white/10 border border-border flex items-center justify-center text-text-main group-hover:scale-105 transition-transform duration-150 shrink-0">
+                      <Bookmark size={17} strokeWidth={1.5} />
                     </div>
-                    <div className="flex flex-col">
-                      <span className="font-bold text-sm">Minha Lista de Leitura</span>
-                      <span className="text-xs text-white/50">Acessar seus artigos salvos</span>
+                    <div className="flex flex-col min-w-0">
+                      <span className="font-medium text-sm text-text-main">Minha Lista de Leitura</span>
+                      <span className="text-xs text-text-muted truncate">Acessar seus artigos e tópicos salvos</span>
                     </div>
                   </Command.Item>
                 )}
@@ -160,8 +166,11 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             )}
 
             {filteredArticles.length > 0 && (
-              <Command.Group heading="Artigos e Conhecimento" className="mt-4">
-                {/* Limit rendering to top 15 results to prevent INP regression on large data */}
+              <div className="mt-2 space-y-1">
+                <div className="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-70">
+                  Artigos e Conhecimento
+                </div>
+                {/* Limita a renderização aos 15 primeiros para garantir resposta 120Hz sem quebra de frame */}
                 {filteredArticles.slice(0, 15).map((item) => (
                   <Command.Item
                     key={item.id}
@@ -169,36 +178,45 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                       onSelectArticle(item);
                       onClose();
                     }}
-                    className="flex items-start gap-4 p-3 rounded-xl hover:bg-white/10 cursor-pointer text-white/90 transition-colors group aria-selected:bg-white/15"
+                    className="flex items-center justify-between gap-4 p-3 rounded-2xl hover:bg-stone-100/80 dark:hover:bg-white/10 cursor-pointer text-text-main transition-colors duration-150 group aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                   >
-                    <div className="mt-1 w-8 h-8 rounded-full border border-white/20 flex items-center justify-center text-white/40 group-hover:border-white/60 group-hover:text-white transition-colors shrink-0">
-                      <Hash size={14} />
-                    </div>
-                    <div className="flex flex-col gap-0.5">
-                      <span className="font-serif text-lg leading-tight group-hover:underline decoration-white/30 underline-offset-4 decoration-1">{item.question}</span>
-                      <div className="flex items-center gap-2">
-                        <span className="text-[9px] uppercase tracking-wider font-bold opacity-50 bg-white/10 px-1.5 py-0.5 rounded">{item.category}</span>
-                        <span className="text-[10px] opacity-40 truncate max-w-[200px]">{item.answer.substring(0, 60)}...</span>
+                    <div className="flex items-start gap-3.5 min-w-0">
+                      <div className="mt-0.5 w-7 h-7 rounded-lg border border-border bg-stone-50 dark:bg-white/5 flex items-center justify-center text-text-muted group-hover:text-text-main group-hover:border-text-main/30 transition-colors shrink-0">
+                        <Hash size={13} strokeWidth={1.75} />
+                      </div>
+                      <div className="flex flex-col gap-1 min-w-0">
+                        <span className="font-serif text-base font-normal leading-snug text-text-main group-hover:text-text-main transition-colors truncate">
+                          {item.question}
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <span className="text-[9px] uppercase tracking-wider font-bold text-text-muted bg-stone-100 dark:bg-white/10 border border-border px-1.5 py-0.5 rounded shrink-0">
+                            {item.category}
+                          </span>
+                          <span className="text-xs text-text-muted truncate opacity-80">
+                            {item.answer.substring(0, 65)}...
+                          </span>
+                        </div>
                       </div>
                     </div>
-                    <div className="ml-auto opacity-0 group-hover:opacity-100 -translate-x-2 group-hover:translate-x-0 transition-all duration-300 self-center">
-                      <ArrowRight size={16} className="text-white/60" />
+
+                    <div className="opacity-0 group-hover:opacity-100 -translate-x-1 group-hover:translate-x-0 transition-all duration-150 shrink-0 text-text-muted group-hover:text-text-main">
+                      <ArrowRight size={15} strokeWidth={1.5} />
                     </div>
                   </Command.Item>
                 ))}
-              </Command.Group>
+              </div>
             )}
 
             {showTheme && (
-              <Command.Group heading="Sistema" className="mt-4 border-t border-white/10 pt-2">
+              <div className="mt-3 border-t border-border pt-2">
                 <Command.Item
                   onSelect={() => { onToggleTheme(); onClose(); }}
-                  className="flex items-center gap-3 p-2 rounded-lg hover:bg-white/10 cursor-pointer text-white/60 hover:text-white aria-selected:bg-white/15"
+                  className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-stone-100/80 dark:hover:bg-white/10 cursor-pointer text-text-muted hover:text-text-main transition-colors duration-150 aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                 >
-                  {isDarkMode ? <Sun size={16} /> : <Moon size={16} />}
-                  <span className="text-xs font-bold uppercase tracking-widest">Alternar para Modo {isDarkMode ? 'Claro' : 'Escuro'}</span>
+                  {isDarkMode ? <Sun size={15} strokeWidth={1.5} /> : <Moon size={15} strokeWidth={1.5} />}
+                  <span className="text-xs font-medium uppercase tracking-wider">Alternar para Modo {isDarkMode ? 'Claro' : 'Escuro'}</span>
                 </Command.Item>
-              </Command.Group>
+              </div>
             )}
           </Command.List>
         </Command>

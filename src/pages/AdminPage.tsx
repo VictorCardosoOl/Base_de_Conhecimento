@@ -12,6 +12,9 @@ export const AdminPage: React.FC = () => {
                 <div>
                     <h1 className="text-3xl font-serif text-text-main">Painel Administrativo</h1>
                     <p className="text-text-muted mt-1">Gerencie os artigos da Base de Conhecimento</p>
+                    <div className="inline-block mt-2 px-2.5 py-1 bg-amber-500/10 border border-amber-500/20 text-amber-600 dark:text-amber-400 rounded-md text-xs">
+                        ⚠️ Modo Demonstração (SSG/Git): Para persistir alterações em produção, edite os arquivos Markdown em <code className="font-mono text-[11px]">src/content/artigos/</code>.
+                    </div>
                 </div>
                 <div className="flex gap-3">
                     <button 

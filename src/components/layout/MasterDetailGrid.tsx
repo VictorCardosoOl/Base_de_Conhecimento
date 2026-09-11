@@ -55,12 +55,13 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
   useEffect(() => {
     let rafId: number | null = null;
     let timer: NodeJS.Timeout | null = null;
+    let destroyed = false;
 
     if (isOpen) {
       document.body.style.overflow = 'hidden';
       
       timer = setTimeout(() => {
-        if (modalContainerRef.current && modalContentRef.current) {
+        if (!destroyed && modalContainerRef.current && modalContentRef.current) {
           const scopedLenis = new Lenis({
             wrapper: modalContainerRef.current,
             content: modalContentRef.current,
@@ -72,6 +73,7 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
           scopedLenisRef.current = scopedLenis;
           
           function raf(time: number) {
+            if (destroyed) return;
             scopedLenis.raf(time);
             rafId = requestAnimationFrame(raf);
           }
@@ -82,13 +84,16 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
       document.body.style.overflow = '';
       if (rafId) cancelAnimationFrame(rafId);
       scopedLenisRef.current?.destroy();
+      scopedLenisRef.current = null;
     }
 
     return () => {
+      destroyed = true;
       document.body.style.overflow = '';
       if (timer) clearTimeout(timer);
       if (rafId) cancelAnimationFrame(rafId);
       scopedLenisRef.current?.destroy();
+      scopedLenisRef.current = null;
     };
   }, [isOpen]);
 

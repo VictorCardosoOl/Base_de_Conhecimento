@@ -51,11 +51,15 @@ export const useReadingQueue = () => {
     };
   }, []);
 
-  // Salva no localStorage e emite evento para sincronizar outras instâncias na mesma aba
+  // Salva no localStorage com tratamento de erro e emite evento para sincronizar outras instâncias na mesma aba
   const saveQueue = (newQueue: string[]) => {
     setQueue(newQueue);
-    localStorage.setItem('sstfaq_queue', JSON.stringify(newQueue));
-    window.dispatchEvent(new CustomEvent('sstfaq-queue-sync'));
+    try {
+      localStorage.setItem('sstfaq_queue', JSON.stringify(newQueue));
+      window.dispatchEvent(new CustomEvent('sstfaq-queue-sync'));
+    } catch (err) {
+      console.error('Falha ao persistir fila de leitura no localStorage:', err);
+    }
   };
 
   const addToQueue = (id: string) => {

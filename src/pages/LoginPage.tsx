@@ -28,6 +28,9 @@ export const LoginPage: React.FC = () => {
                     </div>
                     <h1 className="text-2xl font-serif text-text-main">Acesso Restrito</h1>
                     <p className="text-text-muted mt-2 text-center">Entre com suas credenciais para acessar o painel administrativo.</p>
+                    <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-text-muted text-center leading-relaxed">
+                        <strong className="text-text-main font-semibold">Ambiente de Demonstração:</strong> Esta base opera como SSG (Static Site Generation). Artigos são versionados via Git/Markdown.
+                    </div>
                 </div>
 
                 <form onSubmit={handleLogin} className="space-y-4">

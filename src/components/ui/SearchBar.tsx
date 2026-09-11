@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Search, Command, Sparkles } from 'lucide-react';
+import { Search, Command } from 'lucide-react';
 
 interface SearchBarProps {
   onClick: () => void;
@@ -10,19 +10,36 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
   <div
     className="relative w-full max-w-xl mx-auto cursor-pointer group"
     onClick={onClick}
+    role="button"
+    tabIndex={0}
+    onKeyDown={(e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        onClick();
+      }
+    }}
+    aria-label="Abrir barra de pesquisa e comandos (Pressione Ctrl+K)"
   >
-    <div className="flex items-center justify-between border-b border-border py-1 md:py-1.5 transition-all duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-text-main">
-      <div className="flex items-center gap-4 md:gap-5 flex-1 overflow-hidden">
-        <Search size={18} strokeWidth={1} className="text-stone-500 group-hover:text-text-main transition-colors shrink-0" />
-        <span className="text-base font-light text-stone-600 dark:text-stone-300 tracking-tight truncate group-hover:text-text-main transition-colors">
-          Buscar conhecimento na biblioteca...
+    {/* Glow sutil ao passar o cursor */}
+    <div className="absolute -inset-1 bg-gradient-to-r from-stone-200/40 via-stone-300/30 to-stone-200/40 dark:from-white/5 dark:via-white/10 dark:to-white/5 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
+
+    <div className="relative flex items-center justify-between px-5 py-3.5 bg-bg-island backdrop-blur-xl border border-border rounded-full shadow-sm hover:shadow-md transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-text-main/40 active:scale-[0.99] transform-gpu">
+      <div className="flex items-center gap-3.5 flex-1 min-w-0">
+        <Search
+          size={18}
+          strokeWidth={1.5}
+          className="text-text-muted group-hover:text-text-main transition-colors duration-150 shrink-0"
+        />
+        <span className="text-sm sm:text-base font-serif font-light text-text-muted group-hover:text-text-main transition-colors duration-150 truncate tracking-tight">
+          Buscar conhecimento ou diretrizes...
         </span>
       </div>
-      <div className="flex items-center gap-3 md:gap-4 ml-2">
-        <div className="hidden sm:flex items-center gap-1.5 px-1.5 py-0.5 border border-stone-300 dark:border-stone-700 rounded text-[9px] md:text-[11px] font-bold text-stone-600 dark:text-stone-300">
-          <Command className="w-2.5 h-2.5 md:w-3 md:h-3" strokeWidth={1.5} /> K
-        </div>
 
+      <div className="flex items-center gap-2 shrink-0 ml-3">
+        <kbd className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1 text-[10px] font-sans font-semibold tracking-wider text-text-muted bg-stone-100/80 dark:bg-white/10 border border-border rounded-lg shadow-2xs uppercase select-none group-hover:border-text-main/30 group-hover:text-text-main transition-colors duration-150">
+          <Command className="w-3 h-3" strokeWidth={1.75} />
+          <span>K</span>
+        </kbd>
       </div>
     </div>
   </div>

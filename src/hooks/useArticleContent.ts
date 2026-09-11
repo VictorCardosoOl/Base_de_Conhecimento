@@ -51,9 +51,17 @@ export const useArticleContent = (article: FAQItem) => {
             const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
             const combinedRegex = new RegExp(`(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
             
-            // Map for O(1) lookup
+            // Map for O(1) lookup with HTML entity escaping to prevent DOM XSS injection
+            const escapeHtml = (str: string) =>
+                str
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/'/g, '&#39;');
+
             const termToDef = Object.fromEntries(
-                glossaryEntries.map(([t, d]) => [t.toLowerCase(), d.replace(/"/g, '&quot;')])
+                glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d)])
             );
 
             rawHtml = rawHtml.replace(combinedRegex, (match) => {

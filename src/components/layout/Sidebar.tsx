@@ -18,6 +18,22 @@ interface SidebarProps {
   onPositionChange: (pos: 'left'|'right'|'top'|'bottom') => void;
   isArticleOpen?: boolean;
 }
+ 
+interface TooltipLabelProps {
+  text: string;
+  position: 'left' | 'right' | 'top' | 'bottom';
+  isHorizontal: boolean;
+  isArticleOpen?: boolean;
+}
+
+const TooltipLabel: React.FC<TooltipLabelProps> = ({ text, position, isHorizontal, isArticleOpen }) => {
+  if (!isHorizontal && !isArticleOpen) return null;
+  return (
+    <span className={`hidden lg:block absolute ${position === 'top' || (isArticleOpen && !isHorizontal) ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} ${isArticleOpen && !isHorizontal ? 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2'} px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-150 ease-out whitespace-nowrap z-[100] shadow-sm transform-gpu group-hover:translate-y-0`}>
+      {text}
+    </span>
+  );
+};
 
 export const Sidebar: React.FC<SidebarProps> = ({
   currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange, isArticleOpen
@@ -32,15 +48,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     const posList: ('left'|'right'|'top'|'bottom')[] = ['left', 'top', 'right', 'bottom'];
     const idx = posList.indexOf(position);
     onPositionChange(posList[(idx + 1) % 4]);
-  };
-
-  const TooltipLabel = ({ text }: { text: string }) => {
-    if (!isHorizontal && !isArticleOpen) return null;
-    return (
-      <span className={`hidden lg:block absolute ${position === 'top' || (isArticleOpen && !isHorizontal) ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} ${isArticleOpen && !isHorizontal ? 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2'} px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-150 ease-out whitespace-nowrap z-[100] shadow-sm transform-gpu group-hover:translate-y-0`}>
-        {text}
-      </span>
-    );
   };
 
   const getBtnClass = (isActive: boolean) => `
@@ -90,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   <Home size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
                   <span className={`transition-all duration-250 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>Acervo</span>
                   {!isHorizontal && isExpanded && currentCat === null && !isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
-                  <TooltipLabel text="Acervo" />
+                  <TooltipLabel text="Acervo" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
                 </div>
               </button>
 
@@ -111,7 +118,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     )}
                   </div>
                   {!isHorizontal && isExpanded && isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
-                  <TooltipLabel text={`Minha Lista${queueCount > 0 ? ` (${queueCount})` : ''}`} />
+                  <TooltipLabel text={`Minha Lista${queueCount > 0 ? ` (${queueCount})` : ''}`} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
                 </div>
               </button>
             </div>
@@ -136,7 +143,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <Icon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
                       <span className={`transition-all duration-250 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>{cat}</span>
                       {!isHorizontal && isExpanded && isActive && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
-                      <TooltipLabel text={cat} />
+                      <TooltipLabel text={cat} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
                     </div>
                   </button>
                 );
@@ -156,7 +163,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
                 {isDarkMode ? 'Claro' : 'Escuro'}
               </span>
-              <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} />
+              <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
             </div>
           </button>
           
@@ -167,7 +174,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               className="ml-4 text-text-muted hover:text-text-main transition-all duration-150 hidden lg:block p-3 group relative lg:hover:scale-110 lg:hover:-translate-y-0.5 transform-gpu"
             >
               <Layout size={20} strokeWidth={1.5} aria-hidden="true" />
-              <TooltipLabel text="Mudar Posição" />
+              <TooltipLabel text="Mudar Posição" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
             </button>
           )}
         </div>
