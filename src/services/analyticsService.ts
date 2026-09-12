@@ -15,13 +15,24 @@ export interface ContentFeedback {
 const SEARCH_LOGS_KEY = 'sst_search_analytics_logs';
 const CONTENT_FEEDBACK_KEY = 'sst_content_feedback_logs';
 const COMPLETED_ARTICLES_KEY = 'sst_completed_articles';
+const CONSENT_STORAGE_KEY = 'sst_user_cookie_consent';
 
 export const AnalyticsService = {
   logSearch(query: string, resultCount: number) {
+    // Privacy by Default: Telemetria de busca só é persistida se houver consentimento explícito
+    if (typeof window !== 'undefined' && localStorage.getItem(CONSENT_STORAGE_KEY) !== 'granted') {
+      return;
+    }
+
     const trimmed = query.trim();
     if (!trimmed || trimmed.length < 2) return;
 
     try {
+      // Server-side beacon tracking simulation
+      if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
+        navigator.sendBeacon('/api/track/search', JSON.stringify({ query: trimmed, resultCount }));
+      }
+
       const logs: SearchLog[] = JSON.parse(localStorage.getItem(SEARCH_LOGS_KEY) || '[]');
       logs.unshift({
         query: trimmed,

@@ -5,19 +5,17 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "npm run gen:catalog && vite",
-    "build": "npm run gen:catalog && vite build",
-    "preview": "vite preview",
-    "gen:catalog": "node scripts/generate-catalog.js",
+    "predev": "node scripts/generate-catalog.js",
+    "dev": "next dev",
+    "prebuild": "node scripts/generate-catalog.js",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
-    "test:e2e:ui": "playwright test --ui",
-    "lint:md": "markdownlint \"src/content/artigos/**/*.md\" --config .markdownlint.json --ignore \"**/node_modules/**\"",
-    "format:check": "prettier --check \"src/content/artigos/**/*.md\"",
-    "format:write": "prettier --write \"src/content/artigos/**/*.md\"",
-    "prepare": "husky || true"
+    "test:e2e:ui": "playwright test --ui"
   },
   "lint-staged": {
     "src/content/artigos/**/*.md": [
@@ -43,11 +41,9 @@
     "marked": "15.0.0",
     "mermaid": "^12.0.0",
     "minisearch": "^7.2.0",
+    "next": "^16.3.5",
     "react": "19.2.3",
-    "react-dom": "19.2.3",
-    "react-helmet-async": "2.0.5",
-    "react-router-dom": "^7.18.3",
-    "vite-plugin-pwa": "1.2.0"
+    "react-dom": "19.2.3"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.13.0",
@@ -58,7 +54,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "16.3.3",
     "@types/node": "22.14.0",
-    "@vitejs/plugin-react": "5.0.0",
+    "@types/react": "19.3.0",
     "@vitest/coverage-v8": "^5.0.0",
     "autoprefixer": "10.4.23",
     "gray-matter": "4.0.3",
@@ -73,7 +69,6 @@
     "tailwindcss": "4.1.18",
     "turndown": "7.2.4",
     "typescript": "5.8.2",
-    "vite": "^6.4.3",
     "vitest": "5.0.0"
   }
 }

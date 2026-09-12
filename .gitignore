@@ -22,3 +22,14 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+
+# Next.js
+.next/
+out/
+build/
+.swc/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+.env*.local

@@ -24,7 +24,7 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
           className="text-text-muted group-hover:text-text-main transition-colors duration-150 shrink-0"
         />
         <span className="text-sm sm:text-base font-serif font-light text-text-muted group-hover:text-text-main transition-colors duration-150 truncate tracking-tight">
-          Buscar conhecimento ou diretrizes...
+          Ex: Como enviar o evento S-2240 ao eSocial?
         </span>
       </div>
 

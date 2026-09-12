@@ -57,8 +57,8 @@ export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
       {/* Botão de Personalização Tipográfica */}
       <button
         onClick={() => setIsOpen(!isOpen)}
-        title="Personalizar Tipografia (Fonte, Tamanho, Espaçamento)"
-        aria-label="Opções de Tipografia"
+        title="Ajuste a leitura para sua preferência visual"
+        aria-label="Ajustar Tipografia e Leitura"
         className={`p-2 rounded-lg border border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors ${
           isOpen ? 'bg-stone-100 dark:bg-stone-800 text-text-main' : ''
         }`}

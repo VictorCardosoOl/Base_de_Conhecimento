@@ -67,8 +67,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           inputRef.current?.focus();
         }
       });
-      tl.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.12, ease: "power2.out" })
-        .fromTo(modalRef.current, { opacity: 0, scale: 0.985, y: 6 }, { opacity: 1, scale: 1, y: 0, duration: 0.15, ease: "power3.out" }, "-=0.08");
+      tl.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" })
+        .fromTo(modalRef.current, { opacity: 0, scale: 0.95, y: 12, filter: 'blur(4px)' }, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: "expo.out" }, "-=0.2");
     }
   }, { dependencies: [isOpen], scope: containerRef });
 
@@ -101,6 +101,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       {/* Modal Content */}
       <div
         ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-label="Comandos e Busca"
         className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/20 dark:shadow-black/60 rounded-3xl overflow-hidden opacity-0 border border-border bg-bg-island backdrop-blur-2xl"
       >
         <Command
@@ -134,6 +137,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           <Command.List
             className="max-h-[60vh] overflow-y-auto p-3 scroll-py-2 no-scrollbar"
             data-lenis-prevent
+            aria-live="polite"
+            aria-atomic="true"
           >
             <Command.Empty className="py-12 text-center text-text-muted">
               <p className="font-serif italic text-base">Nenhum resultado encontrado para sua busca.</p>

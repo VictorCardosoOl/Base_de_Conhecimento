@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home, Bell } from 'lucide-react';
+import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home, Bell, ShieldCheck } from 'lucide-react';
 import { Category } from '../../types/index';
 import { getCategoryIcon } from '../../constants/navigation';
 import { Magnetic } from '../ui/MagneticButton';
+import { useConsent } from '../../contexts/ConsentContext';
 
 interface SidebarProps {
   currentCat: Category | null;
@@ -40,6 +41,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
   currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange, isArticleOpen
 }) => {
   const [isHovered, setIsHovered] = useState(false);
+  const { setOpenLegalModal, setActiveLegalTab } = useConsent();
   
   // No mobile, hover rules
   const isExpanded = (isHovered || isOpen) && !isArticleOpen;
@@ -55,8 +57,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
     flex items-center text-sm rounded-xl transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu relative group
     ${isHorizontal || isArticleOpen ? 'justify-center p-2.5 lg:hover:scale-[1.12] lg:hover:-translate-y-0.5 shrink-0' : 'w-full py-2.5 px-3 ' + (isExpanded ? '' : 'justify-center')}
     ${isActive
-      ? 'text-text-main font-semibold bg-stone-100 dark:bg-white/10 shadow-sm'
-      : 'text-text-muted hover:text-text-main hover:bg-stone-50 dark:hover:bg-white/5 font-medium'}
+      ? 'text-text-main font-semibold bg-bg-main shadow-sm border border-border'
+      : 'text-text-muted hover:text-text-main hover:bg-bg-main font-medium'}
   `;
 
   // Desktop positioning logic (ensuring true centering e largura adequada sem corte)
@@ -77,7 +79,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       <aside
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-180 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu
+        className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu
           lg:border lg:rounded-[2rem] flex
           ${desktopPosClass}
           ${mobilePosClass}
@@ -186,6 +188,25 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   Alertas
                 </span>
                 <TooltipLabel text="Notificações Push (PWA)" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+              </div>
+            </button>
+          </Magnetic>
+
+          <Magnetic strength={0.3} className="w-full">
+            <button
+              onClick={() => {
+                setActiveLegalTab('privacy');
+                setOpenLegalModal(true);
+              }}
+              aria-label="Políticas de Privacidade e Termos de Uso (LGPD)"
+              className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
+            >
+              <div className="flex items-center gap-4">
+                <ShieldCheck size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150 text-text-main" />
+                <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+                  LGPD
+                </span>
+                <TooltipLabel text="Termos & LGPD" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
               </div>
             </button>
           </Magnetic>

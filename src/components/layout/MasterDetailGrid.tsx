@@ -1,8 +1,9 @@
+"use client";
 import React, { useRef, useEffect, useState } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring, useTransform } from 'framer-motion';
 import { ArrowUpRight, X, Plus, Check, ArrowLeft, ChevronRight, Printer, ShieldCheck, Calendar, Bell, Share2, Award } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import Lenis from 'lenis';
 import { FAQItem } from '../../types/index';
 import { useArticleContent } from '../../hooks/useArticleContent';
@@ -163,19 +164,19 @@ export const ContentModal: React.FC<ContentModalProps> = ({ isOpen, onClose, lay
         <>
           <motion.div 
             onClick={onClose} 
-            className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[50] will-change-[opacity]" 
+            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[50] will-change-[opacity]" 
             initial={{ opacity: 0 }} 
-            animate={{ opacity: 1, transition: { duration: 0.12 } }} 
-            exit={{ opacity: 0, transition: { duration: 0.10 } }} 
+            animate={{ opacity: 1, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }} 
+            exit={{ opacity: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }} 
           />
           
           <motion.div
             role="dialog"
             aria-modal="true"
             aria-labelledby={`modal-title-${item.id}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0, transition: { duration: 0.16, ease: [0.16, 1, 0.3, 1] } }}
-            exit={{ opacity: 0, y: 8, transition: { duration: 0.10, ease: [0.2, 0, 0, 1] } }}
+            initial={{ opacity: 0, y: "100vh", scale: 0.96 }}
+            animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", damping: 26, stiffness: 220, mass: 0.7 } }}
+            exit={{ opacity: 0, y: "100vh", scale: 0.96, transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] } }}
             className={`fixed inset-x-0 bottom-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2.5rem] h-[96vh] top-[4vh] ${
               isZenMode ? 'max-w-4xl' : 'max-w-[2000px] 4xl:max-w-[2400px]'
             } mx-auto border-x border-t border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity] transition-all duration-300`}
@@ -409,7 +410,7 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({ item, o
 export const MasterDetailGrid = ({ items, onModalStateChange }: { items: FAQItem[], onModalStateChange?: (isOpen: boolean) => void }) => {
   const [selectedItem, setSelectedItem] = useState<FAQItem | null>(null);
   const { queue, toggleQueue } = useReadingQueue();
-  const location = useLocation();
+  const location = usePathname();
 
   const handleSetSelected = (item: FAQItem | null) => {
     setSelectedItem(item);
@@ -452,3 +453,4 @@ export const MasterDetailGrid = ({ items, onModalStateChange }: { items: FAQItem
     </div>
   );
 };
+

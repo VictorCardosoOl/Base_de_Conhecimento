@@ -42,7 +42,7 @@ export const useArticleContent = (article: FAQItem) => {
     const htmlContent = useMemo(() => {
         if (!content || typeof content !== 'string') return '';
 
-        let rawHtml = marked.parse(content) as string;
+        let rawHtml = marked.parse(content, { headerIds: false }) as string;
 
         // Inject Glossary Tooltips efficiently (O(N) instead of O(N*M))
         const glossaryEntries = Object.entries(glossaryData);

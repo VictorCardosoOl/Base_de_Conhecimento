@@ -151,18 +151,19 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
   // Injetar marcações (Highlights) no HTML e re-sanitizar após manipulação
   const processedHtml = React.useMemo(() => {
     if (!htmlContent) return '';
-    if (activeHighlights.length === 0) return htmlContent;
 
     let res = htmlContent;
-    activeHighlights.forEach(h => {
-      if (!h.text) return;
-      const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-      const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color) ? h.color : 'amber';
-      const regex = new RegExp(`(?![^<]*>)(${escaped})`, 'gi');
-      res = res.replace(regex, `<mark class="sst-highlight-${safeColor}">$1</mark>`);
-    });
+    if (activeHighlights.length > 0) {
+      activeHighlights.forEach(h => {
+        if (!h.text) return;
+        const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color) ? h.color : 'amber';
+        const regex = new RegExp(`(?![^<]*>)(${escaped})`, 'gi');
+        res = res.replace(regex, `<mark class="sst-highlight-${safeColor}">$1</mark>`);
+      });
+    }
 
-    // Sanitiza novamente após a injeção dos elementos <mark> permitindo classes seguras
+    // Sanitiza sempre o HTML, mesmo sem highlights, mitigando Stored XSS
     return DOMPurify.sanitize(res, {
       ADD_TAGS: ['mark'],
       ADD_ATTR: ['class', 'data-tooltip']

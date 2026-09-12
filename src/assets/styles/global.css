@@ -19,9 +19,9 @@
   --color-border: var(--border);
   --color-selection: var(--selection);
 
-  --font-sans: 'Inter', sans-serif;
-  --font-serif: 'Playfair Display', serif;
-  --font-dyslexic: 'Lexend', sans-serif;
+  --font-sans: var(--font-inter, 'Inter', sans-serif);
+  --font-serif: var(--font-playfair, 'Playfair Display', serif);
+  --font-dyslexic: var(--font-lexend, 'Lexend', sans-serif);
 
   --breakpoint-2xl: 1536px;
   --breakpoint-3xl: 1920px;
@@ -99,7 +99,7 @@
     animation: fadeInUp 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
   }
 
-  /* Efeito Cinético Awwwards: Skew sutil baseado na velocidade física do scroll */
+  /* Efeito CinÃ©tico Awwwards: Skew sutil baseado na velocidade fÃ­sica do scroll */
   .scroll-reactive-skew {
     transform: skewY(var(--scroll-skew, 0deg));
     transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
@@ -218,7 +218,7 @@
 
   /* Decorative quote mark */
   .article-content-render blockquote::before {
-    content: "“";
+    content: "â€œ";
     display: block;
     font-family: var(--font-serif);
     font-size: 8rem;
@@ -375,7 +375,7 @@
   }
 
   /* 
-   * PERSONALIZAÇÃO TIPOGRÁFICA DO LEITOR
+   * PERSONALIZAÃ‡ÃƒO TIPOGRÃFICA DO LEITOR
    * ------------------------------------
    */
   .article-font-serif p, .article-font-serif li {
@@ -391,16 +391,16 @@
   }
 
   .article-size-sm p, .article-size-sm li {
-    font-size: 1rem !important; /* 16px */
+    font-size: clamp(0.9rem, 0.85rem + 0.25vw, 1rem) !important;
   }
   .article-size-base p, .article-size-base li {
-    font-size: 1.1875rem !important; /* 19px */
+    font-size: clamp(1.05rem, 0.95rem + 0.4vw, 1.1875rem) !important;
   }
   .article-size-lg p, .article-size-lg li {
-    font-size: 1.35rem !important; /* ~21.6px */
+    font-size: clamp(1.2rem, 1.1rem + 0.5vw, 1.35rem) !important;
   }
   .article-size-xl p, .article-size-xl li {
-    font-size: 1.55rem !important; /* ~24.8px */
+    font-size: clamp(1.35rem, 1.2rem + 0.7vw, 1.55rem) !important;
   }
 
   .article-leading-tight p, .article-leading-tight li {
@@ -417,7 +417,7 @@
   }
 
   /* 
-   * BLOCOS DE CÓDIGO E MERMAID
+   * BLOCOS DE CÃ“DIGO E MERMAID
    * ------------------------------------
    */
   .article-content-render pre {
@@ -493,6 +493,18 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .scroll-reactive-skew {
+    transform: none !important;
+  }
+}
+
 @media print {
   @page {
     margin: 1.5cm;
@@ -529,4 +541,4 @@
     page-break-inside: avoid;
     break-inside: avoid;
   }
-}
+}

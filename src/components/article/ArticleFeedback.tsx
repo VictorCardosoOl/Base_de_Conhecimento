@@ -10,6 +10,7 @@ interface ArticleFeedbackProps {
 export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, question }) => {
   const [feedbackState, setFeedbackState] = useState<'idle' | 'useful_sent' | 'reporting' | 'reported'>('idle');
   const [reportText, setReportText] = useState('');
+  const [honeypot, setHoneypot] = useState('');
 
   const handleUseful = (isUseful: boolean) => {
     AnalyticsService.submitFeedback({
@@ -22,6 +23,13 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
 
   const handleSendReport = (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Anti-bot Honeypot check
+    if (honeypot) {
+        setFeedbackState('reported');
+        return;
+    }
+
     if (!reportText.trim()) return;
 
     AnalyticsService.submitFeedback({
@@ -42,10 +50,10 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
             <span>Avaliação Editorial</span>
           </div>
           <h4 className="text-xl font-serif font-light tracking-tight text-text-main">
-            Este procedimento foi útil para você?
+            O que você achou deste conteúdo?
           </h4>
           <p className="text-xs text-text-muted font-sans">
-            Seu feedback anônimo orienta as revisões periódicas do comitê técnico de SST.
+            Seu feedback rápido nos ajuda a atualizar e melhorar a precisão dos nossos guias continuamente. Leva só um segundo!
           </p>
         </div>
 
@@ -94,6 +102,19 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
             <p className="text-[11px] text-text-muted">
               Indique a portaria, o sistema ou o prazo que diverge da prática atual da empresa.
             </p>
+          </div>
+          
+          {/* Honeypot Field */}
+          <div style={{ display: 'none' }} aria-hidden="true">
+              <label>Leave this field empty</label>
+              <input 
+                  type="text" 
+                  name="user_contact_info" 
+                  tabIndex={-1} 
+                  autoComplete="off" 
+                  value={honeypot} 
+                  onChange={(e) => setHoneypot(e.target.value)} 
+              />
           </div>
           <textarea
             value={reportText}
