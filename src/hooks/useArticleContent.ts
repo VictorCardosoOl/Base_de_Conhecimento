@@ -1,12 +1,10 @@
-import { useState, useEffect, useMemo } from 'react';
-import { marked } from 'marked';
-import DOMPurify from 'dompurify';
+import { useState, useEffect } from 'react';
 import { FAQItem } from '../types/index';
-import glossaryData from '../data/glossary.json';
 import { reportContentError } from '../lib/telemetry';
+import { fetchParsedArticleHtml } from '../actions/articleActions';
 
 export const useArticleContent = (article: FAQItem) => {
-    const [content, setContent] = useState<string | null>(null);
+    const [htmlContent, setHtmlContent] = useState<string>('');
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<Error | null>(null);
 
@@ -17,18 +15,23 @@ export const useArticleContent = (article: FAQItem) => {
 
         const loadContent = async () => {
             try {
-                if (typeof article.content === 'function') {
-                    const module = await article.content();
-                    const rawContent = module.default?.content || module.default || module;
-                    if (mounted) setContent(rawContent as string);
-                } else {
-                    if (mounted) setContent((article.content as string) || article.answer);
+                // If it's a dynamic module, it might be legacy. But we now have the server action!
+                // We'll fetch the parsed HTML from the server action using the article ID.
+                const parsedHtml = await fetchParsedArticleHtml(article.id);
+                
+                if (mounted) {
+                    if (parsedHtml) {
+                        setHtmlContent(parsedHtml);
+                    } else {
+                        // Fallback to basic answer if markdown doesn't exist
+                        setHtmlContent(article.answer || '');
+                    }
                 }
             } catch (err) {
                 reportContentError(err, { articleId: article.id, question: article.question });
                 if (mounted) {
                     setError(err instanceof Error ? err : new Error('Failed to load content'));
-                    setContent(article.answer);
+                    setHtmlContent(article.answer || '');
                 }
             } finally {
                 if (mounted) setIsLoading(false);
@@ -38,42 +41,6 @@ export const useArticleContent = (article: FAQItem) => {
         loadContent();
         return () => { mounted = false; };
     }, [article]);
-
-    const htmlContent = useMemo(() => {
-        if (!content || typeof content !== 'string') return '';
-
-        let rawHtml = marked.parse(content, { headerIds: false }) as string;
-
-        // Inject Glossary Tooltips efficiently (O(N) instead of O(N*M))
-        const glossaryEntries = Object.entries(glossaryData);
-        if (glossaryEntries.length > 0) {
-            // Sort by length descending to match longest phrases first
-            const sortedTerms = glossaryEntries.map(([t]) => t).sort((a, b) => b.length - a.length);
-            const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const combinedRegex = new RegExp(`(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
-            
-            // Map for O(1) lookup with HTML entity escaping to prevent DOM XSS injection
-            const escapeHtml = (str: string) =>
-                str
-                    .replace(/&/g, '&amp;')
-                    .replace(/</g, '&lt;')
-                    .replace(/>/g, '&gt;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/'/g, '&#39;');
-
-            const termToDef = Object.fromEntries(
-                glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d)])
-            );
-
-            rawHtml = rawHtml.replace(combinedRegex, (match) => {
-                const safeDef = termToDef[match.toLowerCase()];
-                return safeDef ? `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>` : match;
-            });
-        }
-
-        // Sanitize AFTER everything, allowing our custom attribute
-        return DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['data-tooltip'] });
-    }, [content]);
 
     return { htmlContent, isLoading, error };
 };

@@ -1,5 +1,6 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 interface KineticTextProps {
   children: string;
@@ -14,56 +15,47 @@ export const KineticText: React.FC<KineticTextProps> = ({
   as: Component = 'span',
   delay = 0
 }) => {
+  const containerRef = useRef<HTMLElement>(null);
   const words = children.split(' ');
 
-  const containerVariants = {
-    hidden: {},
-    visible: {
-      transition: {
-        staggerChildren: 0.045,
-        delayChildren: delay
+  useGSAP(() => {
+    if (!containerRef.current) return;
+    const wordElements = containerRef.current.querySelectorAll('.word-inner');
+    
+    gsap.fromTo(wordElements, 
+      { 
+        yPercent: 100,
+        opacity: 0,
+        rotateX: 18
+      },
+      {
+        yPercent: 0,
+        opacity: 1,
+        rotateX: 0,
+        duration: 1.2,
+        ease: "expo.out",
+        stagger: 0.05,
+        delay: delay,
+        clearProps: "all" // Remove inline styles after animation for VRAM cleanup
       }
-    }
-  };
-
-  const wordVariants = {
-    hidden: {
-      y: '108%',
-      opacity: 0,
-      rotateX: 18,
-      clipPath: 'polygon(0 0, 100% 0, 100% 0, 0 0)'
-    },
-    visible: {
-      y: '0%',
-      opacity: 1,
-      rotateX: 0,
-      clipPath: 'polygon(0 -10%, 100% -10%, 100% 120%, 0 120%)',
-      transition: {
-        duration: 0.68,
-        ease: [0.16, 1, 0.3, 1] // Curva Bezier de aceleração inicial rápida e amortecimento longo
-      }
-    }
-  };
+    );
+  }, { scope: containerRef, dependencies: [children, delay] });
 
   return (
-    <Component className={`inline-block overflow-hidden ${className}`}>
-      <motion.span
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="inline-flex flex-wrap gap-x-[0.28em] will-change-transform"
-      >
+    <Component ref={containerRef} className={`inline-block ${className}`}>
+      <span className="inline-flex flex-wrap gap-x-[0.28em]">
         {words.map((word, idx) => (
-          <span key={idx} className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em]">
-            <motion.span
-              variants={wordVariants}
-              className="inline-block will-change-transform transform-gpu origin-bottom"
-            >
+          <span 
+            key={idx} 
+            className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em]"
+            style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' }}
+          >
+            <span className="word-inner inline-block will-change-transform transform-gpu origin-bottom">
               {word}
-            </motion.span>
+            </span>
           </span>
         ))}
-      </motion.span>
+      </span>
     </Component>
   );
 };

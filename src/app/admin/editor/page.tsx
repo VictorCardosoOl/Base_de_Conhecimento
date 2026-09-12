@@ -1,49 +1,64 @@
-﻿"use client";
+"use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
 import { Category } from '@/types/index';
+import { saveArticle } from '@/actions/editorActions';
 
 export default function EditorPage() {
     const navigate = useRouter();
     const [title, setTitle] = useState('');
     const [category, setCategory] = useState<Category>(Category.INTRODUCAO);
     const [content, setContent] = useState('');
+    const [isSaving, setIsSaving] = useState(false);
+
+    const handleSave = async () => {
+        setIsSaving(true);
+        const formData = new FormData();
+        formData.append('title', title);
+        formData.append('category', category);
+        formData.append('content', content);
+
+        const result = await saveArticle(formData);
+        setIsSaving(false);
+
+        if (result.success) {
+            alert('Artigo salvo com sucesso!');
+            navigate.push('/admin');
+        } else {
+            alert(result.error);
+        }
+    };
 
     return (
         <div className="max-w-screen-2xl 3xl:max-w-[2100px] mx-auto space-y-6 2xl:space-y-10 p-4 2xl:p-8">
             <header className="flex items-center justify-between border-b border-border pb-6 2xl:pb-8">
                 <div className="flex items-center gap-4">
                     <button 
-                        onClick={() => navigate('/admin')}
+                        onClick={() => navigate.push('/admin')}
                         className="p-2 hover:bg-selection rounded-full transition-colors"
                     >
                         <ArrowLeft size={20} />
                     </button>
                     <div>
                         <h1 className="text-2xl font-serif text-text-main">Editor de Artigo</h1>
-                        <p className="text-sm text-text-muted mt-1">Crie ou edite o conteÃºdo do artigo</p>
+                        <p className="text-sm text-text-muted mt-1">Crie ou edite o conteúdo via Server Actions</p>
                     </div>
                 </div>
                 <div className="flex gap-3">
                     <button 
-                        onClick={() => navigate('/admin')}
+                        onClick={() => navigate.push('/admin')}
                         className="px-4 py-2 text-sm font-medium text-text-muted hover:text-text-main transition-colors"
                     >
                         Cancelar
                     </button>
                     <button 
-                        onClick={() => {
-                            // [MitigaÃ§Ã£o de IDOR e AutorizaÃ§Ã£o]
-                            // TODO: Ao plugar o backend, esta requisiÃ§Ã£o DEVE enviar o Bearer Token
-                            // contido em sessionStorage.getItem('sst_admin_session') no header Authorization.
-                            // O backend DEVE validar se o token pertence ao autor original ou admin
-                            // antes de persistir as mudanÃ§as no banco de dados.
-                            alert('SimulaÃ§Ã£o: Token Bearer enviado e IDOR mitigado via validaÃ§Ã£o Backend.');
-                        }}
-                        className="flex items-center gap-2 bg-text-main text-bg-main px-5 py-2 rounded-lg font-medium hover:opacity-90 transition-colors"
+                        disabled={isSaving}
+                        onClick={handleSave}
+                        className="px-4 py-2 bg-text-main text-bg-main rounded-full font-medium text-sm flex items-center gap-2 hover:bg-text-main/90 transition-colors disabled:opacity-50"
                     >
-                        <Save size={16} /> Publicar
+                        <Save size={16} />
+                        {isSaving ? 'Salvando...' : 'Salvar'}
                     </button>
                 </div>
             </header>

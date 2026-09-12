@@ -357,7 +357,7 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({ item, o
         ease: [0.16, 1, 0.3, 1] // Curva Pro 120Hz: aceleração instantânea e pouso suave
       }}
       onClick={onClick} 
-      className="group cursor-pointer relative py-6 border-b border-border transition-all duration-120 ease-out transform-gpu active:scale-[0.99] active:opacity-90 lg:hover:pl-3 flex flex-col justify-between h-full scroll-reactive-skew"
+      className="group cursor-pointer relative py-6 border-b border-border transition-all duration-120 ease-out transform-gpu active:scale-[0.99] active:opacity-90 lg:hover:pl-3 flex flex-col justify-between h-full"
     >
       {/* Indicador de Hover Lateral */}
       <div className="absolute left-0 top-6 bottom-6 w-[2px] bg-text-main scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-150 ease-out origin-top z-10 transform-gpu" />

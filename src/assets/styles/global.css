@@ -56,7 +56,6 @@
   }
 
   html {
-    scroll-behavior: smooth;
     font-size: clamp(14px, 0.8rem + 0.4vw, 18px);
   }
 
@@ -97,13 +96,6 @@
 
   .animate-fade-in-up {
     animation: fadeInUp 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-  }
-
-  /* Efeito CinÃ©tico Awwwards: Skew sutil baseado na velocidade fÃ­sica do scroll */
-  .scroll-reactive-skew {
-    transform: skewY(var(--scroll-skew, 0deg));
-    transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
-    will-change: transform;
   }
 
   /* Tipografia Escultural Clamp Fluida */

@@ -18,18 +18,18 @@ export const IntroducaoHero: React.FC = () => {
         <div className="lg:col-span-8 h-full flex flex-col justify-end pb-6 lg:pb-10 2xl:pb-14 pointer-events-none select-none z-10 overflow-visible">
           <h1 className="flex flex-col tracking-[-0.045em] font-serif font-normal leading-[0.76] text-text-main overflow-visible">
             <motion.span 
-              initial={{ opacity: 0, y: 100, rotate: 2, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, rotate: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 100, rotate: 2 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2"
+              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 will-change-transform"
             >
               Base de
             </motion.span>
             <motion.span 
-              initial={{ opacity: 0, y: 100, rotate: 2, filter: 'blur(8px)' }}
-              animate={{ opacity: 1, y: 0, rotate: 0, filter: 'blur(0px)' }}
+              initial={{ opacity: 0, y: 100, rotate: 2 }}
+              animate={{ opacity: 1, y: 0, rotate: 0 }}
               transition={{ duration: 1, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 mt-1 lg:mt-2"
+              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 mt-1 lg:mt-2 will-change-transform"
             >
               Conhecimento
             </motion.span>

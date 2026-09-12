@@ -139,10 +139,10 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={pathname}
-                                initial={{ opacity: 0, y: 16, filter: 'blur(4px)' }}
-                                animate={{ opacity: 1, y: 0, filter: 'blur(0px)', transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } }}
-                                exit={{ opacity: 0, y: -12, filter: 'blur(4px)', transition: { duration: 0.3, ease: [0.32, 0, 0.67, 0] } }}
-                                className="w-full will-change-[transform,opacity,filter]"
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
+                                exit={{ opacity: 0, y: -12, transition: { duration: 0.25, ease: [0.32, 0, 0.67, 0] } }}
+                                className="w-full will-change-[transform,opacity] transform-gpu"
                             >
                                 {children}
                             </motion.div>

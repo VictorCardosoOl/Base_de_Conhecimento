@@ -1,11 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef, useEffect } from 'react';
+import gsap from 'gsap';
 
 interface MagneticProps {
   children: React.ReactNode;
   className?: string;
-  strength?: number; // Intensidade do magnetismo (default: 0.25)
-  textStrength?: number; // Intensidade do texto interno (default: 0.12 para efeito de profundidade)
+  strength?: number;
+  textStrength?: number;
   onClick?: (e: React.MouseEvent) => void;
   [key: string]: any;
 }
@@ -19,38 +19,58 @@ export const Magnetic: React.FC<MagneticProps> = ({
   ...rest
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const textRef = useRef<HTMLDivElement>(null);
 
-  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (!ref.current) return;
-    const { clientX, clientY } = e;
-    const { height, width, left, top } = ref.current.getBoundingClientRect();
-    const middleX = clientX - (left + width / 2);
-    const middleY = clientY - (top + height / 2);
-    setPosition({ x: middleX * strength, y: middleY * strength });
-  };
+  useEffect(() => {
+    if (!ref.current || !textRef.current) return;
 
-  const handleMouseLeave = () => {
-    setPosition({ x: 0, y: 0 });
-  };
+    // Use quickTo for high-performance zero-lag DOM updates
+    const xTo = gsap.quickTo(ref.current, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    const yTo = gsap.quickTo(ref.current, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    
+    const textXTo = gsap.quickTo(textRef.current, "x", { duration: 1, ease: "elastic.out(1, 0.3)" });
+    const textYTo = gsap.quickTo(textRef.current, "y", { duration: 1, ease: "elastic.out(1, 0.3)" });
+
+    const mouseMove = (e: MouseEvent) => {
+      const { clientX, clientY } = e;
+      const { height, width, left, top } = ref.current!.getBoundingClientRect();
+      const middleX = clientX - (left + width / 2);
+      const middleY = clientY - (top + height / 2);
+      
+      xTo(middleX * strength);
+      yTo(middleY * strength);
+      textXTo(middleX * textStrength);
+      textYTo(middleY * textStrength);
+    };
+
+    const mouseLeave = () => {
+      xTo(0);
+      yTo(0);
+      textXTo(0);
+      textYTo(0);
+    };
+
+    ref.current.addEventListener("mousemove", mouseMove);
+    ref.current.addEventListener("mouseleave", mouseLeave);
+
+    return () => {
+      if (ref.current) {
+        ref.current.removeEventListener("mousemove", mouseMove);
+        ref.current.removeEventListener("mouseleave", mouseLeave);
+      }
+    };
+  }, [strength, textStrength]);
 
   return (
-    <motion.div
+    <div
       ref={ref}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
       onClick={onClick}
-      animate={{ x: position.x, y: position.y }}
-      transition={{ type: 'spring', stiffness: 380, damping: 28, mass: 0.15 }}
-      className={`inline-block ${className}`}
+      className={`inline-block cursor-pointer ${className}`}
       {...rest}
     >
-      <motion.div
-        animate={{ x: position.x * (textStrength / strength), y: position.y * (textStrength / strength) }}
-        transition={{ type: 'spring', stiffness: 380, damping: 28, mass: 0.15 }}
-      >
+      <div ref={textRef} className="pointer-events-none">
         {children}
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
