@@ -7,17 +7,10 @@ interface SearchBarProps {
 }
 
 export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
-  <div
-    className="relative w-full max-w-xl mx-auto cursor-pointer group"
+  <button
+    type="button"
     onClick={onClick}
-    role="button"
-    tabIndex={0}
-    onKeyDown={(e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        onClick();
-      }
-    }}
+    className="relative w-full max-w-xl mx-auto cursor-pointer group text-left block focus:outline-none focus-visible:ring-2 focus-visible:ring-text-main focus-visible:ring-offset-2 rounded-full"
     aria-label="Abrir barra de pesquisa e comandos (Pressione Ctrl+K)"
   >
     {/* Glow sutil ao passar o cursor */}
@@ -42,5 +35,5 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
         </kbd>
       </div>
     </div>
-  </div>
+  </button>
 );

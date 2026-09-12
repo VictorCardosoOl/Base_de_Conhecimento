@@ -7,6 +7,7 @@ import { FAQ_DATA } from '../constants/index';
 import { Category, FAQItem } from '../types/index';
 import { useOutletContext } from 'react-router-dom';
 import { ReadingExperienceService } from '../services/readingExperienceService';
+import { KineticText } from '../components/ui/KineticText';
 
 export const HomePage: React.FC = () => {
     const [searchParams] = useSearchParams();
@@ -52,13 +53,17 @@ export const HomePage: React.FC = () => {
                         <div className="w-6 2xl:w-10 h-[1px] bg-stone-300 dark:bg-stone-700" />
                     </div>
 
-                    <h1 className={isIntroducaoCategory ? "text-xl sm:text-2xl 2xl:text-3xl font-serif font-light leading-tight tracking-tight text-text-main reveal" : "text-4xl lg:text-5xl 2xl:text-6xl 3xl:text-7xl font-serif font-light leading-tight tracking-tight text-text-main reveal"}>
+                    <div className={isIntroducaoCategory ? "text-xl sm:text-2xl 2xl:text-3xl font-serif font-light leading-tight tracking-tight text-text-main" : "title-sculptural font-serif font-light text-text-main"}>
                         {categoryParam ? (
-                            <span>{categoryParam}</span>
+                            <KineticText as="h1" delay={0.05}>
+                                {categoryParam}
+                            </KineticText>
                         ) : (
-                            <>Base de Conhecimento SST</>
+                            <KineticText as="h1" delay={0.05}>
+                                Base de Conhecimento SST
+                            </KineticText>
                         )}
-                    </h1>
+                    </div>
                 </div>
 
                 <div className="reveal flex flex-col items-center gap-3" style={{ animationDelay: '80ms' }}>

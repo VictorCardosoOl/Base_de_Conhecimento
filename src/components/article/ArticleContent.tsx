@@ -1,5 +1,6 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState, useCallback } from 'react';
 import mermaid from 'mermaid';
+import DOMPurify from 'dompurify';
 import { ArticleLightbox } from './ArticleLightbox';
 import { ArticleHighlightsToolbar } from './ArticleHighlightsToolbar';
 import { ReadingExperienceService, TypographyPreferences, HighlightItem } from '../../services/readingExperienceService';
@@ -19,9 +20,28 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
   const contentRef = useRef<HTMLDivElement>(null);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>('');
+  const activeBlobUrlRef = useRef<string | null>(null);
   const [activeHighlights, setActiveHighlights] = useState<HighlightItem[]>(() => 
     articleId ? ReadingExperienceService.getHighlights(articleId) : []
   );
+
+  const handleCloseLightbox = useCallback(() => {
+    if (activeBlobUrlRef.current) {
+      URL.revokeObjectURL(activeBlobUrlRef.current);
+      activeBlobUrlRef.current = null;
+    }
+    setLightboxSrc(null);
+  }, []);
+
+  // Cleanup de blob URL em unmount
+  useEffect(() => {
+    return () => {
+      if (activeBlobUrlRef.current) {
+        URL.revokeObjectURL(activeBlobUrlRef.current);
+        activeBlobUrlRef.current = null;
+      }
+    };
+  }, []);
 
   // 1. Escutar atualizações de destaques
   useEffect(() => {
@@ -34,7 +54,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
     return () => window.removeEventListener('sst_highlights_updated', handleHighlightsUpdate);
   }, [articleId]);
 
-  // 2. Inicializar Mermaid.js nos diagramas do artigo
+  // 2. Inicializar Mermaid.js nos diagramas do artigo com sanitização de SVG
   useEffect(() => {
     if (!contentRef.current) return;
 
@@ -42,7 +62,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
       mermaid.initialize({
         startOnLoad: false,
         theme: document.body.classList.contains('dark') ? 'dark' : 'neutral',
-        securityLevel: 'loose',
+        securityLevel: 'strict',
         fontFamily: 'var(--font-sans)',
       });
 
@@ -59,13 +79,18 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
         wrapper.id = id;
 
         mermaid.render(id + '-svg', code).then(({ svg }) => {
-          wrapper.innerHTML = svg;
+          // Sanitização explícita do SVG para prevenir SVG-based DOM XSS
+          const safeSvg = DOMPurify.sanitize(svg, { USE_PROFILES: { svg: true, svgFilters: true } });
+          wrapper.innerHTML = safeSvg;
           pre.replaceWith(wrapper);
           wrapper.addEventListener('click', () => {
-            // Permitir abrir o diagrama em tela cheia no lightbox
-            const svgBlob = new Blob([svg], { type: 'image/svg+xml;charset=utf-8' });
-            const URL = window.URL || window.webkitURL;
-            const blobUrl = URL.createObjectURL(svgBlob);
+            if (activeBlobUrlRef.current) {
+              URL.revokeObjectURL(activeBlobUrlRef.current);
+            }
+            const svgBlob = new Blob([safeSvg], { type: 'image/svg+xml;charset=utf-8' });
+            const URLObj = window.URL || window.webkitURL;
+            const blobUrl = URLObj.createObjectURL(svgBlob);
+            activeBlobUrlRef.current = blobUrl;
             setLightboxSrc(blobUrl);
             setLightboxAlt('Diagrama de Fluxo Mermaid');
           });
@@ -123,18 +148,25 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
     });
   }, [htmlContent]);
 
-  // Injetar marcações (Highlights) no HTML renderizado
+  // Injetar marcações (Highlights) no HTML e re-sanitizar após manipulação
   const processedHtml = React.useMemo(() => {
-    if (!htmlContent || activeHighlights.length === 0) return htmlContent;
+    if (!htmlContent) return '';
+    if (activeHighlights.length === 0) return htmlContent;
 
     let res = htmlContent;
     activeHighlights.forEach(h => {
       if (!h.text) return;
       const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color) ? h.color : 'amber';
       const regex = new RegExp(`(?![^<]*>)(${escaped})`, 'gi');
-      res = res.replace(regex, `<mark class="sst-highlight-${h.color}">$1</mark>`);
+      res = res.replace(regex, `<mark class="sst-highlight-${safeColor}">$1</mark>`);
     });
-    return res;
+
+    // Sanitiza novamente após a injeção dos elementos <mark> permitindo classes seguras
+    return DOMPurify.sanitize(res, {
+      ADD_TAGS: ['mark'],
+      ADD_ATTR: ['class', 'data-tooltip']
+    });
   }, [htmlContent, activeHighlights]);
 
   // Classes tipográficas dinâmicas
@@ -161,7 +193,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
       <ArticleLightbox
         src={lightboxSrc}
         alt={lightboxAlt}
-        onClose={() => setLightboxSrc(null)}
+        onClose={handleCloseLightbox}
       />
     </div>
   );

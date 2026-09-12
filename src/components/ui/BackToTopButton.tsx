@@ -23,9 +23,9 @@ export const BackToTopButton: React.FC = () => {
     <button
       onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
       aria-label="Voltar ao início da página"
-      className="fixed bottom-6 right-6 z-40 p-3 bg-text-main text-bg-main shadow-xl hover:opacity-85 transition-all duration-200 animate-fade-in-up border border-border"
+      className="fixed bottom-6 right-6 z-40 w-12 h-12 rounded-full flex items-center justify-center bg-text-main text-bg-main shadow-2xl hover:scale-110 active:scale-90 transition-all duration-120 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu animate-fade-in-up border border-border cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-text-main focus-visible:ring-offset-2"
     >
-      <ArrowUp size={16} />
+      <ArrowUp size={18} strokeWidth={2} />
     </button>
   );
 };

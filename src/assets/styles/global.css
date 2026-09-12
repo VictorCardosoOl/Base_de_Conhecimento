@@ -38,8 +38,11 @@
     --accent: #000000;
     --border: rgba(0, 0, 0, 0.1);
     --selection: rgba(0, 0, 0, 0.1);
+    color-scheme: light;
   }
 
+  :root.dark,
+  html.dark,
   body.dark {
     --bg-main: #000000;
     --bg-island: rgba(20, 20, 20, 0.65);
@@ -49,6 +52,7 @@
     --accent: #ffffff;
     --border: rgba(255, 255, 255, 0.12);
     --selection: rgba(255, 255, 255, 0.2);
+    color-scheme: dark;
   }
 
   html {
@@ -93,6 +97,20 @@
 
   .animate-fade-in-up {
     animation: fadeInUp 0.16s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Efeito Cinético Awwwards: Skew sutil baseado na velocidade física do scroll */
+  .scroll-reactive-skew {
+    transform: skewY(var(--scroll-skew, 0deg));
+    transition: transform 0.12s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform;
+  }
+
+  /* Tipografia Escultural Clamp Fluida */
+  .title-sculptural {
+    font-size: clamp(2rem, 1.2rem + 4.2vw, 5.8rem);
+    line-height: 1.04;
+    letter-spacing: -0.035em;
   }
 
   .no-scrollbar::-webkit-scrollbar {

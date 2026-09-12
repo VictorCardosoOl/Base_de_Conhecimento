@@ -14,7 +14,8 @@ const LoginPage = React.lazy(() => import('./pages/LoginPage').then(m => ({ defa
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const isAdmin = localStorage.getItem('isAdmin') === 'true';
-  if (!isAdmin) {
+  const hasSession = !!sessionStorage.getItem('sst_admin_session');
+  if (!isAdmin || !hasSession) {
     return <Navigate to="/login" replace />;
   }
   return <>{children}</>;

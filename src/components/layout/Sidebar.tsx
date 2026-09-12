@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home, Bell } from 'lucide-react';
 import { Category } from '../../types/index';
 import { getCategoryIcon } from '../../constants/navigation';
+import { Magnetic } from '../ui/MagneticButton';
 
 interface SidebarProps {
   currentCat: Category | null;
@@ -58,13 +59,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
       : 'text-text-muted hover:text-text-main hover:bg-stone-50 dark:hover:bg-white/5 font-medium'}
   `;
 
-  // Desktop positioning logic (ensuring true centering)
+  // Desktop positioning logic (ensuring true centering e largura adequada sem corte)
   const desktopPosClass = isHorizontal 
     ? `lg:left-1/2 lg:-translate-x-1/2 ${position === 'top' ? 'lg:top-6' : 'lg:bottom-6'} lg:flex-row lg:h-[4rem] lg:w-auto lg:px-6 lg:py-2`
-    : `lg:top-1/2 lg:-translate-y-1/2 ${position === 'left' ? (isArticleOpen ? 'lg:left-2' : 'lg:left-6') : (isArticleOpen ? 'lg:right-2' : 'lg:right-6')} lg:flex-col lg:h-auto lg:py-6 lg:px-2.5 ${isExpanded ? 'lg:w-[12rem]' : (isArticleOpen ? 'lg:w-14 lg:py-4 scale-90' : 'lg:w-16')}`;
+    : `lg:top-1/2 lg:-translate-y-1/2 ${position === 'left' ? (isArticleOpen ? 'lg:left-2' : 'lg:left-6') : (isArticleOpen ? 'lg:right-2' : 'lg:right-6')} lg:flex-col lg:h-auto lg:py-6 lg:px-3 ${isExpanded ? 'lg:w-[15rem]' : (isArticleOpen ? 'lg:w-14 lg:py-4 scale-90' : 'lg:w-16')}`;
 
   // Mobile drawer logic (always left drawer)
-  const mobilePosClass = `max-lg:top-0 max-lg:left-0 max-lg:h-full max-lg:w-[85vw] max-lg:max-w-[280px] max-lg:flex-col max-lg:py-6 max-lg:px-4 max-lg:border-r ${isOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-[150%]'}`;
+  const mobilePosClass = `max-lg:top-0 max-lg:left-0 max-lg:h-full max-lg:w-[85vw] max-lg:max-w-[290px] max-lg:flex-col max-lg:py-6 max-lg:px-4 max-lg:border-r ${isOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-[150%]'}`;
 
   return (
     <>
@@ -154,52 +155,56 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-border' : 'lg:pt-4 lg:mt-2 lg:border-t lg:border-border lg:px-2 lg:flex-col lg:items-stretch'}`}>
           {/* Notificações Push PWA */}
-          <button
-            onClick={async () => {
-              if (!('Notification' in window)) {
-                alert('Seu navegador não possui suporte nativo a Web Push Notifications.');
-                return;
-              }
-              if (Notification.permission === 'granted') {
-                new Notification('SST FAQ Atualizações', {
-                  body: 'Notificações corporativas ativadas! Você receberá comunicados urgentes de normas e eSocial.',
-                  icon: '/pwa-192x192.png'
-                });
-              } else {
-                const permission = await Notification.requestPermission();
-                if (permission === 'granted') {
-                  new Notification('SST FAQ Conectado', {
-                    body: 'Notificações ativadas com sucesso.',
+          <Magnetic strength={0.3} className="w-full">
+            <button
+              onClick={async () => {
+                if (!('Notification' in window)) {
+                  alert('Seu navegador não possui suporte nativo a Web Push Notifications.');
+                  return;
+                }
+                if (Notification.permission === 'granted') {
+                  new Notification('SST FAQ Atualizações', {
+                    body: 'Notificações corporativas ativadas! Você receberá comunicados urgentes de normas e eSocial.',
                     icon: '/pwa-192x192.png'
                   });
+                } else {
+                  const permission = await Notification.requestPermission();
+                  if (permission === 'granted') {
+                    new Notification('SST FAQ Conectado', {
+                      body: 'Notificações ativadas com sucesso.',
+                      icon: '/pwa-192x192.png'
+                    });
+                  }
                 }
-              }
-            }}
-            aria-label="Ativar Notificações Push do PWA"
-            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
-          >
-            <div className="flex items-center gap-4">
-              <Bell size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150" />
-              <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
-                Alertas
-              </span>
-              <TooltipLabel text="Notificações Push (PWA)" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
-            </div>
-          </button>
+              }}
+              aria-label="Ativar Notificações Push do PWA"
+              className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
+            >
+              <div className="flex items-center gap-4">
+                <Bell size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150" />
+                <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+                  Alertas
+                </span>
+                <TooltipLabel text="Notificações Push (PWA)" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+              </div>
+            </button>
+          </Magnetic>
 
-          <button
-            onClick={toggleDark}
-            aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-            className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
-          >
-            <div className="flex items-center gap-4">
-              {isDarkMode ? <Sun size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-150 transform-gpu" /> : <Moon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-150 transform-gpu" />}
-              <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
-                {isDarkMode ? 'Claro' : 'Escuro'}
-              </span>
-              <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
-            </div>
-          </button>
+          <Magnetic strength={0.3} className="w-full">
+            <button
+              onClick={toggleDark}
+              aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
+              className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
+            >
+              <div className="flex items-center gap-4">
+                {isDarkMode ? <Sun size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-150 transform-gpu" /> : <Moon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-150 transform-gpu" />}
+                <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+                  {isDarkMode ? 'Claro' : 'Escuro'}
+                </span>
+                <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+              </div>
+            </button>
+          </Magnetic>
           
           {isHorizontal && (
             <button

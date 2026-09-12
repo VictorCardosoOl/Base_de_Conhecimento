@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Sidebar } from '../components/layout/Sidebar';
 import { CommandPalette } from '../components/ui/CommandPalette';
 import { Category, FAQItem } from '../types/index';
@@ -47,6 +48,7 @@ export const MainLayout: React.FC = () => {
     const effectivelyArticleOpen = isArticleOpen || isArticleRoute;
 
     useEffect(() => {
+        document.documentElement.classList.toggle('dark', isDarkMode);
         document.body.classList.toggle('dark', isDarkMode);
         const metaThemeColor = document.querySelector('meta[name="theme-color"]');
         if (metaThemeColor) {
@@ -140,7 +142,23 @@ export const MainLayout: React.FC = () => {
                         >
                             <Menu size={20} strokeWidth={1.5} />
                         </button>
-                        <Outlet context={{ currentCategory, setCurrentCategory, openCommandPalette: () => setIsCommandPaletteOpen(true), setIsArticleOpen }} />
+
+                        {/* Transição Cinematográfica de Roteamento Awwwards (Otimizada para 120Hz) */}
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={location.pathname}
+                                initial={{ opacity: 0, y: 10 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -8 }}
+                                transition={{ 
+                                    duration: 0.22, 
+                                    ease: [0.16, 1, 0.3, 1] 
+                                }}
+                                className="w-full will-change-[transform,opacity]"
+                            >
+                                <Outlet context={{ currentCategory, setCurrentCategory, openCommandPalette: () => setIsCommandPaletteOpen(true), setIsArticleOpen }} />
+                            </motion.div>
+                        </AnimatePresence>
                     </div>
                 </main>
 

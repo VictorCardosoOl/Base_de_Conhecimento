@@ -6,16 +6,35 @@ export const LoginPage: React.FC = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
-    const handleLogin = (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
-        // Usuário de teste: admin@admin.com / admin
-        if (email === 'admin@admin.com' && password === 'admin') {
+        setError('');
+        setIsLoading(true);
+
+        // Simulação assíncrona com validação de credenciais de teste para ambiente SSG/Demo
+        const trimmedEmail = email.trim().toLowerCase();
+        
+        // Hash simples no client para evitar comparação de string pura em dump de memória
+        const encoder = new TextEncoder();
+        const data = encoder.encode(`${trimmedEmail}:${password}`);
+        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+        const hashArray = Array.from(new Uint8Array(hashBuffer));
+        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        // SHA-256 de "admin@admin.com:admin"
+        const expectedHash = '4e803d52367ba4f3fb87440ba73693e55c3c0eb4d7e2f5f190e22709210c85c2';
+
+        if (hashHex === expectedHash) {
+            const sessionToken = btoa(`sst_session_${Date.now()}_${Math.random()}`);
+            sessionStorage.setItem('sst_admin_session', sessionToken);
             localStorage.setItem('isAdmin', 'true');
             navigate('/admin');
         } else {
-            setError('Credenciais inválidas. Use admin@admin.com e senha admin');
+            setError('Credenciais incorretas. Consulte a documentação interna ou utilize as credenciais de teste fornecidas.');
+            setIsLoading(false);
         }
     };
 
@@ -29,7 +48,7 @@ export const LoginPage: React.FC = () => {
                     <h1 className="text-2xl font-serif text-text-main">Acesso Restrito</h1>
                     <p className="text-text-muted mt-2 text-center">Entre com suas credenciais para acessar o painel administrativo.</p>
                     <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-text-muted text-center leading-relaxed">
-                        <strong className="text-text-main font-semibold">Ambiente de Demonstração:</strong> Esta base opera como SSG (Static Site Generation). Artigos são versionados via Git/Markdown.
+                        <strong className="text-text-main font-semibold">Acesso de Demonstração:</strong> Credenciais de teste locais: <code className="font-mono text-[11px] font-semibold text-text-main">admin@admin.com</code> / <code className="font-mono text-[11px] font-semibold text-text-main">admin</code>. O conteúdo oficial é versionado via Git/Markdown.
                     </div>
                 </div>
 

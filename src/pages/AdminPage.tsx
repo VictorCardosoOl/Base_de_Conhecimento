@@ -45,6 +45,7 @@ export const AdminPage: React.FC = () => {
                     <button 
                         onClick={() => {
                             localStorage.removeItem('isAdmin');
+                            sessionStorage.removeItem('sst_admin_session');
                             navigate('/login');
                         }}
                         className="flex items-center gap-2 border border-border text-text-main px-4 py-2 rounded-lg font-medium hover:bg-selection transition-colors text-sm"

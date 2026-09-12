@@ -14,7 +14,8 @@ export const SEOHead: React.FC<SEOHeadProps> = ({
     isArticle = false,
     url = typeof window !== 'undefined' ? window.location.href : ''
 }) => {
-    const defaultImage = "https://exemplo.com.br/default-thumbnail.jpg"; // Substituir por thumbnail real
+    const origin = typeof window !== 'undefined' ? window.location.origin : '';
+    const defaultImage = `${origin}/pwa-512x512.png`;
 
     const schemaOrgJSONLD = isArticle ? {
         "@context": "https://schema.org",
