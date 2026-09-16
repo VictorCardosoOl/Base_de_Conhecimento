@@ -1,13 +1,13 @@
 import { renderHook, waitFor } from '@testing-library/react';
 import { describe, it, expect } from 'vitest';
-import { useArticleContent } from './useArticleContent';
-import { FAQItem, Category } from '../types/index';
+import { useArticleContent } from '../../hooks/use-article-content';
+import { FAQItem, Category } from '../../types/index';
 
 const createMockArticle = (contentVal: any): FAQItem => ({
   id: 'test-article',
   question: 'Pergunta Teste',
   answer: 'Resposta de Fallback',
-  category: Category.INTRODUCAO,
+  category: Category.SOBRE,
   date: '11 Set 2026',
   content: contentVal,
 });

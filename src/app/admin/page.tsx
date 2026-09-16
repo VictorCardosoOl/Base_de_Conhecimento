@@ -1,9 +1,9 @@
-﻿"use client";
+"use client";
 import React, { useState, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { FileText, Plus, Edit, Trash2, Search, AlertCircle, Clock, CheckCircle2, MessageSquare, ShieldAlert } from 'lucide-react';
-import { FAQ_DATA } from '@/constants/index';
-import { AnalyticsService } from '@/services/analyticsService';
+import { FAQ_DATA } from '@/config/index';
+import { AnalyticsService } from '@/services/analytics-service';
 
 export default function AdminPage() {
     const navigate = useRouter();
@@ -47,14 +47,14 @@ export default function AdminPage() {
                         onClick={() => {
                             localStorage.removeItem('isAdmin');
                             sessionStorage.removeItem('sst_admin_session');
-                            navigate('/login');
+                            navigate.push('/login');
                         }}
                         className="flex items-center gap-2 border border-border text-text-main px-4 py-2 rounded-lg font-medium hover:bg-selection transition-colors text-sm"
                     >
                         Sair
                     </button>
                     <button 
-                        onClick={() => navigate('/admin/editor')}
+                        onClick={() => navigate.push('/admin/editor')}
                         className="flex items-center gap-2 bg-text-main text-bg-main px-4 py-2 rounded-lg font-medium hover:opacity-90 transition-opacity text-sm"
                     >
                         <Plus size={16} /> Novo Artigo
@@ -128,7 +128,7 @@ export default function AdminPage() {
                                         </td>
                                         <td className="p-4 text-right opacity-0 group-hover:opacity-100 transition-opacity">
                                             <div className="flex items-center justify-end gap-2">
-                                                <button onClick={() => navigate('/admin/editor')} className="p-2 text-text-muted hover:text-text-main rounded-lg hover:bg-selection transition-colors">
+                                                <button onClick={() => navigate.push('/admin/editor')} className="p-2 text-text-muted hover:text-text-main rounded-lg hover:bg-selection transition-colors">
                                                     <Edit size={16} />
                                                 </button>
                                                 <button className="p-2 text-text-muted hover:text-red-600 rounded-lg hover:bg-red-500/20 transition-colors">
@@ -183,7 +183,7 @@ export default function AdminPage() {
                                         </td>
                                         <td className="p-4 text-right">
                                             <button
-                                                onClick={() => navigate('/admin/editor')}
+                                                onClick={() => navigate.push('/admin/editor')}
                                                 className="px-3 py-1 text-xs font-semibold rounded-lg bg-text-main text-bg-main hover:opacity-90"
                                             >
                                                 Criar Artigo
@@ -226,7 +226,7 @@ export default function AdminPage() {
                                 </div>
                                 <div className="pt-2 flex justify-end">
                                     <button
-                                        onClick={() => navigate('/admin/editor')}
+                                        onClick={() => navigate.push('/admin/editor')}
                                         className="text-xs font-semibold text-text-main hover:underline flex items-center gap-1"
                                     >
                                         Revisar e Atualizar Selo <Edit size={12} />

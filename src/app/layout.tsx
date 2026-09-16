@@ -19,6 +19,7 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: "Base de Conhecimento SST | Padrão eSocial",
   description: "Guias oficiais, diretrizes e procedimentos consolidados de Saúde e Segurança do Trabalho. Pesquise fluxos, eventos do eSocial e regras de negócio.",
+  manifest: "/manifest.json",
   openGraph: {
     title: "Base de Conhecimento SST",
     description: "Guias e procedimentos consolidados de SST e eSocial.",

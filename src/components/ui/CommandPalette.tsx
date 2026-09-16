@@ -3,10 +3,11 @@ import { Command } from 'cmdk';
 import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { FAQItem, Category } from '../../types/index';
-import { FAQ_DATA } from '../../constants/index';
-import { useSearch } from '../../hooks/useSearch';
-import { AnalyticsService } from '../../services/analyticsService';
-import { ReadingExperienceService } from '../../services/readingExperienceService';
+import { FAQ_DATA } from '../../config/index';
+import { useSearch } from '../../hooks/use-search';
+import { AnalyticsService } from '../../services/analytics-service';
+import { ReadingExperienceService } from '../../services/reading-experience-service';
+import { useFocusTrap } from '../../hooks/use-focus-trap';
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -27,6 +28,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
+
+  useFocusTrap(modalRef, isOpen);
 
   // Fuzzy Search for Articles
   const filteredArticles = useSearch(FAQ_DATA, inputValue, {

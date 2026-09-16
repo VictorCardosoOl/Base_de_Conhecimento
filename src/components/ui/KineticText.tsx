@@ -39,7 +39,7 @@ export const KineticText: React.FC<KineticTextProps> = ({
       rotateX: 0,
       transition: {
         duration: 1.2,
-        ease: [0.16, 1, 0.3, 1] // equivalent to expo.out
+        ease: [0.16, 1, 0.3, 1] as any // equivalent to expo.out
       }
     }
   };

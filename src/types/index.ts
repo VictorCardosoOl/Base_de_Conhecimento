@@ -1,5 +1,5 @@
 export enum Category {
-  INTRODUCAO = 'Introdução',
+  SOBRE = 'Sobre',
   GRO = 'GRO',
   ESOCIAL = 'eSocial',
   INFORMACOES = 'Informações',
@@ -18,7 +18,7 @@ export interface FAQItem {
   excerpt?: string;
   tags?: string[];
   searchText?: string;
-  content?: any;
+  content?: string | (() => Promise<{ default: { content: string } }>);
   // Gestão de Validade e Auditoria de Conteúdo
   validityMonths?: number;
   lastReviewed?: string;

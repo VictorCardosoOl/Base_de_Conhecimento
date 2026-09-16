@@ -1,4 +1,4 @@
-﻿import fs from "fs";
+import fs from "fs";
 import path from "path";
 import matter from "gray-matter";
 
@@ -45,14 +45,10 @@ export function getAllArticles(): FAQItem[] {
       const question = data.question || data.title || path.basename(filePath, ".md");
       
       const plainText = content
-          .replace(/!\[.*?\]\(.*?\)/g, "")
-          .replace(/\[([^\]]+)\]\(.*?\)/g, "$1")
-          .replace(/#{1,6}\s+/g, "")
-          .replace(/(\*\*|__)(.*?)\1/g, "$2")
-          .replace(/(\*|_)(.*?)\1/g, "$2")
-          .replace(/`{3}[\s\S]*?`{3}/g, "")
-          .replace(/`(.+?)`/g, "$1")
-          .replace(/\n/g, " ")
+          .replace(/```[\s\S]*?```/g, " ")
+          .replace(/<[^>]*>/g, " ")
+          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
+          .replace(/[#*`_~]/g, " ")
           .replace(/\s+/g, " ")
           .trim();
 

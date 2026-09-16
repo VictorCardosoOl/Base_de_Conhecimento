@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { ThumbsUp, ThumbsDown, AlertTriangle, Check, Send } from 'lucide-react';
-import { AnalyticsService } from '../../services/analyticsService';
+import { AnalyticsService } from '../../services/analytics-service';
 
 interface ArticleFeedbackProps {
   articleId: string;

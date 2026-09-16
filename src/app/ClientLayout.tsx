@@ -10,7 +10,7 @@ import { BackToTopButton } from "@/components/ui/BackToTopButton";
 import { CookieBanner } from "@/components/ui/CookieBanner";
 import { LegalModal } from "@/components/ui/LegalModal";
 import { useConsent } from "@/contexts/ConsentContext";
-import { useReadingQueue } from "@/hooks/useReadingQueue";
+import { useReadingQueue } from "@/hooks/use-reading-queue";
 import { initTelemetry } from "@/lib/telemetry";
 
 const CommandPalette = lazy(() => 
@@ -42,7 +42,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sidebarPos, setSidebarPos] = useState<"left"|"right"|"top"|"bottom">("left");
     const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-    const [currentCategory, setCurrentCategory] = useState<string | null>(null);
+    const [currentCategory, setCurrentCategory] = useState<any | null>(null);
 
     useEffect(() => {
         setSidebarPos((localStorage.getItem("sidebarPos") as any) || "left");
@@ -84,7 +84,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
         return () => window.removeEventListener("keydown", handleGlobalKeys);
     }, [isCommandPaletteOpen, isArticleRoute]);
 
-    const handleCategorySelect = (cat: string | null) => {
+    const handleCategorySelect = (cat: any | null) => {
         setCurrentCategory(cat);
         if (cat) {
             router.push(`/?category=${encodeURIComponent(cat)}`);

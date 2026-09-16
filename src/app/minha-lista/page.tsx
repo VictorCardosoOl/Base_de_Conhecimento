@@ -1,14 +1,14 @@
-﻿"use client";
+"use client";
 import React, { useState, useEffect } from 'react';
-import { MasterDetailGrid } from '@/components/layout/MasterDetailGrid';
-import { FAQ_DATA, DEFAULT_LEARNING_TRACKS } from '@/constants/index';
-import { useReadingQueue } from '@/hooks/useReadingQueue';
+import { ArticleGrid } from '@/components/layout/ArticleGrid';
+import { FAQ_DATA, DEFAULT_LEARNING_TRACKS } from '@/config/index';
+import { useReadingQueue } from '@/hooks/use-reading-queue';
 import { FAQItem, LearningTrack } from '@/types/index';
 
-import { AnalyticsService } from '@/services/analyticsService';
-import { ReadingExperienceService, ReadingGoal } from '@/services/readingExperienceService';
+import { AnalyticsService } from '@/services/analytics-service';
+import { ReadingExperienceService, ReadingGoal } from '@/services/reading-experience-service';
 import { BookOpen, CheckCircle, GraduationCap, Clock, Check, Target, RotateCcw } from 'lucide-react';
-import { SEOHead } from '@/components/layout/SEOHead';
+
 
 export default function QueuePage() {
     const { queue } = useReadingQueue();
@@ -59,10 +59,7 @@ export default function QueuePage() {
 
     return (
         <div className="space-y-8">
-            <SEOHead 
-                title="Minha Lista e Trilhas de Leitura | SST FAQ" 
-                description="Acompanhe suas metas de leitura, trilhas de aprendizagem em SST e eSocial, e artigos salvos para estudo offline."
-            />
+
             <header className="space-y-4 2xl:space-y-6 max-w-5xl">
                 <div className="space-y-1 2xl:space-y-2">
                     <div className="flex items-center gap-3 text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300 reveal">
@@ -250,7 +247,7 @@ export default function QueuePage() {
                     </div>
 
                     <div className="pt-2">
-                        <MasterDetailGrid items={trackArticles}  />
+                        <ArticleGrid items={trackArticles}  />
                     </div>
                 </div>
             )}
@@ -259,7 +256,7 @@ export default function QueuePage() {
             {viewMode === 'queue' && (
                 <div className="space-y-4">
                     <div className="pt-2 w-full max-w-screen-2xl 3xl:max-w-[2100px] mx-auto">
-                        <MasterDetailGrid items={displayedQueueArticles}  />
+                        <ArticleGrid items={displayedQueueArticles}  />
                     </div>
 
                     {displayedQueueArticles.length === 0 && (

@@ -5,14 +5,14 @@ import { ArrowLeft, ChevronRight, Printer, ShieldCheck, Share2, Award, X } from 
 import { createPortal } from 'react-dom';
 import Lenis from 'lenis';
 import { FAQItem } from '../../types/index';
-import { useArticleContent } from '../../hooks/useArticleContent';
-import { useReadingGoalTracker } from '../../hooks/useReadingGoalTracker';
+import { useArticleContent } from '../../hooks/use-article-content';
+import { useReadingGoalTracker } from '../../hooks/use-reading-goal-tracker';
 import { ArticleContent } from '../article/ArticleContent';
 import { ArticleSkeleton } from '../article/ArticleSkeleton';
 import { ArticleFeedback } from '../article/ArticleFeedback';
 import { ArticleReadingControls } from '../article/ArticleReadingControls';
 import { TableOfContents } from '../article/TableOfContents';
-import { ReadingExperienceService, TypographyPreferences } from '../../services/readingExperienceService';
+import { ReadingExperienceService, TypographyPreferences } from '../../services/reading-experience-service';
 
 const ModalArticleContent = ({ article, typography }: { article: FAQItem; typography?: any }) => {
   const { htmlContent, isLoading } = useArticleContent(article);
@@ -39,10 +39,15 @@ interface ArticleModalProps {
   item: FAQItem;
 }
 
+import { useFocusTrap } from '../../hooks/use-focus-trap';
+
 export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, layoutId, item }) => {
+  const dialogRef = useRef<HTMLDivElement>(null);
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const scopedLenisRef = useRef<Lenis | null>(null);
+
+  useFocusTrap(dialogRef, isOpen);
 
   // Estados da nova experiência de leitura
   const [isZenMode, setIsZenMode] = useState(false);
@@ -176,6 +181,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
           />
           
           <motion.div
+            ref={dialogRef}
             role="dialog"
             aria-modal="true"
             aria-labelledby={`modal-title-${item.id}`}

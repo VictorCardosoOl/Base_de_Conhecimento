@@ -1,6 +1,6 @@
 import * as Sentry from '@sentry/react';
 
-const SENTRY_DSN = import.meta.env.VITE_SENTRY_DSN;
+const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN || (import.meta as any).env?.VITE_SENTRY_DSN;
 const CONSENT_STORAGE_KEY = 'sst_user_cookie_consent';
 
 export function hasUserConsented(): boolean {
@@ -54,7 +54,7 @@ export function initTelemetry() {
 
 // Reportador customizado para capturar falhas em lazy chunks e parsers de conteúdo
 export function reportContentError(error: unknown, context?: Record<string, any>) {
-  if (import.meta.env.DEV) {
+  if (process.env.NODE_ENV === 'development') {
     console.error('🚨 [Content Error / Chunk Failure]:', error, context);
   }
   

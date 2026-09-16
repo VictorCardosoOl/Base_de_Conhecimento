@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from 'vitest';
-import { ReadingExperienceService } from '../readingExperienceService';
+import { ReadingExperienceService } from '../reading-experience-service';
 
 describe('ReadingExperienceService', () => {
   beforeEach(() => {

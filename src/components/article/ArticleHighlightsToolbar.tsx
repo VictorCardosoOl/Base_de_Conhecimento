@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Highlighter, Trash2, Check } from 'lucide-react';
-import { ReadingExperienceService, HighlightItem } from '../../services/readingExperienceService';
+import { ReadingExperienceService, HighlightItem } from '../../services/reading-experience-service';
 
 interface ArticleHighlightsToolbarProps {
   articleId: string;

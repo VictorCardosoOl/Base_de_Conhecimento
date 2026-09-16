@@ -3,14 +3,15 @@ import catalog from '../data/catalog.json';
 import { ARTICLE_CONTENT_MAP } from '../data/mapping';
 
 const mapCategory = (cat?: string): Category => {
-  if (!cat) return Category.INTRODUCAO;
+  if (!cat) return Category.SOBRE;
   const normalized = cat.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   switch (normalized) {
     case 'esocial': return Category.ESOCIAL;
     case 'eventos': return Category.EVENTOS;
     case 'informacoes': return Category.INFORMACOES;
     case 'gro': return Category.GRO;
-    case 'introducao': return Category.INTRODUCAO;
+    case 'introducao': return Category.SOBRE;
+    case 'sobre': return Category.SOBRE;
     case 'coletivo': return Category.COLETIVO;
     case 'financeiro': return Category.FINANCEIRO;
     case 'tecnologia':

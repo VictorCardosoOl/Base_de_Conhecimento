@@ -2,7 +2,7 @@ import { BookOpen, Shield, FileText, Info, Users, Calendar, List, CreditCard, Mo
 import { Category } from '../types/index';
 
 export const CATEGORY_ICONS: Record<string, LucideIcon> = {
-  [Category.INTRODUCAO]: BookOpen,
+  [Category.SOBRE]: BookOpen,
   [Category.GRO]: Shield,
   [Category.ESOCIAL]: FileText,
   [Category.INFORMACOES]: Info,

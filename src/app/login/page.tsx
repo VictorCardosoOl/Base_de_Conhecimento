@@ -1,7 +1,8 @@
-﻿"use client";
+"use client";
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { Lock } from 'lucide-react';
+import { authenticateAdmin } from '@/actions/auth-actions';
 
 export default function LoginPage() {
     const [email, setEmail] = useState('');
@@ -24,26 +25,16 @@ export default function LoginPage() {
         setError('');
         setIsLoading(true);
 
-        // SimulaÃ§Ã£o assÃ­ncrona com validaÃ§Ã£o de credenciais de teste para ambiente SSG/Demo
-        const trimmedEmail = email.trim().toLowerCase();
-        
-        // Hash simples no client para evitar comparaÃ§Ã£o de string pura em dump de memÃ³ria
-        const encoder = new TextEncoder();
-        const data = encoder.encode(`${trimmedEmail}:${password}`);
-        const hashBuffer = await crypto.subtle.digest('SHA-256', data);
-        const hashArray = Array.from(new Uint8Array(hashBuffer));
-        const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        // Server action hides the expected hash and logic from the client bundle
+        const isValid = await authenticateAdmin(email, password);
 
-        // SHA-256 de "admin@admin.com:admin"
-        const expectedHash = '4e803d52367ba4f3fb87440ba73693e55c3c0eb4d7e2f5f190e22709210c85c2';
-
-        if (hashHex === expectedHash) {
+        if (isValid) {
             const sessionToken = btoa(`sst_session_${Date.now()}_${Math.random()}`);
             sessionStorage.setItem('sst_admin_session', sessionToken);
             localStorage.setItem('isAdmin', 'true');
-            navigate('/admin');
+            navigate.push('/admin');
         } else {
-            setError('Credenciais incorretas. Consulte a documentaÃ§Ã£o interna ou utilize as credenciais de teste fornecidas.');
+            setError('Credenciais incorretas. Consulte a documentação interna ou utilize as credenciais de teste fornecidas.');
             setIsLoading(false);
         }
     };

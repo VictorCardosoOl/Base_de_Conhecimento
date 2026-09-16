@@ -6,15 +6,15 @@ import { createPortal } from 'react-dom';
 import { usePathname } from 'next/navigation';
 import Lenis from 'lenis';
 import { FAQItem } from '../../types/index';
-import { useArticleContent } from '../../hooks/useArticleContent';
-import { useReadingQueue } from '../../hooks/useReadingQueue';
-import { useReadingGoalTracker } from '../../hooks/useReadingGoalTracker';
+import { useArticleContent } from '../../hooks/use-article-content';
+import { useReadingQueue } from '../../hooks/use-reading-queue';
+import { useReadingGoalTracker } from '../../hooks/use-reading-goal-tracker';
 import { ArticleContent } from '../article/ArticleContent';
 import { ArticleSkeleton } from '../article/ArticleSkeleton';
 import { ArticleFeedback } from '../article/ArticleFeedback';
 import { ArticleReadingControls } from '../article/ArticleReadingControls';
 import { TableOfContents } from '../article/TableOfContents';
-import { ReadingExperienceService, TypographyPreferences } from '../../services/readingExperienceService';
+import { ReadingExperienceService, TypographyPreferences } from '../../services/reading-experience-service';
 import { ArticleModal } from './ArticleModal';
 
 interface CardItemProps {
@@ -86,7 +86,7 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({ item, o
   );
 };
 
-export const MasterDetailGrid = ({ items, onModalStateChange }: { items: FAQItem[], onModalStateChange?: (isOpen: boolean) => void }) => {
+export const ArticleGrid = ({ items, onModalStateChange }: { items: FAQItem[], onModalStateChange?: (isOpen: boolean) => void }) => {
   const [selectedItem, setSelectedItem] = useState<FAQItem | null>(null);
   const { queue, toggleQueue } = useReadingQueue();
   const location = usePathname();
@@ -101,7 +101,7 @@ export const MasterDetailGrid = ({ items, onModalStateChange }: { items: FAQItem
     if (selectedItem) {
       handleSetSelected(null);
     }
-  }, [location.pathname, location.search]);
+  }, [location]);
 
   return (
     <div className="w-full">

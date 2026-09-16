@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { ReadingExperienceService } from '../services/readingExperienceService';
+import { ReadingExperienceService } from '../services/reading-experience-service';
 
 interface UseReadingGoalTrackerOptions {
   articleId: string;

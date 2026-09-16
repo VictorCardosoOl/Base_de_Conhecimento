@@ -1,16 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Type, Eye, EyeOff, Check, SlidersHorizontal } from 'lucide-react';
-import { ReadingExperienceService, TypographyPreferences } from '../../services/readingExperienceService';
+import { ReadingExperienceService, TypographyPreferences } from '../../services/reading-experience-service';
 
 interface ArticleReadingControlsProps {
   isZenMode: boolean;
   onToggleZenMode: () => void;
+  typography?: TypographyPreferences;
   onTypographyChange?: (pref: TypographyPreferences) => void;
 }
 
 export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
   isZenMode,
   onToggleZenMode,
+  typography,
   onTypographyChange
 }) => {
   const [isOpen, setIsOpen] = useState(false);

@@ -53,6 +53,7 @@
     "@testing-library/react": "16.3.3",
     "@types/node": "22.14.0",
     "@types/react": "19.3.0",
+    "@types/react-dom": "^19.3.0",
     "@vitest/coverage-v8": "^5.0.0",
     "autoprefixer": "10.4.23",
     "gray-matter": "4.0.3",

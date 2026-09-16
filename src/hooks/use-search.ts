@@ -54,7 +54,7 @@ export function useSearch<T extends Record<string, any>>(
         const searchHits = miniSearch.engine.search(trimmed);
         const hitIds = new Set(searchHits.map(hit => hit.id));
         const matchedItems: T[] = searchHits
-            .map(hit => miniSearch.idMap.get(hit.id))
+            .map(hit => miniSearch.idMap.get(hit.id) as T | undefined)
             .filter((item): item is T => item !== undefined);
 
         // 2. Substring fallback para acrônimos ou termos contidos em palavras compostas (ex: "CAT" dentro de "LTCAT")

@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach, vi } from 'vitest';
-import { useReadingQueue } from './useReadingQueue';
+import { useReadingQueue } from '../../hooks/use-reading-queue';
 
 describe('useReadingQueue Hook (State & Persistence Logic)', () => {
   beforeEach(() => {

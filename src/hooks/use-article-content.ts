@@ -26,13 +26,10 @@ export const useArticleContent = (article: FAQItem) => {
                     markdownContent = article.content;
                 }
                 
-                // Aguarda 400ms para garantir que a animação de entrada do Modal (framer-motion) 
-                // seja concluída em 60/120fps sem interrupções da Thread Principal.
-                await new Promise(resolve => setTimeout(resolve, 400));
-
+                // A renderização não sofre mais atraso forçado.
                 if (mounted) {
                     if (markdownContent) {
-                        let rawHtml = await marked.parse(markdownContent, { headerIds: false });
+                        let rawHtml: string = await marked.parse(markdownContent) as string;
                         
                         // Injetar Glossario
                         const glossaryEntries = Object.entries(glossaryData || {});

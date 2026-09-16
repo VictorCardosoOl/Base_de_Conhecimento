@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home, Bell, ShieldCheck } from 'lucide-react';
 import { Category } from '../../types/index';
-import { getCategoryIcon } from '../../constants/navigation';
+import { getCategoryIcon } from '../../config/navigation';
 import { useConsent } from '../../contexts/ConsentContext';
 
 interface SidebarProps {

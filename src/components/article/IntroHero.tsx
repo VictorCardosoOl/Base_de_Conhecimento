@@ -2,7 +2,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export const IntroducaoHero: React.FC = () => {
+export const IntroHero: React.FC = () => {
   return (
     <div className="w-full relative select-none">
       {/* Container Principal:

@@ -6,7 +6,6 @@
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff",
-  "requestFramePermissions": [],
   "icons": [
     {
       "src": "pwa-192x192.png",

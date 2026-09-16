@@ -1,7 +1,7 @@
 "use client";
 import React, { useMemo } from "react";
-import { MasterDetailGrid } from "./MasterDetailGrid";
-import { FAQ_DATA } from "@/constants/index";
+import { ArticleGrid } from './ArticleGrid';
+import { FAQ_DATA } from '@/config/index';
 
 export function HomeGrid({ categoryParam }: { categoryParam: string | null }) {
   const articles = useMemo(() => {
@@ -9,5 +9,5 @@ export function HomeGrid({ categoryParam }: { categoryParam: string | null }) {
     return FAQ_DATA.filter((a) => a.category === categoryParam);
   }, [categoryParam]);
 
-  return <MasterDetailGrid items={articles} />;
+  return <ArticleGrid items={articles} />;
 }

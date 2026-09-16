@@ -3,7 +3,7 @@ import mermaid from 'mermaid';
 import DOMPurify from 'dompurify';
 import { ArticleLightbox } from './ArticleLightbox';
 import { ArticleHighlightsToolbar } from './ArticleHighlightsToolbar';
-import { ReadingExperienceService, TypographyPreferences, HighlightItem } from '../../services/readingExperienceService';
+import { ReadingExperienceService, TypographyPreferences, HighlightItem } from '../../services/reading-experience-service';
 import { Check, Copy } from 'lucide-react';
 
 interface ArticleContentProps {

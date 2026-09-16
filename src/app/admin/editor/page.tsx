@@ -3,12 +3,12 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { ArrowLeft, Save, Image as ImageIcon } from 'lucide-react';
 import { Category } from '@/types/index';
-import { saveArticle } from '@/actions/editorActions';
+import { saveArticle } from '@/actions/editor-actions';
 
 export default function EditorPage() {
     const navigate = useRouter();
     const [title, setTitle] = useState('');
-    const [category, setCategory] = useState<Category>(Category.INTRODUCAO);
+    const [category, setCategory] = useState<Category>(Category.SOBRE);
     const [content, setContent] = useState('');
     const [isSaving, setIsSaving] = useState(false);
 

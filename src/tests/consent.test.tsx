@@ -3,7 +3,7 @@ import { renderHook, act } from '@testing-library/react';
 import React from 'react';
 import { ConsentProvider, useConsent } from '../contexts/ConsentContext';
 import { hasUserConsented } from '../lib/telemetry';
-import { AnalyticsService } from '../services/analyticsService';
+import { AnalyticsService } from '../services/analytics-service';
 
 describe('LGPD Consent Gate & Privacy by Default', () => {
   beforeEach(() => {

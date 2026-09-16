@@ -1,6 +1,6 @@
 import { renderHook, act } from '@testing-library/react';
 import { describe, it, expect, beforeEach } from 'vitest';
-import { useSearch } from './useSearch';
+import { useSearch } from '../../hooks/use-search';
 
 interface MockItem {
   id: string;
