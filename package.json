@@ -58,6 +58,7 @@
     "@vitest/coverage-v8": "^5.0.0",
     "autoprefixer": "10.4.23",
     "gray-matter": "4.0.3",
+    "happy-dom": "^20.14.5",
     "husky": "^9.1.7",
     "jsdom": "^30.0.1",
     "lint-staged": "^17.5.1",
