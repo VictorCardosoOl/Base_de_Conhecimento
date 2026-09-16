@@ -27,7 +27,7 @@ describe('useArticleContent Hook (Markdown Parse & Sanitization)', () => {
 
   it('deve carregar conteúdo dinâmico via função assíncrona (lazy import)', async () => {
     const asyncArticle = createMockArticle(async () => ({
-      default: '# Título Importado Dinamicamente'
+      default: { content: '# Título Importado Dinamicamente' }
     }));
 
     const { result } = renderHook(() => useArticleContent(asyncArticle));
