@@ -1,6 +1,5 @@
 import React, { useRef } from 'react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { motion } from 'framer-motion';
 
 interface KineticTextProps {
   children: string;
@@ -12,37 +11,49 @@ interface KineticTextProps {
 export const KineticText: React.FC<KineticTextProps> = ({
   children,
   className = '',
-  as: Component = 'span',
+  as = 'span',
   delay = 0
 }) => {
-  const containerRef = useRef<HTMLElement>(null);
   const words = children.split(' ');
 
-  useGSAP(() => {
-    if (!containerRef.current) return;
-    const wordElements = containerRef.current.querySelectorAll('.word-inner');
-    
-    gsap.fromTo(wordElements, 
-      { 
-        yPercent: 100,
-        opacity: 0,
-        rotateX: 18
-      },
-      {
-        yPercent: 0,
-        opacity: 1,
-        rotateX: 0,
-        duration: 1.2,
-        ease: "expo.out",
-        stagger: 0.05,
-        delay: delay,
-        clearProps: "all" // Remove inline styles after animation for VRAM cleanup
+  const containerVariants = {
+    hidden: { opacity: 1 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.05,
+        delayChildren: delay,
       }
-    );
-  }, { scope: containerRef, dependencies: [children, delay] });
+    }
+  };
+
+  const wordVariants = {
+    hidden: {
+      y: "100%",
+      opacity: 0,
+      rotateX: 18
+    },
+    visible: {
+      y: "0%",
+      opacity: 1,
+      rotateX: 0,
+      transition: {
+        duration: 1.2,
+        ease: [0.16, 1, 0.3, 1] // equivalent to expo.out
+      }
+    }
+  };
+
+  // Convert 'as' prop to motion component dynamically
+  const MotionComponent = motion[as as keyof typeof motion] as any;
 
   return (
-    <Component ref={containerRef} className={`inline-block ${className}`}>
+    <MotionComponent
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+      className={`inline-block ${className}`}
+    >
       <span className="inline-flex flex-wrap gap-x-[0.28em]">
         {words.map((word, idx) => (
           <span 
@@ -50,12 +61,15 @@ export const KineticText: React.FC<KineticTextProps> = ({
             className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em]"
             style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' }}
           >
-            <span className="word-inner inline-block will-change-transform transform-gpu origin-bottom">
+            <motion.span 
+              variants={wordVariants}
+              className="word-inner inline-block will-change-transform transform-gpu origin-bottom"
+            >
               {word}
-            </span>
+            </motion.span>
           </span>
         ))}
       </span>
-    </Component>
+    </MotionComponent>
   );
 };

@@ -1,15 +1,16 @@
-
+"use client";
 import React from 'react';
 import { Search, Command } from 'lucide-react';
 
-interface SearchBarProps {
-  onClick: () => void;
-}
+export const SearchBar: React.FC = () => {
+  const handleClick = () => {
+    window.dispatchEvent(new KeyboardEvent("keydown", { key: "/", metaKey: true }));
+  };
 
-export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
+  return (
   <button
     type="button"
-    onClick={onClick}
+    onClick={handleClick}
     className="relative w-full max-w-xl mx-auto cursor-pointer group text-left block focus:outline-none focus-visible:ring-2 focus-visible:ring-text-main focus-visible:ring-offset-2 rounded-full"
     aria-label="Abrir barra de pesquisa e comandos (Pressione Ctrl+K)"
   >
@@ -36,4 +37,5 @@ export const SearchBar: React.FC<SearchBarProps> = ({ onClick }) => (
       </div>
     </div>
   </button>
-);
+  );
+};

@@ -54,7 +54,10 @@ export function initTelemetry() {
 
 // Reportador customizado para capturar falhas em lazy chunks e parsers de conteúdo
 export function reportContentError(error: unknown, context?: Record<string, any>) {
-  console.error('🚨 [Content Error / Chunk Failure]:', error, context);
+  if (import.meta.env.DEV) {
+    console.error('🚨 [Content Error / Chunk Failure]:', error, context);
+  }
+  
   if (hasUserConsented() && SENTRY_DSN) {
     Sentry.captureException(error, {
       extra: context,

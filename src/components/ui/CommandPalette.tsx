@@ -1,8 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
 import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
-import gsap from 'gsap';
-import { useGSAP } from '@gsap/react';
+import { motion } from 'framer-motion';
 import { FAQItem, Category } from '../../types/index';
 import { FAQ_DATA } from '../../constants/index';
 import { useSearch } from '../../hooks/useSearch';
@@ -45,6 +44,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   useEffect(() => {
     if (isOpen) {
       setInputValue('');
+      // Delay autoFocus to match animation timing
+      setTimeout(() => inputRef.current?.focus(), 300);
     }
   }, [isOpen]);
 
@@ -59,18 +60,6 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
     return () => clearTimeout(timer);
   }, [inputValue, filteredArticles.length]);
-
-  useGSAP(() => {
-    if (isOpen) {
-      const tl = gsap.timeline({
-        onComplete: () => {
-          inputRef.current?.focus();
-        }
-      });
-      tl.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: "power2.out" })
-        .fromTo(modalRef.current, { opacity: 0, scale: 0.95, y: 12, filter: 'blur(4px)' }, { opacity: 1, scale: 1, y: 0, filter: 'blur(0px)', duration: 0.5, ease: "expo.out" }, "-=0.2");
-    }
-  }, { dependencies: [isOpen], scope: containerRef });
 
   // Lock Body Scroll & Handle ESC
   useEffect(() => {
@@ -92,19 +81,25 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   return (
     <div ref={containerRef} className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
       {/* Backdrop */}
-      <div
+      <motion.div
         ref={backdropRef}
-        className="fixed inset-0 bg-stone-900/40 dark:bg-black/80 backdrop-blur-md opacity-0"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3, ease: "easeOut" }}
+        className="fixed inset-0 bg-stone-900/40 dark:bg-black/80 backdrop-blur-md"
         onClick={onClose}
       />
 
       {/* Modal Content */}
-      <div
+      <motion.div
         ref={modalRef}
+        initial={{ opacity: 0, scale: 0.95, y: 12, filter: 'blur(4px)' }}
+        animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
+        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
         role="dialog"
         aria-modal="true"
         aria-label="Comandos e Busca"
-        className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/20 dark:shadow-black/60 rounded-3xl overflow-hidden opacity-0 border border-border bg-bg-island backdrop-blur-2xl"
+        className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/20 dark:shadow-black/60 rounded-3xl overflow-hidden border border-border bg-bg-island backdrop-blur-2xl"
       >
         <Command
           className="w-full bg-transparent overflow-hidden"
@@ -239,7 +234,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             )}
           </Command.List>
         </Command>
-      </div>
+      </motion.div>
     </div>
   );
 };

@@ -1,6 +1,5 @@
 import React, { useEffect, useRef } from 'react';
 import Lenis from 'lenis';
-import gsap from 'gsap';
 
 interface SmoothScrollProps {
     children: React.ReactNode;
@@ -24,18 +23,16 @@ export const SmoothScroll: React.FC<SmoothScrollProps> = ({ children }) => {
         lenisRef.current = lenis;
 
         // O skew global foi removido para anular o Layout Thrashing.
-        // O GSAP ScrollTrigger deve ser usado localmente em cada componente se necessário.
-
-        // Sincronizando o Lenis 100% com o Ticker do GSAP (Regra de Ouro)
+        // Usamos requestAnimationFrame nativo ao invés do GSAP para não inchar o bundle
+        let rafId: number;
         const updateLenis = (time: number) => {
-            lenis.raf(time * 1000);
+            lenis.raf(time);
+            rafId = requestAnimationFrame(updateLenis);
         };
-
-        gsap.ticker.add(updateLenis);
-        gsap.ticker.lagSmoothing(0);
+        rafId = requestAnimationFrame(updateLenis);
 
         return () => {
-            gsap.ticker.remove(updateLenis);
+            cancelAnimationFrame(rafId);
             lenis.destroy();
         };
     }, []);

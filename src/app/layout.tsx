@@ -39,6 +39,25 @@ export default function RootLayout({
 }) {
   return (
     <html lang="pt-BR" suppressHydrationWarning className={`${inter.variable} ${playfair.variable} ${lexend.variable}`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var isDark = localStorage.getItem('isDarkMode');
+                var shouldBeDark = isDark === 'true' || (isDark === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (shouldBeDark) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.style.colorScheme = 'dark';
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.style.colorScheme = 'light';
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
+      </head>
       <body className="bg-bg-main text-text-main font-sans antialiased overflow-x-hidden selection:bg-selection" suppressHydrationWarning>
         <ConsentProvider>
             <ClientLayout>{children}</ClientLayout>

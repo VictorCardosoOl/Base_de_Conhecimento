@@ -59,28 +59,26 @@ export function useSearch<T extends Record<string, any>>(
 
         // 2. Substring fallback para acrônimos ou termos contidos em palavras compostas (ex: "CAT" dentro de "LTCAT")
         const lowerQuery = trimmed.toLowerCase();
-        for (const item of data) {
-            const itemId = (item as any).id !== undefined && (item as any).id !== null ? String((item as any).id) : '';
-            if (itemId && !hitIds.has(itemId)) {
-                const matchesAnyKey = options.keys.some(key => {
-                    const val = item[key];
-                    if (typeof val === 'string') {
-                        return val.toLowerCase().includes(lowerQuery);
-                    }
-                    if (Array.isArray(val)) {
-                        return val.some(v => typeof v === 'string' && v.toLowerCase().includes(lowerQuery));
-                    }
-                    return false;
-                });
+        
+        const fallbackItems = data.filter(item => {
+            const itemId = item.id !== undefined && item.id !== null ? String(item.id) : '';
+            
+            // Guard clause: se já foi encontrado pelo MiniSearch, pula
+            if (itemId && hitIds.has(itemId)) return false;
 
-                if (matchesAnyKey) {
-                    matchedItems.push(item);
-                    hitIds.add(itemId);
+            return options.keys.some(key => {
+                const val = item[key];
+                if (typeof val === 'string') {
+                    return val.toLowerCase().includes(lowerQuery);
                 }
-            }
-        }
+                if (Array.isArray(val)) {
+                    return val.some(v => typeof v === 'string' && v.toLowerCase().includes(lowerQuery));
+                }
+                return false;
+            });
+        });
 
-        return matchedItems;
+        return [...matchedItems, ...fallbackItems];
     }, [miniSearch, deferredQuery, data, options.keys]);
 
     return results;

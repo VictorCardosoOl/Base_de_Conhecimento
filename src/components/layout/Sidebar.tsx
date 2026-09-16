@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { Archive, Bookmark, Sun, Moon, Layout, Circle, Home, Bell, ShieldCheck } from 'lucide-react';
 import { Category } from '../../types/index';
 import { getCategoryIcon } from '../../constants/navigation';
-import { Magnetic } from '../ui/MagneticButton';
 import { useConsent } from '../../contexts/ConsentContext';
 
 interface SidebarProps {
@@ -24,14 +23,22 @@ interface SidebarProps {
 interface TooltipLabelProps {
   text: string;
   position: 'left' | 'right' | 'top' | 'bottom';
-  isHorizontal: boolean;
-  isArticleOpen?: boolean;
+  isExpanded: boolean;
 }
 
-const TooltipLabel: React.FC<TooltipLabelProps> = ({ text, position, isHorizontal, isArticleOpen }) => {
-  if (!isHorizontal && !isArticleOpen) return null;
+const TooltipLabel: React.FC<TooltipLabelProps> = ({ text, position, isExpanded }) => {
+  // Hide tooltip on desktop if the sidebar is already expanded (unless horizontal)
+  const isHorizontal = position === 'top' || position === 'bottom';
+  if (isExpanded && !isHorizontal) return null;
+
+  let posClasses = '';
+  if (position === 'top') posClasses = 'top-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2';
+  else if (position === 'bottom') posClasses = 'bottom-[calc(100%+0.5rem)] left-1/2 -translate-x-1/2';
+  else if (position === 'left') posClasses = 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2';
+  else posClasses = 'right-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2';
+
   return (
-    <span className={`hidden lg:block absolute ${position === 'top' || (isArticleOpen && !isHorizontal) ? 'top-[calc(100%+0.5rem)]' : 'bottom-[calc(100%+0.5rem)]'} ${isArticleOpen && !isHorizontal ? 'left-[calc(100%+0.5rem)] top-1/2 -translate-y-1/2' : 'left-1/2 -translate-x-1/2'} px-3 py-1.5 glass bg-[var(--text-main)] text-[var(--bg-main)] text-[11px] font-medium tracking-wide rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-150 ease-out whitespace-nowrap z-[100] shadow-sm transform-gpu group-hover:translate-y-0`}>
+    <span className={`hidden lg:block absolute ${posClasses} px-2.5 py-1 glass bg-text-main text-bg-main text-[10px] font-medium tracking-wide rounded-md opacity-0 group-hover:opacity-100 pointer-events-none transition-all duration-150 ease-out whitespace-nowrap z-[100] shadow-sm transform-gpu translate-y-1 group-hover:translate-y-0`}>
       {text}
     </span>
   );
@@ -40,12 +47,11 @@ const TooltipLabel: React.FC<TooltipLabelProps> = ({ text, position, isHorizonta
 export const Sidebar: React.FC<SidebarProps> = ({
   currentCat, onSelect, isDarkMode, toggleDark, isOpen, onClose, isQueueView, onSelectQueue, queueCount = 0, onLogoClick, position, onPositionChange, isArticleOpen
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
   const { setOpenLegalModal, setActiveLegalTab } = useConsent();
+  const [isHovered, setIsHovered] = useState(false);
   
-  // No mobile, hover rules
-  const isExpanded = (isHovered || isOpen) && !isArticleOpen;
   const isHorizontal = position === 'top' || position === 'bottom';
+  const isExpanded = (isHovered || isOpen) && !isArticleOpen;
 
   const cyclePosition = () => {
     const posList: ('left'|'right'|'top'|'bottom')[] = ['left', 'top', 'right', 'bottom'];
@@ -54,19 +60,29 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const getBtnClass = (isActive: boolean) => `
-    flex items-center text-sm rounded-xl transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] transform-gpu relative group
-    ${isHorizontal || isArticleOpen ? 'justify-center p-2.5 lg:hover:scale-[1.12] lg:hover:-translate-y-0.5 shrink-0' : 'w-full py-2.5 px-3 ' + (isExpanded ? '' : 'justify-center')}
+    flex items-center text-xs rounded-xl transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu relative group
+    max-lg:w-full max-lg:py-2.5 max-lg:px-3
+    ${isHorizontal || isArticleOpen ? 'lg:justify-center lg:p-2 lg:hover:scale-[1.12] lg:hover:-translate-y-0.5 shrink-0' : 'w-full py-2 px-2 ' + (isExpanded ? '' : 'lg:justify-center')}
     ${isActive
       ? 'text-text-main font-semibold bg-bg-main shadow-sm border border-border'
       : 'text-text-muted hover:text-text-main hover:bg-bg-main font-medium'}
   `;
 
-  // Desktop positioning logic (ensuring true centering e largura adequada sem corte)
-  const desktopPosClass = isHorizontal 
-    ? `lg:left-1/2 lg:-translate-x-1/2 ${position === 'top' ? 'lg:top-6' : 'lg:bottom-6'} lg:flex-row lg:h-[4rem] lg:w-auto lg:px-6 lg:py-2`
-    : `lg:top-1/2 lg:-translate-y-1/2 ${position === 'left' ? (isArticleOpen ? 'lg:left-2' : 'lg:left-6') : (isArticleOpen ? 'lg:right-2' : 'lg:right-6')} lg:flex-col lg:h-auto lg:py-6 lg:px-3 ${isExpanded ? 'lg:w-[15rem]' : (isArticleOpen ? 'lg:w-14 lg:py-4 scale-90' : 'lg:w-16')}`;
+  // Animação super fluida: Sincronizada com o container e adicionado um leve "slide-in" (-translate-x)
+  const textClass = `transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] whitespace-nowrap overflow-hidden transform-gpu ${
+    (isExpanded && !isHorizontal) ? 'max-w-[100px] opacity-100 translate-x-0 ml-2.5 lg:ml-3' : 'max-w-0 opacity-0 -translate-x-2 ml-0 max-lg:max-w-full max-lg:opacity-100 max-lg:translate-x-0 max-lg:ml-3'
+  }`;
+  
+  const sectionTitleClass = `text-[8px] uppercase tracking-[0.3em] text-text-muted font-bold px-2 transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] overflow-hidden whitespace-nowrap transform-gpu max-lg:mb-3 max-lg:max-w-full max-lg:opacity-100 max-lg:translate-x-0 ${
+    (!isHorizontal && isExpanded) ? 'max-w-[100px] opacity-100 translate-x-0 mb-2' : 'max-w-0 opacity-0 -translate-x-2 h-0 mb-0'
+  }`;
 
-  // Mobile drawer logic (always left drawer)
+  // Slim ainda mais compacto e delicado (w-40 expandido, w-14 colapsado)
+  const desktopPosClass = isHorizontal 
+    ? `lg:left-1/2 lg:-translate-x-1/2 ${position === 'top' ? 'lg:top-4' : 'lg:bottom-4'} lg:flex-row lg:h-[3.5rem] lg:w-auto lg:px-4 lg:py-1.5`
+    : `lg:top-1/2 lg:-translate-y-1/2 ${position === 'left' ? 'lg:left-4' : 'lg:right-4'} lg:flex-col lg:h-auto lg:py-4 lg:px-2 ${isExpanded ? 'lg:w-40' : 'lg:w-14'}`;
+
+  // Mobile drawer 
   const mobilePosClass = `max-lg:top-0 max-lg:left-0 max-lg:h-full max-lg:w-[85vw] max-lg:max-w-[290px] max-lg:flex-col max-lg:py-6 max-lg:px-4 max-lg:border-r ${isOpen ? 'max-lg:translate-x-0' : 'max-lg:-translate-x-[150%]'}`;
 
   return (
@@ -80,73 +96,71 @@ export const Sidebar: React.FC<SidebarProps> = ({
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
         className={`fixed z-[70] glass bg-bg-island border-border shadow-xl lg:shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:lg:shadow-[0_8px_30px_rgb(255,255,255,0.02)] transition-all duration-500 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu
-          lg:border lg:rounded-[2rem] flex
+          lg:border lg:rounded-3xl flex
           ${desktopPosClass}
           ${mobilePosClass}
         `}
       >
-
-        <nav className={`flex-1 flex max-lg:flex-col max-lg:space-y-8 max-lg:overflow-y-auto no-scrollbar lg:overflow-visible ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-3' : 'lg:flex-col lg:space-y-4 lg:overflow-y-auto'}`} aria-label="Navegação principal">
-          <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2' : 'lg:flex-col lg:space-y-1'}`}>
-            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-250 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Navegação</p>
-            <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`}>
+        <nav className={`flex-1 flex max-lg:flex-col max-lg:space-y-8 max-lg:overflow-y-auto no-scrollbar lg:overflow-visible ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2' : 'lg:flex-col lg:space-y-3 lg:overflow-y-auto'}`} aria-label="Navegação principal">
+          <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-1.5' : 'lg:flex-col lg:space-y-1'}`}>
+            <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-1.5' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`}>
               <button
-                onClick={() => { onSelect(null); }}
+                onClick={() => { onSelect(null); onClose(); }}
                 aria-label="Ver acervo completo"
                 aria-current={currentCat === null && !isQueueView ? 'page' : undefined}
                 className={getBtnClass(currentCat === null && !isQueueView)}
               >
-                <div className="flex items-center gap-4">
-                  <Home size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
-                  <span className={`transition-all duration-250 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>Acervo</span>
-                  {!isHorizontal && isExpanded && currentCat === null && !isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
-                  <TooltipLabel text="Acervo" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+                <div className="flex items-center">
+                  <Home size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
+                  <span className={textClass}>Acervo</span>
+                  {!isHorizontal && isExpanded && currentCat === null && !isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50 shrink-0" />}
+                  <TooltipLabel text="Acervo" position={position} isExpanded={isExpanded} />
                 </div>
               </button>
 
               <button
-                onClick={() => { onSelectQueue?.(); }}
+                onClick={() => { onSelectQueue?.(); onClose(); }}
                 aria-label={`Ver minha lista de leitura com ${queueCount} itens salvos`}
                 aria-current={isQueueView ? 'page' : undefined}
                 className={getBtnClass(isQueueView === true)}
               >
-                <div className="flex items-center gap-4">
-                  <Bookmark size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
-                  <div className={`flex items-center gap-2 transition-all duration-250 whitespace-nowrap max-lg:flex ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
+                <div className="flex items-center">
+                  <Bookmark size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
+                  <div className={`flex items-center ${textClass}`}>
                     <span>Minha Lista</span>
                     {queueCount > 0 && (
-                      <span className="text-[9px] font-black bg-[var(--text-main)] text-[var(--bg-main)] px-1.5 py-0.5 rounded-full ml-1" aria-label={`${queueCount} itens`}>
+                      <span className="text-[8px] font-black bg-text-main text-bg-main px-1.5 py-0.5 rounded-full ml-1 shrink-0">
                         {queueCount}
                       </span>
                     )}
                   </div>
-                  {!isHorizontal && isExpanded && isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
-                  <TooltipLabel text={`Minha Lista${queueCount > 0 ? ` (${queueCount})` : ''}`} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+                  {!isHorizontal && isExpanded && isQueueView && <Circle size={4} fill="currentColor" className="ml-auto opacity-50 shrink-0" />}
+                  <TooltipLabel text={`Minha Lista${queueCount > 0 ? ` (${queueCount})` : ''}`} position={position} isExpanded={isExpanded} />
                 </div>
               </button>
             </div>
           </div>
 
-          <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-2 lg:ml-2 lg:pl-5 lg:border-l lg:border-border' : 'lg:flex-col lg:space-y-1'}`}>
-            <p className={`text-[9px] uppercase tracking-[0.3em] text-text-muted font-bold px-3 transition-opacity duration-250 max-lg:block max-lg:mb-3 ${(!isHorizontal && isExpanded) ? 'lg:opacity-100 lg:h-auto lg:mb-3' : 'lg:opacity-0 lg:h-0 lg:hidden'}`} aria-hidden="true">Módulos</p>
-            <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-2' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`} role="menu">
+          <div className={`flex max-lg:flex-col max-lg:space-y-2 ${isHorizontal ? 'lg:flex-row lg:items-center lg:gap-1.5 lg:ml-1.5 lg:pl-4 lg:border-l lg:border-border' : 'lg:flex-col lg:space-y-1'}`}>
+            <p className={sectionTitleClass} aria-hidden="true">Módulos</p>
+            <div className={`flex max-lg:flex-col max-lg:space-y-0.5 max-lg:items-stretch ${isHorizontal ? 'lg:flex-row lg:gap-1.5' : 'lg:flex-col lg:space-y-0.5 lg:items-center xl:items-stretch'}`} role="menu">
               {Object.values(Category).map(cat => {
                 const Icon = getCategoryIcon(cat);
                 const isActive = currentCat === cat;
                 return (
                   <button
                     key={cat}
-                    onClick={() => { onSelect(cat); }}
+                    onClick={() => { onSelect(cat); onClose(); }}
                     aria-label={`Filtrar por módulo ${cat}`}
                     aria-current={isActive ? 'page' : undefined}
                     role="menuitem"
                     className={getBtnClass(isActive)}
                   >
-                    <div className="flex items-center gap-4">
-                      <Icon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
-                      <span className={`transition-all duration-250 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>{cat}</span>
-                      {!isHorizontal && isExpanded && isActive && <Circle size={4} fill="currentColor" className="ml-auto opacity-50" />}
-                      <TooltipLabel text={cat} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+                    <div className="flex items-center">
+                      <Icon size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0" />
+                      <span className={textClass}>{cat}</span>
+                      {!isHorizontal && isExpanded && isActive && <Circle size={4} fill="currentColor" className="ml-auto opacity-50 shrink-0" />}
+                      <TooltipLabel text={cat} position={position} isExpanded={isExpanded} />
                     </div>
                   </button>
                 );
@@ -155,86 +169,73 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         </nav>
 
-        <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-6 lg:ml-3 lg:border-l lg:border-border' : 'lg:pt-4 lg:mt-2 lg:border-t lg:border-border lg:px-2 lg:flex-col lg:items-stretch'}`}>
-          {/* Notificações Push PWA */}
-          <Magnetic strength={0.3} className="w-full">
-            <button
-              onClick={async () => {
-                if (!('Notification' in window)) {
-                  alert('Seu navegador não possui suporte nativo a Web Push Notifications.');
-                  return;
-                }
-                if (Notification.permission === 'granted') {
-                  new Notification('SST FAQ Atualizações', {
-                    body: 'Notificações corporativas ativadas! Você receberá comunicados urgentes de normas e eSocial.',
+        <div className={`shrink-0 flex items-center max-lg:mt-auto max-lg:pt-6 max-lg:border-t max-lg:border-border max-lg:px-3 ${isHorizontal ? 'lg:pl-4 lg:ml-2 lg:border-l lg:border-border' : 'lg:pt-3 lg:mt-2 lg:border-t lg:border-border lg:px-1 lg:flex-col lg:items-stretch'}`}>
+          <button
+            onClick={async () => {
+              if (!('Notification' in window)) {
+                alert('Seu navegador não possui suporte nativo a Web Push Notifications.');
+                return;
+              }
+              if (Notification.permission === 'granted') {
+                new Notification('SST FAQ Atualizações', {
+                  body: 'Notificações corporativas ativadas! Você receberá comunicados urgentes de normas e eSocial.',
+                  icon: '/pwa-192x192.png'
+                });
+              } else {
+                const permission = await Notification.requestPermission();
+                if (permission === 'granted') {
+                  new Notification('SST FAQ Conectado', {
+                    body: 'Notificações ativadas com sucesso.',
                     icon: '/pwa-192x192.png'
                   });
-                } else {
-                  const permission = await Notification.requestPermission();
-                  if (permission === 'granted') {
-                    new Notification('SST FAQ Conectado', {
-                      body: 'Notificações ativadas com sucesso.',
-                      icon: '/pwa-192x192.png'
-                    });
-                  }
                 }
-              }}
-              aria-label="Ativar Notificações Push do PWA"
-              className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
-            >
-              <div className="flex items-center gap-4">
-                <Bell size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150" />
-                <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
-                  Alertas
-                </span>
-                <TooltipLabel text="Notificações Push (PWA)" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
-              </div>
-            </button>
-          </Magnetic>
+              }
+            }}
+            aria-label="Ativar Notificações Push"
+            className={`flex items-center py-1.5 text-[9px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full lg:px-2' : 'lg:justify-center lg:w-full')}`}
+          >
+            <div className="flex items-center">
+              <Bell size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150" />
+              <span className={textClass}>Alertas</span>
+              <TooltipLabel text="Notificações Push" position={position} isExpanded={isExpanded} />
+            </div>
+          </button>
 
-          <Magnetic strength={0.3} className="w-full">
-            <button
-              onClick={() => {
-                setActiveLegalTab('privacy');
-                setOpenLegalModal(true);
-              }}
-              aria-label="Políticas de Privacidade e Termos de Uso (LGPD)"
-              className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
-            >
-              <div className="flex items-center gap-4">
-                <ShieldCheck size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150 text-text-main" />
-                <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
-                  LGPD
-                </span>
-                <TooltipLabel text="Termos & LGPD" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
-              </div>
-            </button>
-          </Magnetic>
+          <button
+            onClick={() => {
+              setActiveLegalTab('privacy');
+              setOpenLegalModal(true);
+            }}
+            aria-label="LGPD e Termos"
+            className={`flex items-center py-1.5 text-[9px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full lg:px-2' : 'lg:justify-center lg:w-full')}`}
+          >
+            <div className="flex items-center">
+              <ShieldCheck size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:scale-110 transition-transform duration-150 text-text-main" />
+              <span className={textClass}>LGPD</span>
+              <TooltipLabel text="Termos & LGPD" position={position} isExpanded={isExpanded} />
+            </div>
+          </button>
 
-          <Magnetic strength={0.3} className="w-full">
-            <button
-              onClick={toggleDark}
-              aria-label={isDarkMode ? "Ativar modo claro" : "Ativar modo escuro"}
-              className={`flex items-center py-2 text-[10px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full' : 'lg:justify-center lg:w-full')}`}
-            >
-              <div className="flex items-center gap-4">
-                {isDarkMode ? <Sun size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-150 transform-gpu" /> : <Moon size={20} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-150 transform-gpu" />}
-                <span className={`transition-all duration-150 whitespace-nowrap max-lg:block ${(isExpanded && !isHorizontal) ? 'lg:opacity-100 lg:w-auto' : 'lg:opacity-0 lg:w-0 lg:hidden'}`}>
-                  {isDarkMode ? 'Claro' : 'Escuro'}
-                </span>
-                <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
-              </div>
-            </button>
-          </Magnetic>
+          <button
+            onClick={toggleDark}
+            aria-label="Alternar Tema"
+            className={`flex items-center py-1.5 text-[9px] font-bold uppercase tracking-widest text-text-muted hover:text-text-main transition-colors duration-150 max-lg:w-full max-lg:justify-between group relative ${isHorizontal ? 'lg:justify-center' : (isExpanded ? 'lg:justify-between lg:w-full lg:px-2' : 'lg:justify-center lg:w-full')}`}
+          >
+            <div className="flex items-center">
+              {isDarkMode ? <Sun size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:rotate-45 transition-transform duration-150 transform-gpu" /> : <Moon size={18} strokeWidth={1.5} aria-hidden="true" className="shrink-0 lg:group-hover:-rotate-12 transition-transform duration-150 transform-gpu" />}
+              <span className={textClass}>{isDarkMode ? 'Claro' : 'Escuro'}</span>
+              <TooltipLabel text={isDarkMode ? 'Modo Claro' : 'Modo Escuro'} position={position} isExpanded={isExpanded} />
+            </div>
+          </button>
           
           {isHorizontal && (
             <button
               onClick={cyclePosition}
               aria-label="Alterar posição do menu"
-              className="ml-4 text-text-muted hover:text-text-main transition-all duration-150 hidden lg:block p-3 group relative lg:hover:scale-110 lg:hover:-translate-y-0.5 transform-gpu"
+              className="ml-3 text-text-muted hover:text-text-main transition-all duration-150 hidden lg:block p-2 group relative lg:hover:scale-110 lg:hover:-translate-y-0.5 transform-gpu shrink-0"
             >
-              <Layout size={20} strokeWidth={1.5} aria-hidden="true" />
-              <TooltipLabel text="Mudar Posição" position={position} isHorizontal={isHorizontal} isArticleOpen={isArticleOpen} />
+              <Layout size={18} strokeWidth={1.5} aria-hidden="true" />
+              <TooltipLabel text="Mudar Posição" position={position} isExpanded={isExpanded} />
             </button>
           )}
         </div>

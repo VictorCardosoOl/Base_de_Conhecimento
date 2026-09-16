@@ -19,7 +19,10 @@ const CommandPalette = lazy(() =>
 
 export function ClientLayout({ children }: { children: React.ReactNode }) {
     const [isDarkMode, setIsDarkMode] = useState(false);
+    const [isMounted, setIsMounted] = useState(false);
+
     useEffect(() => {
+        setIsMounted(true);
         const saved = localStorage.getItem("isDarkMode");
         if (saved !== null) {
             setIsDarkMode(saved === "true");
@@ -29,10 +32,12 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
+        if (!isMounted) return;
         localStorage.setItem("isDarkMode", String(isDarkMode));
         document.documentElement.classList.toggle("dark", isDarkMode);
         document.body.classList.toggle("dark", isDarkMode);
-    }, [isDarkMode]);
+        document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
+    }, [isDarkMode, isMounted]);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
     const [sidebarPos, setSidebarPos] = useState<"left"|"right"|"top"|"bottom">("left");
@@ -44,8 +49,9 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     }, []);
 
     useEffect(() => {
+        if (!isMounted) return;
         localStorage.setItem("sidebarPos", sidebarPos);
-    }, [sidebarPos]);
+    }, [sidebarPos, isMounted]);
 
     const pathname = usePathname();
     const router = useRouter();
