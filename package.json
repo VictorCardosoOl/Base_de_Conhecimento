@@ -65,7 +65,7 @@
     "markdownlint-cli": "^0.49.1",
     "postcss": "^8.5.28",
     "prettier": "^3.9.6",
-    "tailwindcss": "4.1.18",
+    "tailwindcss": "4.3.3",
     "typescript": "5.8.2",
     "vite": "^8.3.0",
     "vitest": "5.0.0"
