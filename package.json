@@ -56,7 +56,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.1",
     "@vitest/coverage-v8": "^5.0.0",
-    "autoprefixer": "10.4.23",
+    "autoprefixer": "10.6.0",
     "gray-matter": "4.0.3",
     "happy-dom": "^20.14.5",
     "husky": "^9.1.7",
