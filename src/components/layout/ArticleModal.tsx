@@ -1,12 +1,13 @@
-"use client";
-import React, { useRef, useEffect, useState } from 'react';
+﻿"use client";
+import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import { ArrowLeft, ChevronRight, Printer, ShieldCheck, Share2, Award, X } from 'lucide-react';
 import { createPortal } from 'react-dom';
-import Lenis from 'lenis';
 import { FAQItem } from '../../types/index';
 import { useArticleContent } from '../../hooks/use-article-content';
 import { useReadingGoalTracker } from '../../hooks/use-reading-goal-tracker';
+import { useScopedLenis } from '../../hooks/use-scoped-lenis';
+import { sheetVariants, fadeVariants, readingProgressSpring } from '@/lib/animations';
 import { ArticleContent } from '../article/ArticleContent';
 import { ArticleSkeleton } from '../article/ArticleSkeleton';
 import { ArticleFeedback } from '../article/ArticleFeedback';
@@ -45,11 +46,13 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
   const dialogRef = useRef<HTMLDivElement>(null);
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
-  const scopedLenisRef = useRef<Lenis | null>(null);
 
   useFocusTrap(dialogRef, isOpen);
 
-  // Estados da nova experiência de leitura
+  // Lenis scoped â€” gerenciado pelo hook centralizado (use-scoped-lenis.ts)
+  useScopedLenis(modalContainerRef, modalContentRef, isOpen);
+
+  // Estados da nova experiÃªncia de leitura
   const [isZenMode, setIsZenMode] = useState(false);
   const [typography, setTypography] = useState<TypographyPreferences>(() => ReadingExperienceService.getTypography());
   const [shareFeedback, setShareFeedback] = useState(false);
@@ -60,15 +63,12 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
     isActive: isOpen
   });
 
-  // Barra de progresso de leitura
+  // Barra de progresso de leitura â€” spring preset centralizado em animations.ts
   const { scrollYProgress } = useScroll({
     container: modalContainerRef
   });
-  const scaleX = useSpring(scrollYProgress, {
-    stiffness: 350,
-    damping: 35,
-    restDelta: 0.001
-  });
+  const scaleX = useSpring(scrollYProgress, readingProgressSpring);
+
 
   // Escuta tecla ESC para sair do Zen Mode ou fechar modal
   useEffect(() => {
@@ -109,64 +109,31 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
         setShareFeedback(true);
         setTimeout(() => setShareFeedback(false), 2000);
       } catch {
-        alert('Link copiado para a área de transferência!');
+        alert('Link copiado para a Ã¡rea de transferÃªncia!');
       }
     }
   };
 
   useEffect(() => {
-    let rafId: number | null = null;
-    let timer: NodeJS.Timeout | null = null;
-    let destroyed = false;
-
     if (isOpen) {
-      // Prevenção do Layout Shift (FOUC Scrollbar)
+      // PrevenÃ§Ã£o do Layout Shift (FOUC Scrollbar)
       const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
       if (scrollbarWidth > 0) {
         document.body.style.paddingRight = `${scrollbarWidth}px`;
       }
       document.body.style.overflow = 'hidden';
-      
-      timer = setTimeout(() => {
-        if (!destroyed && modalContainerRef.current && modalContentRef.current) {
-          const scopedLenis = new Lenis({
-            wrapper: modalContainerRef.current,
-            content: modalContentRef.current,
-            duration: 0.5,
-            easing: (t) => 1 - Math.pow(1 - t, 4),
-            orientation: 'vertical',
-            touchMultiplier: 1.5,
-          });
-          scopedLenisRef.current = scopedLenis;
-          
-          function raf(time: number) {
-            if (destroyed) return;
-            scopedLenis.raf(time);
-            rafId = requestAnimationFrame(raf);
-          }
-          rafId = requestAnimationFrame(raf);
-        }
-      }, 30);
     } else {
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
-      if (rafId) cancelAnimationFrame(rafId);
-      scopedLenisRef.current?.destroy();
-      scopedLenisRef.current = null;
     }
-
     return () => {
-      destroyed = true;
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
-      if (timer) clearTimeout(timer);
-      if (rafId) cancelAnimationFrame(rafId);
-      scopedLenisRef.current?.destroy();
-      scopedLenisRef.current = null;
     };
   }, [isOpen]);
 
   if (!isOpen) return null;
+
 
   return createPortal(
     <AnimatePresence>
@@ -174,10 +141,11 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
         <>
           <motion.div 
             onClick={onClose} 
-            className="fixed inset-0 bg-black/60 backdrop-blur-md z-[50] will-change-[opacity]" 
-            initial={{ opacity: 0 }} 
-            animate={{ opacity: 1, transition: { duration: 0.4, ease: [0.22, 1, 0.36, 1] } }} 
-            exit={{ opacity: 0, transition: { duration: 0.3, ease: [0.22, 1, 0.36, 1] } }} 
+            className="fixed inset-0 bg-black/80  z-[50] will-change-[opacity]"
+            variants={fadeVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           />
           
           <motion.div
@@ -185,29 +153,30 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
             role="dialog"
             aria-modal="true"
             aria-labelledby={`modal-title-${item.id}`}
-            initial={{ opacity: 0, y: "100vh", scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1, transition: { type: "spring", damping: 26, stiffness: 220, mass: 0.7 } }}
-            exit={{ opacity: 0, y: "100vh", scale: 0.96, transition: { duration: 0.4, ease: [0.32, 0, 0.67, 0] } }}
+            variants={sheetVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
             className={`fixed inset-x-0 bottom-0 z-[60] bg-bg-main rounded-t-2xl sm:rounded-t-[2.5rem] h-[96vh] top-[4vh] ${
-              isZenMode ? 'max-w-4xl' : 'max-w-[2000px] 4xl:max-w-[2400px]'
+              isZenMode ?'max-w-4xl' : 'max-w-[2000px] 4xl:max-w-[2400px]'
             } mx-auto border-x border-t border-border overflow-hidden shadow-2xl transform-gpu will-change-[transform,opacity] transition-colors transition-[max-width] duration-300`}
           >
             <div ref={modalContainerRef} className="h-full w-full overflow-y-auto no-scrollbar pb-24">
                <div ref={modalContentRef}>
-                  {/* Header Section inside the Modal (Zen Mode minimiza distrações) */}
-                  <nav className={`sticky top-0 z-50 w-full bg-bg-main/90 backdrop-blur-md border-b border-border no-print transition-all duration-150 transform-gpu ${
-                    isZenMode ? 'py-1' : ''
+                  {/* Header Section inside the Modal (Zen Mode minimiza distraÃ§Ãµes) */}
+                  <nav className={`sticky top-0 z-50 w-full bg-bg-main  border-b border-border no-print transition-all duration-150 transform-gpu ${
+                    isZenMode ?'py-1' : ''
                   }`}>
                     {/* Magnetic Reading Progress Bar */}
                     <motion.div 
                       className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50"
                       style={{ scaleX }}
                     />
-                    <div className={`w-full h-16 2xl:h-20 flex items-center justify-between px-6 md:pr-12 2xl:pr-16 ${!isZenMode ? 'lg:pl-52 xl:pl-64' : 'md:pl-12 2xl:pl-16'}`}>
+                    <div className={`w-full h-16 2xl:h-20 flex items-center justify-between px-6 md:pr-12 2xl:pr-16 ${!isZenMode ?'lg:pl-52 xl:pl-64' : 'md:pl-12 2xl:pl-16'}`}>
                       <div className="flex items-center gap-4 text-xs 2xl:text-sm font-medium text-text-muted">
                         <button
                           onClick={onClose}
-                          aria-label="Voltar para a página anterior"
+                          aria-label="Voltar para a pÃ¡gina anterior"
                           className="hover:text-blue-600 transition-colors flex items-center gap-1 min-h-[44px] min-w-[44px]"
                         >
                           <ArrowLeft size={16} />
@@ -216,7 +185,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
                         {!isZenMode && (
                           <>
                             <span className="text-gray-300 dark:text-gray-700">|</span>
-                            <button onClick={onClose} className="hover:text-blue-600 transition-colors">Início</button>
+                            <button onClick={onClose} className="hover:text-blue-600 transition-colors">InÃ­cio</button>
                             <ChevronRight size={14} className="text-gray-400" />
                             <span className="uppercase tracking-wide opacity-80">{item.category}</span>
                             <ChevronRight size={14} className="text-gray-400 hidden sm:block" />
@@ -227,7 +196,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
                         )}
                       </div>
                       
-                      {/* Ações do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
+                      {/* AÃ§Ãµes do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
                       <div className="flex items-center gap-2">
                         {/* Controles de Leitura e Modo Foco */}
                         <ArticleReadingControls
@@ -237,7 +206,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
                           onTypographyChange={setTypography}
                         />
 
-                        {/* Impressão Dinâmica (PDF) */}
+                        {/* ImpressÃ£o DinÃ¢mica (PDF) */}
                         <button
                           onClick={() => window.print()}
                           aria-label="Gerar PDF do Artigo"
@@ -247,12 +216,12 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
                           <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider">PDF</span>
                         </button>
 
-                        {/* Compartilhar Nativo / Área de Transferência */}
+                        {/* Compartilhar Nativo / Ãrea de TransferÃªncia */}
                         <button
                           onClick={handleShare}
                           aria-label="Compartilhar"
                           className={`p-2 sm:p-2.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors ${
-                            shareFeedback ? 'text-green-600' : 'text-text-muted hover:text-text-main'
+                            shareFeedback ?'text-green-600' : 'text-text-muted hover:text-text-main'
                           }`}
                         >
                           <Share2 size={18} />
@@ -276,35 +245,35 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
                     <div className="bg-text-main text-bg-main px-4 py-3 flex items-center justify-between shadow-md">
                       <div className="flex items-center gap-2.5 text-xs font-medium">
                         <Award size={16} className="text-amber-400 shrink-0" />
-                        <span>Parabéns! Você alcançou sua <strong>Meta de Leitura</strong> programada na lista.</span>
+                        <span>ParabÃ©ns! VocÃª alcanÃ§ou sua <strong>Meta de Leitura</strong> programada na lista.</span>
                       </div>
                       <button
                         onClick={dismissBanner}
                         className="text-bg-main/80 hover:text-bg-main p-1"
-                        aria-label="Fechar notificação de meta"
+                        aria-label="Fechar notificaÃ§Ã£o de meta"
                       >
                         <X size={14} />
                       </button>
                     </div>
                   )}
 
-                  {/* Cabeçalho oficial visível apenas na impressão/PDF */}
+                  {/* CabeÃ§alho oficial visÃ­vel apenas na impressÃ£o/PDF */}
                   <div className="hidden print:block p-8 border-b-2 border-stone-800 text-stone-900 mb-8">
                     <div className="flex items-center justify-between">
                       <div>
                         <h2 className="text-xl font-bold uppercase tracking-wider">Base Corporativa de Conhecimento SST</h2>
-                        <p className="text-xs text-stone-600">Diretoria de Governança, Saúde e Segurança do Trabalho</p>
+                        <p className="text-xs text-stone-600">Diretoria de GovernanÃ§a, SaÃºde e SeguranÃ§a do Trabalho</p>
                       </div>
                       <div className="text-right text-xs text-stone-500">
-                        <p>Documento Rastreável</p>
-                        <p>Impresso em: {new Date().toLocaleDateString('pt-BR')} às {new Date().toLocaleTimeString('pt-BR')}</p>
+                        <p>Documento RastreÃ¡vel</p>
+                        <p>Impresso em: {new Date().toLocaleDateString('pt-BR')} Ã s {new Date().toLocaleTimeString('pt-BR')}</p>
                       </div>
                     </div>
                   </div>
 
                   <div className="w-full pt-10 pb-6 px-6 md:px-16 2xl:px-24">
                     <div className="max-w-4xl mx-auto text-center space-y-6">
-                        {/* Selo Editorial de Gestão de Validade e Auditoria */}
+                        {/* Selo Editorial de GestÃ£o de Validade e Auditoria */}
                         <div className="inline-flex items-center gap-3 py-1 px-3 border-y border-border text-[11px] uppercase tracking-[0.18em] text-text-muted">
                           <span className="flex items-center gap-1.5 font-medium">
                             <ShieldCheck size={13} className="text-emerald-600 dark:text-emerald-400 stroke-[1.75]" />
@@ -328,14 +297,14 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({ isOpen, onClose, lay
                     </div>
                   </div>
 
-                  {/* Grid de Conteúdo Principal + Índice Dinâmico (ToC) */}
+                  {/* Grid de ConteÃºdo Principal + Ãndice DinÃ¢mico (ToC) */}
                   <div className="p-6 md:p-12 2xl:p-16 max-w-6xl mx-auto">
-                    <div className={`grid grid-cols-1 ${!isZenMode ? 'xl:grid-cols-[1fr_260px]' : ''} gap-12 items-start`}>
+                    <div className={`grid grid-cols-1 ${!isZenMode ?'xl:grid-cols-[1fr_260px]' : ''} gap-12 items-start`}>
                       <div className="min-w-0">
                         <ModalArticleContent article={item} typography={typography} />
                       </div>
 
-                      {/* Índice Dinâmico à Direita (oculto no Modo Zen) */}
+                      {/* Ãndice DinÃ¢mico Ã  Direita (oculto no Modo Zen) */}
                       {!isZenMode && (
                         <div className="hidden xl:block">
                           <TableOfContents containerRef={modalContainerRef} />

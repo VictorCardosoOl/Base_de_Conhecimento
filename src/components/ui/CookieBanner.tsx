@@ -1,12 +1,13 @@
-import React from 'react';
+﻿import React from 'react';
 import { useConsent } from '../../contexts/ConsentContext';
 import { ShieldCheck, Cookie, FileText } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { slideUpVariants } from '@/lib/animations';
 
 export const CookieBanner: React.FC = () => {
   const { consent, acceptAll, rejectAll, setOpenLegalModal, setActiveLegalTab } = useConsent();
 
-  // Não renderiza se o usuário já expressou consentimento (concedido ou negado)
+  // NÃ£o renderiza se o usuÃ¡rio jÃ¡ expressou consentimento (concedido ou negado)
   if (consent !== 'pending') return null;
 
   return (
@@ -14,11 +15,11 @@ export const CookieBanner: React.FC = () => {
       <motion.aside
         role="region"
         aria-label="Consentimento de Cookies e Privacidade"
-        initial={{ y: 50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 50, opacity: 0 }}
-        transition={{ duration: 0.3, ease: [0.16, 1, 0.3, 1] }}
-        className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-[80] p-5 rounded-2xl glass bg-bg-island/95 border border-border shadow-2xl backdrop-blur-xl text-text-main transform-gpu"
+        variants={slideUpVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-md z-[80] p-5 rounded-2xl  bg-bg-island border border-border shadow-2xl  text-text-main transform-gpu will-change-[transform,opacity]"
       >
         <div className="flex items-start gap-3.5">
           <div className="p-2.5 rounded-xl bg-bg-island border border-border text-text-main shrink-0 mt-0.5">
@@ -37,7 +38,7 @@ export const CookieBanner: React.FC = () => {
             </div>
 
             <p className="text-xs text-text-muted leading-relaxed">
-              Utilizamos cookies e tecnologias estritamente necessárias para o funcionamento e, sob sua autorização expressa, telemetria de desempenho anônima. Nenhuma ferramenta de terceiros é executada sem o seu consentimento prévio.
+              Utilizamos cookies e tecnologias estritamente necessÃ¡rias para o funcionamento e, sob sua autorizaÃ§Ã£o expressa, telemetria de desempenho anÃ´nima. Nenhuma ferramenta de terceiros Ã© executada sem o seu consentimento prÃ©vio.
             </p>
 
             <div className="flex items-center gap-3 pt-1 text-xs">
@@ -50,9 +51,9 @@ export const CookieBanner: React.FC = () => {
                 className="underline text-text-muted hover:text-text-main transition-colors inline-flex items-center gap-1 font-medium cursor-pointer"
               >
                 <FileText size={12} />
-                Políticas de Privacidade
+                PolÃ­ticas de Privacidade
               </button>
-              <span className="text-border">•</span>
+              <span className="text-border">â€¢</span>
               <button
                 type="button"
                 onClick={() => {

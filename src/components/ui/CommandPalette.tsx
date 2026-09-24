@@ -1,7 +1,8 @@
-import React, { useEffect, useState, useRef } from 'react';
+﻿import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
 import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { scaleInVariants, fadeVariants } from '@/lib/animations';
 import { FAQItem, Category } from '../../types/index';
 import { FAQ_DATA } from '../../config/index';
 import { useSearch } from '../../hooks/use-search';
@@ -86,23 +87,25 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
       {/* Backdrop */}
       <motion.div
         ref={backdropRef}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, ease: "easeOut" }}
-        className="fixed inset-0 bg-stone-900/40 dark:bg-black/80 backdrop-blur-md"
+        variants={fadeVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
+        className="fixed inset-0 bg-stone-900/40 dark:bg-black/80 "
         onClick={onClose}
       />
 
       {/* Modal Content */}
       <motion.div
         ref={modalRef}
-        initial={{ opacity: 0, scale: 0.95, y: 12, filter: 'blur(4px)' }}
-        animate={{ opacity: 1, scale: 1, y: 0, filter: 'blur(0px)' }}
-        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.1 }}
+        variants={scaleInVariants}
+        initial="hidden"
+        animate="visible"
+        exit="exit"
         role="dialog"
         aria-modal="true"
         aria-label="Comandos e Busca"
-        className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/20 dark:shadow-black/60 rounded-3xl overflow-hidden border border-border bg-bg-island backdrop-blur-2xl"
+        className="w-full max-w-2xl relative shadow-2xl shadow-stone-900/20 dark:shadow-black/60 rounded-3xl overflow-hidden border border-border bg-bg-island  will-change-[transform,opacity] transform-gpu"
       >
         <Command
           className="w-full bg-transparent overflow-hidden"
@@ -116,7 +119,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ref={inputRef}
               value={inputValue}
               onValueChange={setInputValue}
-              placeholder="O que você procura?"
+              placeholder="O que vocÃª procura"
               className="flex-1 h-14 bg-transparent outline-none text-base sm:text-lg text-text-main placeholder:text-text-muted font-serif font-light"
             />
             <div className="hidden sm:flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-text-muted bg-stone-100 dark:bg-white/10 px-2 py-1 rounded-md border border-border">
@@ -144,7 +147,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
             {!inputValue && (
               <div className="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-70">
-                Navegação & Atalhos
+                NavegaÃ§Ã£o & Atalhos
               </div>
             )}
 
@@ -175,7 +178,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                     </div>
                     <div className="flex flex-col min-w-0">
                       <span className="font-medium text-sm text-text-main">Minha Lista de Leitura</span>
-                      <span className="text-xs text-text-muted truncate">Acessar seus artigos e tópicos salvos</span>
+                      <span className="text-xs text-text-muted truncate">Acessar seus artigos e tÃ³picos salvos</span>
                     </div>
                   </Command.Item>
                 )}
@@ -187,7 +190,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 <div className="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-70">
                   Artigos e Conhecimento
                 </div>
-                {/* Limita a renderização aos 15 primeiros para garantir resposta 120Hz sem quebra de frame */}
+                {/* Limita a renderizaÃ§Ã£o aos 15 primeiros para garantir resposta 120Hz sem quebra de frame */}
                 {filteredArticles.slice(0, 15).map((item) => (
                   <Command.Item
                     key={item.id}
@@ -230,8 +233,8 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   onSelect={() => { onToggleTheme(); onClose(); }}
                   className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-stone-100/80 dark:hover:bg-white/10 cursor-pointer text-text-muted hover:text-text-main transition-colors duration-150 aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                 >
-                  {isDarkMode ? <Sun size={15} strokeWidth={1.5} /> : <Moon size={15} strokeWidth={1.5} />}
-                  <span className="text-xs font-medium uppercase tracking-wider">Alternar para Modo {isDarkMode ? 'Claro' : 'Escuro'}</span>
+                  {isDarkMode ?<Sun size={15} strokeWidth={1.5} /> : <Moon size={15} strokeWidth={1.5} />}
+                  <span className="text-xs font-medium uppercase tracking-wider">Alternar para Modo {isDarkMode ?'Claro' : 'Escuro'}</span>
                 </Command.Item>
               </div>
             )}

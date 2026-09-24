@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React from 'react';
 import { Search, Command } from 'lucide-react';
 
@@ -17,7 +17,7 @@ export const SearchBar: React.FC = () => {
     {/* Glow sutil ao passar o cursor */}
     <div className="absolute -inset-1 bg-gradient-to-r from-stone-200/40 via-stone-300/30 to-stone-200/40 dark:from-white/5 dark:via-white/10 dark:to-white/5 rounded-full blur-md opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none" />
 
-    <div className="relative flex items-center justify-between px-5 py-3.5 bg-bg-island backdrop-blur-xl border border-border rounded-full shadow-sm hover:shadow-md transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-text-main/40 active:scale-[0.99] transform-gpu">
+    <div className="relative flex items-center justify-between px-5 py-3.5 bg-bg-island  border border-border rounded-full shadow-sm hover:shadow-md transition-all duration-150 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:border-text-main/40 active:scale-[0.99] transform-gpu">
       <div className="flex items-center gap-3.5 flex-1 min-w-0">
         <Search
           size={18}
@@ -25,7 +25,7 @@ export const SearchBar: React.FC = () => {
           className="text-text-muted group-hover:text-text-main transition-colors duration-150 shrink-0"
         />
         <span className="text-sm sm:text-base font-serif font-light text-text-muted group-hover:text-text-main transition-colors duration-150 truncate tracking-tight">
-          Ex: Como enviar o evento S-2240 ao eSocial?
+          Ex: Como enviar o evento S-2240 ao eSocial
         </span>
       </div>
 

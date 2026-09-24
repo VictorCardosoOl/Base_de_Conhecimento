@@ -1,5 +1,6 @@
-import React, { useRef } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
+import { kineticContainerVariants, kineticWordVariants } from '@/lib/animations';
 
 interface KineticTextProps {
   children: string;
@@ -16,33 +17,8 @@ export const KineticText: React.FC<KineticTextProps> = ({
 }) => {
   const words = children.split(' ');
 
-  const containerVariants = {
-    hidden: { opacity: 1 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-        delayChildren: delay,
-      }
-    }
-  };
-
-  const wordVariants = {
-    hidden: {
-      y: "100%",
-      opacity: 0,
-      rotateX: 18
-    },
-    visible: {
-      y: "0%",
-      opacity: 1,
-      rotateX: 0,
-      transition: {
-        duration: 1.2,
-        ease: [0.16, 1, 0.3, 1] as any // equivalent to expo.out
-      }
-    }
-  };
+  // Variantes centralizadas em src/lib/animations.ts
+  const containerVariants = kineticContainerVariants(delay);
 
   // Convert 'as' prop to motion component dynamically
   const MotionComponent = motion[as as keyof typeof motion] as any;
@@ -62,7 +38,7 @@ export const KineticText: React.FC<KineticTextProps> = ({
             style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' }}
           >
             <motion.span 
-              variants={wordVariants}
+              variants={kineticWordVariants}
               className="word-inner inline-block will-change-transform transform-gpu origin-bottom"
             >
               {word}

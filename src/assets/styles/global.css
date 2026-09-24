@@ -31,7 +31,7 @@
 @layer base {
   :root {
     --bg-main: #ffffff;
-    --bg-island: rgba(255, 255, 255, 0.65);
+    --bg-island: #fafafa;
     --text-main: #000000;
     --text-body: #0a0a0a;
     --text-muted: #262626;
@@ -45,7 +45,7 @@
   html.dark,
   body.dark {
     --bg-main: #000000;
-    --bg-island: rgba(20, 20, 20, 0.65);
+    --bg-island: #141414;
     --text-main: #ffffff;
     --text-body: #fafafa;
     --text-muted: #a3a3a3;
@@ -75,9 +75,6 @@
 }
 
 @layer utilities {
-  .glass {
-    @apply backdrop-blur-[40px];
-  }
 
   .reveal {
     animation: revealUp 0.18s cubic-bezier(0.16, 1, 0.3, 1) forwards;

@@ -20,8 +20,21 @@ const mapCategory = (cat?: string): Category => {
   }
 };
 
+export interface CatalogRawItem {
+  id: string;
+  category?: string;
+  question: string;
+  answer: string;
+  date: string;
+  searchText?: string;
+  tags?: string[];
+  validityMonths?: number;
+  lastReviewed?: string;
+  verifiedBy?: string;
+}
+
 // Converts the JSON catalog + Lazy Load Map into the application's FAQItem format
-export const FAQ_DATA: FAQItem[] = catalog.map((item: any) => ({
+export const FAQ_DATA: FAQItem[] = catalog.map((item: CatalogRawItem) => ({
   id: item.id,
   question: item.question,
   answer: item.answer,

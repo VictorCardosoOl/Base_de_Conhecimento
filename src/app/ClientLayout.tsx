@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect, Suspense, lazy } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { pageVariants } from "@/lib/animations";
 import { Sidebar } from "@/components/layout/Sidebar";
 import { SmoothScroll } from "@/components/ui/SmoothScroll";
 import { Menu } from "lucide-react";
@@ -36,7 +37,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
         localStorage.setItem("isDarkMode", String(isDarkMode));
         document.documentElement.classList.toggle("dark", isDarkMode);
         document.body.classList.toggle("dark", isDarkMode);
-        document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
+        document.documentElement.style.colorScheme = isDarkMode ?'dark' : 'light';
     }, [isDarkMode, isMounted]);
 
     const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -87,7 +88,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     const handleCategorySelect = (cat: any | null) => {
         setCurrentCategory(cat);
         if (cat) {
-            router.push(`/?category=${encodeURIComponent(cat)}`);
+            router.push(`/category=${encodeURIComponent(cat)}`);
         } else {
             router.push("/");
         }
@@ -127,17 +128,17 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
                     </Suspense>
                 )}
 
-                <main className={`flex-1 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${isArticleRoute ? "z-50" : ""}`}>
+                <main className={`flex-1 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${isArticleRoute ?"z-50" : ""}`}>
                     <div className={`max-w-[2000px] 4xl:max-w-[2400px] mx-auto w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
                         px-5 sm:px-8 2xl:px-16 3xl:px-24 4xl:px-32 max-lg:pt-24 max-lg:pb-12 lg:py-12 2xl:py-16 3xl:py-24
-                        ${sidebarPos === "left" ? "lg:pl-[140px] 2xl:lg:pl-[160px] 3xl:lg:pl-[180px] lg:pr-12 2xl:lg:pr-16 3xl:lg:pr-24" : 
-                          sidebarPos === "right" ? "lg:pr-[140px] 2xl:lg:pr-[160px] 3xl:lg:pr-[180px] lg:pl-12 2xl:lg:pl-16 3xl:lg:pl-24" : 
-                          sidebarPos === "top" ? "lg:pt-[140px] 2xl:lg:pt-[160px] 3xl:lg:pt-[180px] lg:px-12 2xl:lg:px-16 3xl:lg:px-24" : 
+                        ${sidebarPos === "left" ?"lg:pl-[140px] 2xl:lg:pl-[160px] 3xl:lg:pl-[180px] lg:pr-12 2xl:lg:pr-16 3xl:lg:pr-24" : 
+                          sidebarPos === "right" ?"lg:pr-[140px] 2xl:lg:pr-[160px] 3xl:lg:pr-[180px] lg:pl-12 2xl:lg:pl-16 3xl:lg:pl-24" : 
+                          sidebarPos === "top" ?"lg:pt-[140px] 2xl:lg:pt-[160px] 3xl:lg:pt-[180px] lg:px-12 2xl:lg:px-16 3xl:lg:px-24" : 
                           "lg:pb-[140px] 2xl:lg:pb-[160px] 3xl:lg:pb-[180px] lg:px-12 2xl:lg:px-16 3xl:lg:px-24"}
                     `}>
                         <button
                             onClick={() => setIsSidebarOpen(true)}
-                            className="lg:hidden fixed top-4 right-4 z-40 p-2.5 glass bg-bg-island border border-border rounded-full shadow-lg text-text-main mt-[env(safe-area-inset-top)]"
+                            className="lg:hidden fixed top-4 right-4 z-40 p-2.5  bg-bg-island border border-border rounded-full shadow-lg text-text-main mt-[env(safe-area-inset-top)]"
                         >
                             <Menu size={20} strokeWidth={1.5} />
                         </button>
@@ -145,10 +146,11 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
                         <AnimatePresence mode="wait">
                             <motion.div
                                 key={pathname}
-                                initial={{ opacity: 0, y: 16 }}
-                                animate={{ opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } }}
-                                exit={{ opacity: 0, y: -12, transition: { duration: 0.25, ease: [0.32, 0, 0.67, 0] } }}
-                                className="w-full will-change-[transform,opacity] transform-gpu"
+                                variants={pageVariants}
+                                initial="hidden"
+                                animate="visible"
+                                exit="exit"
+                                className="w-full transform-gpu"
                             >
                                 {children}
                             </motion.div>

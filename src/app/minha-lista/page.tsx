@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useState, useEffect } from 'react';
 import { ArticleGrid } from '@/components/layout/ArticleGrid';
 import { FAQ_DATA, DEFAULT_LEARNING_TRACKS } from '@/config/index';
@@ -64,7 +64,7 @@ export default function QueuePage() {
                 <div className="space-y-1 2xl:space-y-2">
                     <div className="flex items-center gap-3 text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300 reveal">
                         <div className="w-6 2xl:w-10 h-[0.5px] bg-stone-400" />
-                        <span>EducaÃ§Ã£o Corporativa & GestÃ£o do Conhecimento</span>
+                        <span>EducaÃƒÂ§ÃƒÂ£o Corporativa & GestÃƒÂ£o do Conhecimento</span>
                     </div>
 
                     <h1 className="text-3xl lg:text-5xl 2xl:text-6xl font-serif font-light leading-tight tracking-tight text-text-main reveal">
@@ -73,7 +73,7 @@ export default function QueuePage() {
                 </div>
 
                 {/* Card Editorial de Meta de Leitura Direta na Lista */}
-                <div className="p-4 sm:p-5 border border-border bg-bg-island/50 backdrop-blur-sm rounded-xl space-y-3">
+                <div className="p-4 sm:p-5 border border-border bg-bg-island  rounded-xl space-y-3">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                         <div className="flex items-center gap-2.5">
                             <div className="w-7 h-7 rounded-lg border border-border bg-bg-main flex items-center justify-center text-text-main">
@@ -97,7 +97,7 @@ export default function QueuePage() {
                                     onClick={() => handleSelectGoal(mins)}
                                     className={`px-3 py-1 text-xs font-mono font-bold rounded-lg border transition-all ${
                                         readingGoal.targetMinutes === mins
-                                            ? 'bg-text-main text-bg-main border-text-main shadow-sm'
+                                            ?'bg-text-main text-bg-main border-text-main shadow-sm'
                                             : 'border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800'
                                     }`}
                                 >
@@ -119,7 +119,7 @@ export default function QueuePage() {
                     <div className="space-y-1 pt-1">
                         <div className="flex justify-between text-[10px] font-mono uppercase tracking-widest text-text-muted">
                             <span>Progresso do Ciclo</span>
-                            <span>{goalProgressPct}% {readingGoal.completedNotified ? '(Meta Atingida)' : ''}</span>
+                            <span>{goalProgressPct}% {readingGoal.completedNotified ?'(Meta Atingida)' : ''}</span>
                         </div>
                         <div className="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
                             <div
@@ -130,11 +130,11 @@ export default function QueuePage() {
                     </div>
                 </div>
 
-                {/* SeleÃ§Ã£o entre Trilhas de Onboarding e Fila Individual */}
+                {/* SeleÃƒÂ§ÃƒÂ£o entre Trilhas de Onboarding e Fila Individual */}
                 <div className="flex items-center gap-6 pt-2 border-b border-border">
                     <button
                         onClick={() => setViewMode('tracks')}
-                        className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${viewMode === 'tracks' ? 'text-text-main' : 'text-text-muted hover:text-text-main'}`}
+                        className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${viewMode === 'tracks' ?'text-text-main' : 'text-text-muted hover:text-text-main'}`}
                     >
                         <GraduationCap size={15} />
                         <span>Trilhas de Onboarding</span>
@@ -142,7 +142,7 @@ export default function QueuePage() {
                     </button>
                     <button
                         onClick={() => setViewMode('queue')}
-                        className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${viewMode === 'queue' ? 'text-text-main' : 'text-text-muted hover:text-text-main'}`}
+                        className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${viewMode === 'queue' ?'text-text-main' : 'text-text-muted hover:text-text-main'}`}
                     >
                         <BookOpen size={15} />
                         <span>Minha Lista ({displayedQueueArticles.length})</span>
@@ -165,7 +165,7 @@ export default function QueuePage() {
                                 <div
                                     key={track.id}
                                     onClick={() => setSelectedTrack(track)}
-                                    className={`p-6 border cursor-pointer transition-all duration-150 flex flex-col justify-between relative ${isCurrent ? 'border-text-main bg-bg-island/80 shadow-sm' : 'border-border bg-bg-main hover:border-text-muted'}`}
+                                    className={`p-6 border cursor-pointer transition-all duration-150 flex flex-col justify-between relative ${isCurrent ?'border-text-main bg-bg-island/80 shadow-sm' : 'border-border bg-bg-main hover:border-text-muted'}`}
                                 >
                                     {isCurrent && <div className="absolute top-0 left-0 right-0 h-[2px] bg-text-main" />}
                                     <div className="space-y-3 mb-6">
@@ -184,7 +184,7 @@ export default function QueuePage() {
                                     {/* Barra de Progresso Minimalista */}
                                     <div className="space-y-2 pt-4 border-t border-border/60">
                                         <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                                            <span>ConclusÃ£o</span>
+                                            <span>ConclusÃƒÂ£o</span>
                                             <span>{completedCount}/{track.articleIds.length} ({pct}%)</span>
                                         </div>
                                         <div className="w-full h-[3px] bg-border overflow-hidden">
@@ -207,7 +207,7 @@ export default function QueuePage() {
                                 <h2 className="text-2xl font-serif font-light text-text-main">{selectedTrack.title}</h2>
                             </div>
                             <span className="text-xs font-mono uppercase tracking-wider text-text-muted">
-                                Status: <strong className="text-text-main">{trackProgress === 100 ? '100% ConcluÃ­do' : `${trackProgress}% Lido`}</strong>
+                                Status: <strong className="text-text-main">{trackProgress === 100 ?'100% ConcluÃƒÂ­do' : `${trackProgress}% Lido`}</strong>
                             </span>
                         </div>
 
@@ -226,7 +226,7 @@ export default function QueuePage() {
                                                 {String(idx + 1).padStart(2, '0')}
                                             </span>
                                             <div className="min-w-0">
-                                                <h4 className={`text-sm font-medium transition-colors ${isDone ? 'line-through text-text-muted' : 'text-text-main group-hover:text-accent'}`}>
+                                                <h4 className={`text-sm font-medium transition-colors ${isDone ?'line-through text-text-muted' : 'text-text-main group-hover:text-accent'}`}>
                                                     {article.question}
                                                 </h4>
                                                 <span className="text-[10px] uppercase tracking-[0.15em] text-text-muted">{article.category}</span>
@@ -235,10 +235,10 @@ export default function QueuePage() {
 
                                         <button
                                             onClick={(e) => handleToggleComplete(article.id, e)}
-                                            className={`flex items-center gap-1.5 px-3 py-1 text-xs uppercase tracking-wider font-semibold transition-colors shrink-0 ${isDone ? 'border border-text-main text-text-main bg-selection' : 'border border-border text-text-muted hover:text-text-main'}`}
+                                            className={`flex items-center gap-1.5 px-3 py-1 text-xs uppercase tracking-wider font-semibold transition-colors shrink-0 ${isDone ?'border border-text-main text-text-main bg-selection' : 'border border-border text-text-muted hover:text-text-main'}`}
                                         >
-                                            <Check size={12} className={isDone ? 'opacity-100' : 'opacity-30'} />
-                                            <span>{isDone ? 'ConcluÃ­do' : 'Confirmar'}</span>
+                                            <Check size={12} className={isDone ?'opacity-100' : 'opacity-30'} />
+                                            <span>{isDone ?'ConcluÃƒÂ­do' : 'Confirmar'}</span>
                                         </button>
                                     </div>
                                 );
@@ -262,7 +262,7 @@ export default function QueuePage() {
                     {displayedQueueArticles.length === 0 && (
                         <div className="py-12 2xl:py-20 border-t border-border reveal">
                             <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl 2xl:text-2xl font-light">
-                                Sua lista de leitura pessoal estÃ¡ vazia. Salve artigos clicando no Ã­cone de favoritos nos cards.
+                                Sua lista de leitura pessoal estÃƒÂ¡ vazia. Salve artigos clicando no ÃƒÂ­cone de favoritos nos cards.
                             </p>
                         </div>
                     )}

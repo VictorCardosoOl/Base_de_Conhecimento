@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
@@ -31,7 +31,7 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[120] bg-black/90 backdrop-blur-md flex flex-col items-center justify-between p-4 sm:p-8"
+        className="fixed inset-0 z-[120] bg-black/95  flex flex-col items-center justify-between p-4 sm:p-8"
         onClick={onClose}
       >
         {/* Barra Superior */}
@@ -40,7 +40,7 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
           onClick={(e) => e.stopPropagation()}
         >
           <span className="text-xs font-mono uppercase tracking-widest text-stone-400 truncate max-w-md">
-            {alt || 'Visualização Detalhada'}
+            {alt || 'VisualizaÃ§Ã£o Detalhada'}
           </span>
 
           <div className="flex items-center gap-2">
@@ -91,7 +91,7 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
           />
         </div>
 
-        {/* Rodapé informativo */}
+        {/* RodapÃ© informativo */}
         <div className="text-[11px] text-stone-400 font-serif italic text-center z-10">
           Pressione Esc ou clique fora para retornar ao artigo
         </div>

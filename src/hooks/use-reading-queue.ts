@@ -58,12 +58,10 @@ export const useReadingQueue = () => {
 
   const toggleQueue = (id: string) => {
     setQueue(prev => {
-      let next;
-      if (prev.includes(id)) {
-        next = prev.filter(itemId => itemId !== id);
-      } else {
-        next = [...prev, id];
-      }
+      const next = prev.includes(id) 
+        ? prev.filter(itemId => itemId !== id) 
+        : [...prev, id];
+        
       persistQueue(next);
       return next;
     });

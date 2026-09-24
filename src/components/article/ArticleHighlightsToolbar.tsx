@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 import React, { useEffect, useState } from 'react';
 import { Highlighter, Trash2, Check } from 'lucide-react';
 import { ReadingExperienceService, HighlightItem } from '../../services/reading-experience-service';
@@ -32,7 +32,7 @@ export const ArticleHighlightsToolbar: React.FC<ArticleHighlightsToolbarProps> =
         return;
       }
 
-      // Certificar que a seleção está dentro do contêiner do artigo
+      // Certificar que a seleÃ§Ã£o estÃ¡ dentro do contÃªiner do artigo
       const container = containerRef.current;
       if (!container || !container.contains(selection.anchorNode)) {
         setPosition(null);
@@ -74,10 +74,10 @@ export const ArticleHighlightsToolbar: React.FC<ArticleHighlightsToolbarProps> =
         top: `${position.y}px`,
         transform: 'translate(-50%, -100%)'
       }}
-      className="fixed z-50 flex items-center gap-1.5 p-1.5 bg-bg-island backdrop-blur-xl border border-border shadow-2xl rounded-full animate-fade-in-up"
-      onMouseDown={(e) => e.preventDefault()} // Impede perder a seleção ao clicar
+      className="fixed z-50 flex items-center gap-1.5 p-1.5 bg-bg-island  border border-border shadow-2xl rounded-full animate-fade-in-up"
+      onMouseDown={(e) => e.preventDefault()} // Impede perder a seleÃ§Ã£o ao clicar
     >
-      {savedSuccess ? (
+      {savedSuccess ?(
         <div className="flex items-center gap-1 px-3 py-1 text-xs text-emerald-600 font-medium">
           <Check size={14} />
           <span>Destacado</span>

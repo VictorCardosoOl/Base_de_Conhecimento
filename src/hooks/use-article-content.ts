@@ -2,8 +2,29 @@ import { useState, useEffect } from 'react';
 import { FAQItem } from '../types/index';
 import { reportContentError } from '../lib/telemetry';
 import { marked } from 'marked';
-import DOMPurify from 'dompurify';
 import glossaryData from '../data/glossary.json';
+
+// Pré-computar Glossário fora do ciclo de vida do componente para economizar CPU (Performance)
+const glossaryEntries = Object.entries(glossaryData || {});
+let combinedRegex: RegExp | null = null;
+let termToDef: Record<string, string> = {};
+
+if (glossaryEntries.length > 0) {
+  const sortedTerms = glossaryEntries.map(([t]) => t).sort((a, b) => b.length - a.length);
+  const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  combinedRegex = new RegExp(`(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
+  
+  const escapeHtml = (str: string) =>
+      str.replace(/&/g, '&amp;')
+         .replace(/</g, '&lt;')
+         .replace(/>/g, '&gt;')
+         .replace(/"/g, '&quot;')
+         .replace(/'/g, '&#39;');
+
+  termToDef = Object.fromEntries(
+      glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d as string)])
+  );
+}
 
 export const useArticleContent = (article: FAQItem) => {
     const [htmlContent, setHtmlContent] = useState<string>('');
@@ -26,38 +47,21 @@ export const useArticleContent = (article: FAQItem) => {
                     markdownContent = article.content;
                 }
                 
-                // A renderização não sofre mais atraso forçado.
                 if (mounted) {
                     if (markdownContent) {
                         let rawHtml: string = await marked.parse(markdownContent) as string;
                         
                         // Injetar Glossario
-                        const glossaryEntries = Object.entries(glossaryData || {});
-                        if (glossaryEntries.length > 0) {
-                            const sortedTerms = glossaryEntries.map(([t]) => t).sort((a, b) => b.length - a.length);
-                            const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-                            const combinedRegex = new RegExp(`(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
-                            
-                            const escapeHtml = (str: string) =>
-                                str.replace(/&/g, '&amp;')
-                                   .replace(/</g, '&lt;')
-                                   .replace(/>/g, '&gt;')
-                                   .replace(/"/g, '&quot;')
-                                   .replace(/'/g, '&#39;');
-
-                            const termToDef = Object.fromEntries(
-                                glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d as string)])
-                            );
-
+                        if (combinedRegex) {
                             rawHtml = rawHtml.replace(combinedRegex, (match) => {
                                 const safeDef = termToDef[match.toLowerCase()];
                                 return safeDef ? `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>` : match;
                             });
                         }
 
-                        // Sanitizar
-                        const sanitizedHtml = DOMPurify.sanitize(rawHtml, { ADD_ATTR: ['data-tooltip'] });
-                        setHtmlContent(sanitizedHtml);
+                        // Removemos DOMPurify daqui para evitar dupla sanitização.
+                        // O ArticleContent.tsx é o Single Source of Truth para a sanitização final.
+                        setHtmlContent(rawHtml);
                     } else {
                         // Fallback to basic answer if markdown doesn't exist
                         setHtmlContent(article.answer || '');

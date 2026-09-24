@@ -15,6 +15,18 @@ Plataforma de documentação corporativa e suporte normativo em SST focada em ra
 
 ---
 
+## 📖 A Origem do Projeto
+
+A **Base de Conhecimento** nasceu de uma dor operacional percebida durante os meus primeiros meses de estágio. Em uma *software house* em franco crescimento, a cultura e os processos eram transmitidos quase exclusivamente de forma oral. Isso gerava ruídos de comunicação, impactava nossos tempos de resposta (SLA) e dificultava a integração de novos colaboradores.
+
+Ao identificar essa barreira, tomei a iniciativa de documentar e mapear fluxos de trabalho. A otimização foi tão expressiva que impulsionou a minha promoção à liderança da equipe de treinamento. Passamos a documentar o conhecimento de forma colaborativa com o time, gerando um volume tão rico de material que exigiu a criação deste portal centralizado.
+
+Hoje, a plataforma é o coração operacional da equipe: estruturada sob uma arquitetura de **Git-based CMS (Content as Code)**, ela oferece soluções em milissegundos sem depender de bancos de dados complexos, auxiliando diretamente na redução de erros e do *turnover*.
+
+*(Este projeto foi idealizado e arquitetado por mim, com a parceria essencial de [Guilherme Cruz](https://github.com/https-shini) no apoio ao desenvolvimento e [João Sanches](https://github.com/Juao-crtl-c) na curadoria minuciosa do conteúdo).*
+
+---
+
 ## 🚀 Visão de Produto (Features)
 
 * **Busca Fuzzy Instantânea (Zero-Latency):** Mecanismo de busca local com `fuse.js`, indexação pré-compilada, suportando erros de digitação e acentuação.
