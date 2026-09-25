@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect, Suspense, lazy } from "react";
 import { usePathname, useRouter } from "next/navigation";
@@ -88,7 +88,7 @@ export function ClientLayout({ children }: { children: React.ReactNode }) {
     const handleCategorySelect = (cat: any | null) => {
         setCurrentCategory(cat);
         if (cat) {
-            router.push(`/category=${encodeURIComponent(cat)}`);
+            router.push(`/?category=${encodeURIComponent(cat)}`);
         } else {
             router.push("/");
         }
