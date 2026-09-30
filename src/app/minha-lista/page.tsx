@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 import React, { useState, useEffect } from 'react';
 import { ArticleGrid } from '@/components/layout/ArticleGrid';
 import { FAQ_DATA, DEFAULT_LEARNING_TRACKS } from '@/config/index';
@@ -15,10 +15,14 @@ export default function QueuePage() {
     // removed
     const [viewMode, setViewMode] = useState<'queue' | 'tracks'>('tracks');
     const [selectedTrack, setSelectedTrack] = useState<LearningTrack>(DEFAULT_LEARNING_TRACKS[0]);
-    const [completedArticles, setCompletedArticles] = useState<string[]>(() => AnalyticsService.getCompletedArticles());
-    const [readingGoal, setReadingGoal] = useState<ReadingGoal>(() => ReadingExperienceService.getReadingGoal());
+    const [completedArticles, setCompletedArticles] = useState<string[]>([]);
+    const [readingGoal, setReadingGoal] = useState<ReadingGoal | null>(null);
+    const [isMounted, setIsMounted] = useState(false);
 
     useEffect(() => {
+        setCompletedArticles(AnalyticsService.getCompletedArticles());
+        setReadingGoal(ReadingExperienceService.getReadingGoal());
+        setIsMounted(true);
         const handleGoalUpdate = (e: any) => {
             if (e.detail) setReadingGoal(e.detail);
             else setReadingGoal(ReadingExperienceService.getReadingGoal());
@@ -55,7 +59,9 @@ export default function QueuePage() {
         (selectedTrack.articleIds.filter(id => completedArticles.includes(id)).length / selectedTrack.articleIds.length) * 100
     );
 
-    const goalProgressPct = Math.min(100, Math.round((readingGoal.elapsedSeconds / (readingGoal.targetMinutes * 60)) * 100));
+    const goalProgressPct = Math.min(100, Math.round((readingGoal?.elapsedSeconds || 0 / ((readingGoal?.targetMinutes || 1) * 60)) * 100));
+
+    if (!isMounted || !readingGoal) return null;
 
     return (
         <div className="space-y-8">
@@ -64,7 +70,7 @@ export default function QueuePage() {
                 <div className="space-y-1 2xl:space-y-2">
                     <div className="flex items-center gap-3 text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300 reveal">
                         <div className="w-6 2xl:w-10 h-[0.5px] bg-stone-400" />
-                        <span>EducaÃƒÂ§ÃƒÂ£o Corporativa & GestÃƒÂ£o do Conhecimento</span>
+                        <span>Educação Corporativa & Gestão do Conhecimento</span>
                     </div>
 
                     <h1 className="text-3xl lg:text-5xl 2xl:text-6xl font-serif font-light leading-tight tracking-tight text-text-main reveal">
