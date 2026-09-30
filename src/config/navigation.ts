@@ -1,4 +1,15 @@
-import { BookOpen, Shield, FileText, Info, Users, Calendar, List, CreditCard, Monitor, LucideIcon } from 'lucide-react';
+import {
+  BookOpen,
+  Shield,
+  FileText,
+  Info,
+  Users,
+  Calendar,
+  List,
+  CreditCard,
+  Monitor,
+  LucideIcon,
+} from 'lucide-react';
 import { Category } from '../types/index';
 
 export const CATEGORY_ICONS: Record<string, LucideIcon> = {

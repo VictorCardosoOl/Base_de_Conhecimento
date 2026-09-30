@@ -10,78 +10,94 @@ let combinedRegex: RegExp | null = null;
 let termToDef: Record<string, string> = {};
 
 if (glossaryEntries.length > 0) {
-  const sortedTerms = glossaryEntries.map(([t]) => t).sort((a, b) => b.length - a.length);
+  const sortedTerms = glossaryEntries
+    .map(([t]) => t)
+    .sort((a, b) => b.length - a.length);
   const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  combinedRegex = new RegExp(`(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`, 'gi');
-  
+  combinedRegex = new RegExp(
+    `(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`,
+    'gi'
+  );
+
   const escapeHtml = (str: string) =>
-      str.replace(/&/g, '&amp;')
-         .replace(/</g, '&lt;')
-         .replace(/>/g, '&gt;')
-         .replace(/"/g, '&quot;')
-         .replace(/'/g, '&#39;');
+    str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
 
   termToDef = Object.fromEntries(
-      glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d as string)])
+    glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d as string)])
   );
 }
 
 export const useArticleContent = (article: FAQItem) => {
-    const [htmlContent, setHtmlContent] = useState<string>('');
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<Error | null>(null);
+  const [htmlContent, setHtmlContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-    useEffect(() => {
-        let mounted = true;
-        setIsLoading(true);
-        setError(null);
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+    setError(null);
 
-        const loadContent = async () => {
-            try {
-                let markdownContent = '';
-                
-                if (typeof article.content === 'function') {
-                    const module = await article.content();
-                    markdownContent = module.default.content;
-                } else if (typeof article.content === 'string') {
-                    markdownContent = article.content;
-                }
-                
-                if (mounted) {
-                    if (markdownContent) {
-                        let rawHtml: string = await marked.parse(markdownContent) as string;
-                        
-                        // Injetar Glossario
-                        if (combinedRegex) {
-                            rawHtml = rawHtml.replace(combinedRegex, (match) => {
-                                const safeDef = termToDef[match.toLowerCase()];
-                                return safeDef ? `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>` : match;
-                            });
-                        }
+    const loadContent = async () => {
+      try {
+        let markdownContent = '';
 
-                        // Removemos DOMPurify daqui para evitar dupla sanitização.
-                        // O ArticleContent.tsx é o Single Source of Truth para a sanitização final.
-                        setHtmlContent(rawHtml);
-                    } else {
-                        // Fallback to basic answer if markdown doesn't exist
-                        setHtmlContent(article.answer || '');
-                    }
-                }
-            } catch (err) {
-                reportContentError(err, { articleId: article.id, question: article.question });
-                if (mounted) {
-                    setError(err instanceof Error ? err : new Error('Failed to load content'));
-                    setHtmlContent(article.answer || '');
-                }
-            } finally {
-                if (mounted) setIsLoading(false);
+        if (typeof article.content === 'function') {
+          const module = await article.content();
+          markdownContent = module.default.content;
+        } else if (typeof article.content === 'string') {
+          markdownContent = article.content;
+        }
+
+        if (mounted) {
+          if (markdownContent) {
+            let rawHtml: string = (await marked.parse(
+              markdownContent
+            )) as string;
+
+            // Injetar Glossario
+            if (combinedRegex) {
+              rawHtml = rawHtml.replace(combinedRegex, (match) => {
+                const safeDef = termToDef[match.toLowerCase()];
+                return safeDef
+                  ? `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>`
+                  : match;
+              });
             }
-        };
 
-        loadContent();
-        return () => { mounted = false; };
-    }, [article]);
+            // Removemos DOMPurify daqui para evitar dupla sanitização.
+            // O ArticleContent.tsx é o Single Source of Truth para a sanitização final.
+            setHtmlContent(rawHtml);
+          } else {
+            // Fallback to basic answer if markdown doesn't exist
+            setHtmlContent(article.answer || '');
+          }
+        }
+      } catch (err) {
+        reportContentError(err, {
+          articleId: article.id,
+          question: article.question,
+        });
+        if (mounted) {
+          setError(
+            err instanceof Error ? err : new Error('Failed to load content')
+          );
+          setHtmlContent(article.answer || '');
+        }
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
 
-    return { htmlContent, isLoading, error };
+    loadContent();
+    return () => {
+      mounted = false;
+    };
+  }, [article]);
+
+  return { htmlContent, isLoading, error };
 };
-

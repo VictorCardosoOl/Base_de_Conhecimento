@@ -25,7 +25,9 @@ describe('useReadingQueue Hook (State & Persistence Logic)', () => {
       vi.runAllTimers();
     });
     expect(result.current.queue).toContain('artigo-s2240');
-    expect(JSON.parse(localStorage.getItem('sstfaq_queue') || '[]')).toEqual(['artigo-s2240']);
+    expect(JSON.parse(localStorage.getItem('sstfaq_queue') || '[]')).toEqual([
+      'artigo-s2240',
+    ]);
   });
 
   it('não deve permitir itens duplicados na fila', () => {

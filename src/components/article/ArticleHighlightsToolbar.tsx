@@ -1,18 +1,22 @@
-﻿"use client";
+﻿'use client';
 import React, { useEffect, useState } from 'react';
 import { Highlighter, Trash2, Check } from 'lucide-react';
-import { ReadingExperienceService, HighlightItem } from '../../services/reading-experience-service';
+import {
+  ReadingExperienceService,
+  HighlightItem,
+} from '../../services/reading-experience-service';
 
 interface ArticleHighlightsToolbarProps {
   articleId: string;
   containerRef: React.RefObject<HTMLElement | null>;
 }
 
-export const ArticleHighlightsToolbar: React.FC<ArticleHighlightsToolbarProps> = ({
-  articleId,
-  containerRef
-}) => {
-  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+export const ArticleHighlightsToolbar: React.FC<
+  ArticleHighlightsToolbarProps
+> = ({ articleId, containerRef }) => {
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(
+    null
+  );
   const [selectedText, setSelectedText] = useState<string>('');
   const [savedSuccess, setSavedSuccess] = useState(false);
 
@@ -44,13 +48,14 @@ export const ArticleHighlightsToolbar: React.FC<ArticleHighlightsToolbarProps> =
 
       setPosition({
         x: rect.left + rect.width / 2,
-        y: rect.top - 10
+        y: rect.top - 10,
       });
       setSelectedText(text);
     };
 
     document.addEventListener('selectionchange', handleSelection);
-    return () => document.removeEventListener('selectionchange', handleSelection);
+    return () =>
+      document.removeEventListener('selectionchange', handleSelection);
   }, [containerRef]);
 
   const applyHighlight = (color: HighlightItem['color']) => {
@@ -72,12 +77,12 @@ export const ArticleHighlightsToolbar: React.FC<ArticleHighlightsToolbarProps> =
       style={{
         left: `${position.x}px`,
         top: `${position.y}px`,
-        transform: 'translate(-50%, -100%)'
+        transform: 'translate(-50%, -100%)',
       }}
       className="fixed z-50 flex items-center gap-1.5 p-1.5 bg-bg-island  border border-border shadow-2xl rounded-full animate-fade-in-up"
       onMouseDown={(e) => e.preventDefault()} // Impede perder a seleÃ§Ã£o ao clicar
     >
-      {savedSuccess ?(
+      {savedSuccess ? (
         <div className="flex items-center gap-1 px-3 py-1 text-xs text-emerald-600 font-medium">
           <Check size={14} />
           <span>Destacado</span>

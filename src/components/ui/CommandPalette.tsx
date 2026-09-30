@@ -1,6 +1,15 @@
 ﻿import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
-import { Search, Hash, Sun, Moon, Archive, Bookmark, X, ArrowRight } from 'lucide-react';
+import {
+  Search,
+  Hash,
+  Sun,
+  Moon,
+  Archive,
+  Bookmark,
+  X,
+  ArrowRight,
+} from 'lucide-react';
 import { motion } from 'framer-motion';
 import { scaleInVariants, fadeVariants } from '@/lib/animations';
 import { FAQItem, Category } from '../../types/index';
@@ -21,7 +30,13 @@ interface CommandPaletteProps {
 }
 
 export const CommandPalette: React.FC<CommandPaletteProps> = ({
-  isOpen, onClose, onSelectArticle, onToggleTheme, isDarkMode, onSelectCategory, onSelectQueue
+  isOpen,
+  onClose,
+  onSelectArticle,
+  onToggleTheme,
+  isDarkMode,
+  onSelectCategory,
+  onSelectQueue,
 }) => {
   const [inputValue, setInputValue] = useState('');
 
@@ -35,14 +50,26 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   // Fuzzy Search for Articles
   const filteredArticles = useSearch(FAQ_DATA, inputValue, {
     keys: ['question', 'tags', 'answer', 'category', 'searchText'],
-    threshold: 0.4
+    threshold: 0.4,
   });
 
   // Manual filter helpers for static items
-  const isMatch = (text: string) => text.toLowerCase().includes(inputValue.toLowerCase());
-  const showLibrary = !inputValue || isMatch("Biblioteca Completa") || isMatch("Todos os documentos");
-  const showQueue = !inputValue || isMatch("Minha Lista de Leitura") || isMatch("Artigos salvos");
-  const showTheme = !inputValue || isMatch("Alternar para Modo") || isMatch("Tema") || isMatch("Claro") || isMatch("Escuro");
+  const isMatch = (text: string) =>
+    text.toLowerCase().includes(inputValue.toLowerCase());
+  const showLibrary =
+    !inputValue ||
+    isMatch('Biblioteca Completa') ||
+    isMatch('Todos os documentos');
+  const showQueue =
+    !inputValue ||
+    isMatch('Minha Lista de Leitura') ||
+    isMatch('Artigos salvos');
+  const showTheme =
+    !inputValue ||
+    isMatch('Alternar para Modo') ||
+    isMatch('Tema') ||
+    isMatch('Claro') ||
+    isMatch('Escuro');
 
   // Reset input when opening
   useEffect(() => {
@@ -83,7 +110,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   if (!isOpen) return null;
 
   return (
-    <div ref={containerRef} className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6">
+    <div
+      ref={containerRef}
+      className="fixed inset-0 z-[100] flex items-center justify-center px-4 sm:px-6"
+    >
       {/* Backdrop */}
       <motion.div
         ref={backdropRef}
@@ -114,7 +144,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
         >
           {/* Campo de Busca Superior */}
           <div className="flex items-center border-b border-border px-5 py-1 relative">
-            <Search className="w-5 h-5 text-text-muted mr-3.5 shrink-0" strokeWidth={1.5} />
+            <Search
+              className="w-5 h-5 text-text-muted mr-3.5 shrink-0"
+              strokeWidth={1.5}
+            />
             <Command.Input
               ref={inputRef}
               value={inputValue}
@@ -142,7 +175,9 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             aria-atomic="true"
           >
             <Command.Empty className="py-12 text-center text-text-muted">
-              <p className="font-serif italic text-base">Nenhum resultado encontrado para sua busca.</p>
+              <p className="font-serif italic text-base">
+                Nenhum resultado encontrado para sua busca.
+              </p>
             </Command.Empty>
 
             {!inputValue && (
@@ -155,30 +190,44 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               <Command.Group heading="" className="space-y-1">
                 {showLibrary && (
                   <Command.Item
-                    onSelect={() => { onSelectCategory(null); onClose(); }}
+                    onSelect={() => {
+                      onSelectCategory(null);
+                      onClose();
+                    }}
                     className="flex items-center gap-3.5 p-3 rounded-2xl cursor-pointer text-text-main hover:bg-stone-100/80 dark:hover:bg-white/10 transition-colors duration-150 group aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                   >
                     <div className="w-9 h-9 rounded-xl bg-stone-100 dark:bg-white/10 border border-border flex items-center justify-center text-text-main group-hover:scale-105 transition-transform duration-150 shrink-0">
                       <Archive size={17} strokeWidth={1.5} />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="font-medium text-sm text-text-main">Biblioteca Completa</span>
-                      <span className="text-xs text-text-muted truncate">Visualizar todos os documentos e diretrizes</span>
+                      <span className="font-medium text-sm text-text-main">
+                        Biblioteca Completa
+                      </span>
+                      <span className="text-xs text-text-muted truncate">
+                        Visualizar todos os documentos e diretrizes
+                      </span>
                     </div>
                   </Command.Item>
                 )}
 
                 {showQueue && (
                   <Command.Item
-                    onSelect={() => { onSelectQueue(); onClose(); }}
+                    onSelect={() => {
+                      onSelectQueue();
+                      onClose();
+                    }}
                     className="flex items-center gap-3.5 p-3 rounded-2xl cursor-pointer text-text-main hover:bg-stone-100/80 dark:hover:bg-white/10 transition-colors duration-150 group aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                   >
                     <div className="w-9 h-9 rounded-xl bg-stone-100 dark:bg-white/10 border border-border flex items-center justify-center text-text-main group-hover:scale-105 transition-transform duration-150 shrink-0">
                       <Bookmark size={17} strokeWidth={1.5} />
                     </div>
                     <div className="flex flex-col min-w-0">
-                      <span className="font-medium text-sm text-text-main">Minha Lista de Leitura</span>
-                      <span className="text-xs text-text-muted truncate">Acessar seus artigos e tÃ³picos salvos</span>
+                      <span className="font-medium text-sm text-text-main">
+                        Minha Lista de Leitura
+                      </span>
+                      <span className="text-xs text-text-muted truncate">
+                        Acessar seus artigos e tÃ³picos salvos
+                      </span>
                     </div>
                   </Command.Item>
                 )}
@@ -230,11 +279,20 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             {showTheme && (
               <div className="mt-3 border-t border-border pt-2">
                 <Command.Item
-                  onSelect={() => { onToggleTheme(); onClose(); }}
+                  onSelect={() => {
+                    onToggleTheme();
+                    onClose();
+                  }}
                   className="flex items-center gap-3 px-3 py-2 rounded-xl hover:bg-stone-100/80 dark:hover:bg-white/10 cursor-pointer text-text-muted hover:text-text-main transition-colors duration-150 aria-selected:bg-stone-100/90 dark:aria-selected:bg-white/10"
                 >
-                  {isDarkMode ?<Sun size={15} strokeWidth={1.5} /> : <Moon size={15} strokeWidth={1.5} />}
-                  <span className="text-xs font-medium uppercase tracking-wider">Alternar para Modo {isDarkMode ?'Claro' : 'Escuro'}</span>
+                  {isDarkMode ? (
+                    <Sun size={15} strokeWidth={1.5} />
+                  ) : (
+                    <Moon size={15} strokeWidth={1.5} />
+                  )}
+                  <span className="text-xs font-medium uppercase tracking-wider">
+                    Alternar para Modo {isDarkMode ? 'Claro' : 'Escuro'}
+                  </span>
                 </Command.Item>
               </div>
             )}

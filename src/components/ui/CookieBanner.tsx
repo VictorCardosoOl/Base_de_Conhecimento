@@ -5,7 +5,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { slideUpVariants } from '@/lib/animations';
 
 export const CookieBanner: React.FC = () => {
-  const { consent, acceptAll, rejectAll, setOpenLegalModal, setActiveLegalTab } = useConsent();
+  const {
+    consent,
+    acceptAll,
+    rejectAll,
+    setOpenLegalModal,
+    setActiveLegalTab,
+  } = useConsent();
 
   // NÃ£o renderiza se o usuÃ¡rio jÃ¡ expressou consentimento (concedido ou negado)
   if (consent !== 'pending') return null;
@@ -38,7 +44,10 @@ export const CookieBanner: React.FC = () => {
             </div>
 
             <p className="text-xs text-text-muted leading-relaxed">
-              Utilizamos cookies e tecnologias estritamente necessÃ¡rias para o funcionamento e, sob sua autorizaÃ§Ã£o expressa, telemetria de desempenho anÃ´nima. Nenhuma ferramenta de terceiros Ã© executada sem o seu consentimento prÃ©vio.
+              Utilizamos cookies e tecnologias estritamente necessÃ¡rias para o
+              funcionamento e, sob sua autorizaÃ§Ã£o expressa, telemetria de
+              desempenho anÃ´nima. Nenhuma ferramenta de terceiros Ã© executada
+              sem o seu consentimento prÃ©vio.
             </p>
 
             <div className="flex items-center gap-3 pt-1 text-xs">

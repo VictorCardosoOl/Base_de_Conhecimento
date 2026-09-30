@@ -20,7 +20,10 @@ const CONSENT_STORAGE_KEY = 'sst_user_cookie_consent';
 export const AnalyticsService = {
   logSearch(query: string, resultCount: number) {
     // Privacy by Default: Telemetria de busca só é persistida se houver consentimento explícito
-    if (typeof window !== 'undefined' && localStorage.getItem(CONSENT_STORAGE_KEY) !== 'granted') {
+    if (
+      typeof window !== 'undefined' &&
+      localStorage.getItem(CONSENT_STORAGE_KEY) !== 'granted'
+    ) {
       return;
     }
 
@@ -30,14 +33,19 @@ export const AnalyticsService = {
     try {
       // Server-side beacon tracking simulation
       if (typeof navigator !== 'undefined' && navigator.sendBeacon) {
-        navigator.sendBeacon('/api/track/search', JSON.stringify({ query: trimmed, resultCount }));
+        navigator.sendBeacon(
+          '/api/track/search',
+          JSON.stringify({ query: trimmed, resultCount })
+        );
       }
 
-      const logs: SearchLog[] = JSON.parse(localStorage.getItem(SEARCH_LOGS_KEY) || '[]');
+      const logs: SearchLog[] = JSON.parse(
+        localStorage.getItem(SEARCH_LOGS_KEY) || '[]'
+      );
       logs.unshift({
         query: trimmed,
         resultCount,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
       // Mantém os últimos 200 registros no browser
       localStorage.setItem(SEARCH_LOGS_KEY, JSON.stringify(logs.slice(0, 200)));
@@ -52,12 +60,36 @@ export const AnalyticsService = {
       if (logs.length === 0) {
         // Mock inicial realista caso o banco local ainda esteja limpo (para recrutadores/demo)
         return [
-          { query: 'adicional periculosidade inflamaveis', resultCount: 0, timestamp: Date.now() - 1000 * 60 * 42 },
-          { query: 'como calcular insalubridade grau maximo', resultCount: 0, timestamp: Date.now() - 1000 * 60 * 120 },
-          { query: 'exame retorno ao trabalho prazo', resultCount: 0, timestamp: Date.now() - 1000 * 60 * 240 },
-          { query: 'CAT', resultCount: 4, timestamp: Date.now() - 1000 * 60 * 300 },
-          { query: 'LTCAT', resultCount: 2, timestamp: Date.now() - 1000 * 60 * 500 },
-          { query: 'trabalho em altura nr 35 cinto', resultCount: 0, timestamp: Date.now() - 1000 * 60 * 700 }
+          {
+            query: 'adicional periculosidade inflamaveis',
+            resultCount: 0,
+            timestamp: Date.now() - 1000 * 60 * 42,
+          },
+          {
+            query: 'como calcular insalubridade grau maximo',
+            resultCount: 0,
+            timestamp: Date.now() - 1000 * 60 * 120,
+          },
+          {
+            query: 'exame retorno ao trabalho prazo',
+            resultCount: 0,
+            timestamp: Date.now() - 1000 * 60 * 240,
+          },
+          {
+            query: 'CAT',
+            resultCount: 4,
+            timestamp: Date.now() - 1000 * 60 * 300,
+          },
+          {
+            query: 'LTCAT',
+            resultCount: 2,
+            timestamp: Date.now() - 1000 * 60 * 500,
+          },
+          {
+            query: 'trabalho em altura nr 35 cinto',
+            resultCount: 0,
+            timestamp: Date.now() - 1000 * 60 * 700,
+          },
         ];
       }
       return logs;
@@ -66,9 +98,13 @@ export const AnalyticsService = {
     }
   },
 
-  getZeroResultSearches(): { query: string; count: number; lastSearched: number }[] {
+  getZeroResultSearches(): {
+    query: string;
+    count: number;
+    lastSearched: number;
+  }[] {
     const logs = this.getSearchLogs();
-    const zeroLogs = logs.filter(l => l.resultCount === 0);
+    const zeroLogs = logs.filter((l) => l.resultCount === 0);
     const map = new Map<string, { count: number; lastSearched: number }>();
 
     for (const item of zeroLogs) {
@@ -83,18 +119,27 @@ export const AnalyticsService = {
     }
 
     return Array.from(map.entries())
-      .map(([query, data]) => ({ query, count: data.count, lastSearched: data.lastSearched }))
+      .map(([query, data]) => ({
+        query,
+        count: data.count,
+        lastSearched: data.lastSearched,
+      }))
       .sort((a, b) => b.count - a.count);
   },
 
   submitFeedback(feedback: Omit<ContentFeedback, 'timestamp'>) {
     try {
-      const logs: ContentFeedback[] = JSON.parse(localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]');
+      const logs: ContentFeedback[] = JSON.parse(
+        localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]'
+      );
       logs.unshift({
         ...feedback,
-        timestamp: Date.now()
+        timestamp: Date.now(),
       });
-      localStorage.setItem(CONTENT_FEEDBACK_KEY, JSON.stringify(logs.slice(0, 100)));
+      localStorage.setItem(
+        CONTENT_FEEDBACK_KEY,
+        JSON.stringify(logs.slice(0, 100))
+      );
     } catch (e) {
       console.error('Falha ao salvar feedback:', e);
     }
@@ -102,22 +147,26 @@ export const AnalyticsService = {
 
   getFeedbackLogs(): ContentFeedback[] {
     try {
-      const logs = JSON.parse(localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]');
+      const logs = JSON.parse(
+        localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]'
+      );
       if (logs.length === 0) {
         return [
           {
             articleId: 'pgr',
             question: 'PGR',
             type: 'outdated_report',
-            details: 'A portaria MTE de 2026 alterou o prazo de guarda digital do inventário de riscos.',
-            timestamp: Date.now() - 1000 * 60 * 60 * 12
+            details:
+              'A portaria MTE de 2026 alterou o prazo de guarda digital do inventário de riscos.',
+            timestamp: Date.now() - 1000 * 60 * 60 * 12,
           },
           {
             articleId: 'evento-s2210-comunicacao-cat',
-            question: 'Evento S-2210 - Comunicação de Acidente de Trabalho (CAT)',
+            question:
+              'Evento S-2210 - Comunicação de Acidente de Trabalho (CAT)',
             type: 'useful_yes',
-            timestamp: Date.now() - 1000 * 60 * 60 * 24
-          }
+            timestamp: Date.now() - 1000 * 60 * 60 * 24,
+          },
         ];
       }
       return logs;
@@ -139,11 +188,13 @@ export const AnalyticsService = {
     try {
       const completed = this.getCompletedArticles();
       const exists = completed.includes(articleId);
-      const updated = exists ? completed.filter(id => id !== articleId) : [...completed, articleId];
+      const updated = exists
+        ? completed.filter((id) => id !== articleId)
+        : [...completed, articleId];
       localStorage.setItem(COMPLETED_ARTICLES_KEY, JSON.stringify(updated));
       return !exists;
     } catch {
       return false;
     }
-  }
+  },
 };

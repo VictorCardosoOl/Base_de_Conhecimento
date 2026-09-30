@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from 'react';
 
 export const useReadingQueue = () => {
@@ -14,7 +13,7 @@ export const useReadingQueue = () => {
         setQueue(JSON.parse(oldSaved));
         return;
       } catch (e) {
-        console.error("Erro ao carregar fila legada:", e);
+        console.error('Erro ao carregar fila legada:', e);
       }
     }
 
@@ -23,7 +22,7 @@ export const useReadingQueue = () => {
       try {
         setQueue(JSON.parse(saved));
       } catch (e) {
-        console.error("Erro ao carregar fila", e);
+        console.error('Erro ao carregar fila', e);
       }
     }
   }, []);
@@ -40,7 +39,7 @@ export const useReadingQueue = () => {
   };
 
   const addToQueue = (id: string) => {
-    setQueue(prev => {
+    setQueue((prev) => {
       if (prev.includes(id)) return prev;
       const next = [...prev, id];
       persistQueue(next);
@@ -49,26 +48,26 @@ export const useReadingQueue = () => {
   };
 
   const removeFromQueue = (id: string) => {
-    setQueue(prev => {
-      const next = prev.filter(itemId => itemId !== id);
+    setQueue((prev) => {
+      const next = prev.filter((itemId) => itemId !== id);
       persistQueue(next);
       return next;
     });
   };
 
   const toggleQueue = (id: string) => {
-    setQueue(prev => {
-      const next = prev.includes(id) 
-        ? prev.filter(itemId => itemId !== id) 
+    setQueue((prev) => {
+      const next = prev.includes(id)
+        ? prev.filter((itemId) => itemId !== id)
         : [...prev, id];
-        
+
       persistQueue(next);
       return next;
     });
   };
 
   const moveItem = (id: string, direction: 'UP' | 'DOWN') => {
-    setQueue(prev => {
+    setQueue((prev) => {
       const index = prev.indexOf(id);
       if (index === -1) return prev;
       const targetIndex = direction === 'UP' ? index - 1 : index + 1;

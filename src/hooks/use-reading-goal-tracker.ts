@@ -6,7 +6,10 @@ interface UseReadingGoalTrackerOptions {
   isActive: boolean;
 }
 
-export function useReadingGoalTracker({ articleId, isActive }: UseReadingGoalTrackerOptions) {
+export function useReadingGoalTracker({
+  articleId,
+  isActive,
+}: UseReadingGoalTrackerOptions) {
   const [goalReachedBanner, setGoalReachedBanner] = useState(false);
 
   useEffect(() => {
@@ -36,6 +39,6 @@ export function useReadingGoalTracker({ articleId, isActive }: UseReadingGoalTra
 
   return {
     goalReachedBanner,
-    dismissBanner
+    dismissBanner,
   };
 }

@@ -22,7 +22,7 @@ export async function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { id } = await Promise.resolve(params);
   const article = getArticleById(id);
-  
+
   if (!article) {
     return {
       title: 'Artigo não encontrado',
@@ -38,7 +38,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       type: 'article',
       tags: article.tags,
       publishedTime: article.date,
-    }
+    },
   };
 }
 
@@ -55,7 +55,9 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <main className="max-w-4xl mx-auto p-6 md:p-12 lg:p-16">
-      <h1 className="text-3xl font-serif text-text-main mb-8">{article.question}</h1>
+      <h1 className="text-3xl font-serif text-text-main mb-8">
+        {article.question}
+      </h1>
       <div className="prose dark:prose-invert max-w-none">
         <ArticleContent htmlContent={htmlContent} articleId={article.id} />
       </div>

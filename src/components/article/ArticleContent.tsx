@@ -1,10 +1,13 @@
-"use client";
+'use client';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
 import mermaid from 'mermaid';
 import DOMPurify from 'dompurify';
 import { ArticleLightbox } from './ArticleLightbox';
 import { ArticleHighlightsToolbar } from './ArticleHighlightsToolbar';
-import { ReadingExperienceService, HighlightItem } from '../../services/reading-experience-service';
+import {
+  ReadingExperienceService,
+  HighlightItem,
+} from '../../services/reading-experience-service';
 
 interface ArticleContentProps {
   htmlContent: string;
@@ -12,7 +15,11 @@ interface ArticleContentProps {
   typography?: any;
 }
 
-export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, articleId, typography: propTypography }) => {
+export const ArticleContent: React.FC<ArticleContentProps> = ({
+  htmlContent,
+  articleId,
+  typography: propTypography,
+}) => {
   const contentRef = useRef<HTMLDivElement>(null);
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>('');
@@ -28,19 +35,28 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, art
     const handleSettingsUpdate = () => {
       setTypography(ReadingExperienceService.getTypography());
     };
-    
+
     const handleHighlightsUpdate = (e: any) => {
       if (articleId && e.detail?.articleId === articleId) {
         setActiveHighlights(ReadingExperienceService.getHighlights(articleId));
       }
     };
 
-    window.addEventListener('sst_reading_settings_updated', handleSettingsUpdate);
+    window.addEventListener(
+      'sst_reading_settings_updated',
+      handleSettingsUpdate
+    );
     window.addEventListener('sst_highlights_updated', handleHighlightsUpdate);
-    
+
     return () => {
-      window.removeEventListener('sst_reading_settings_updated', handleSettingsUpdate);
-      window.removeEventListener('sst_highlights_updated', handleHighlightsUpdate);
+      window.removeEventListener(
+        'sst_reading_settings_updated',
+        handleSettingsUpdate
+      );
+      window.removeEventListener(
+        'sst_highlights_updated',
+        handleHighlightsUpdate
+      );
     };
   }, [articleId]);
 
@@ -53,12 +69,16 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, art
     try {
       mermaid.initialize({
         startOnLoad: false,
-        theme: document.documentElement.classList.contains('dark') ? 'dark' : 'default',
+        theme: document.documentElement.classList.contains('dark')
+          ? 'dark'
+          : 'default',
         securityLevel: 'loose',
       });
-      mermaid.run({
-        nodes: document.querySelectorAll('.language-mermaid'),
-      }).catch(() => {});
+      mermaid
+        .run({
+          nodes: document.querySelectorAll('.language-mermaid'),
+        })
+        .catch(() => {});
     } catch (e) {}
   }, [htmlContent]);
 
@@ -66,7 +86,11 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, art
     if (!contentRef.current) return;
     const images = contentRef.current.querySelectorAll('img');
     images.forEach((img) => {
-      img.classList.add('cursor-zoom-in', 'transition-transform', 'hover:opacity-90');
+      img.classList.add(
+        'cursor-zoom-in',
+        'transition-transform',
+        'hover:opacity-90'
+      );
       const handleClick = () => {
         setLightboxSrc(img.getAttribute('src'));
         setLightboxAlt(img.getAttribute('alt') || 'Imagem do Artigo');
@@ -79,27 +103,36 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, art
     if (!htmlContent) return '';
     let res = htmlContent;
     if (activeHighlights.length > 0) {
-      activeHighlights.forEach(h => {
+      activeHighlights.forEach((h) => {
         if (!h.text) return;
         const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color) ? h.color : 'amber';
+        const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color)
+          ? h.color
+          : 'amber';
         const regex = new RegExp(`(?![^<]*>)(${escaped})`, 'gi');
-        res = res.replace(regex, `<mark class="sst-highlight-${safeColor}">$1</mark>`);
+        res = res.replace(
+          regex,
+          `<mark class="sst-highlight-${safeColor}">$1</mark>`
+        );
       });
     }
 
     if (typeof window === 'undefined') return res;
-    
+
     return DOMPurify.sanitize(res, {
       ADD_TAGS: ['mark'],
-      ADD_ATTR: ['class', 'data-tooltip']
+      ADD_ATTR: ['class', 'data-tooltip'],
     });
   }, [htmlContent, activeHighlights]);
 
   const typoClasses = [
-    typography?.fontFamily === 'sans' ? 'article-font-sans' : typography?.fontFamily === 'dyslexic' ? 'article-font-dyslexic' : 'article-font-serif',
+    typography?.fontFamily === 'sans'
+      ? 'article-font-sans'
+      : typography?.fontFamily === 'dyslexic'
+        ? 'article-font-dyslexic'
+        : 'article-font-serif',
     `article-size-${typography?.fontSize || 'base'}`,
-    `article-leading-${typography?.lineHeight || 'relaxed'}`
+    `article-leading-${typography?.lineHeight || 'relaxed'}`,
   ].join(' ');
 
   return (
@@ -110,7 +143,10 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({ htmlContent, art
         dangerouslySetInnerHTML={{ __html: processedHtml }}
       />
       {articleId && (
-        <ArticleHighlightsToolbar articleId={articleId} containerRef={contentRef} />
+        <ArticleHighlightsToolbar
+          articleId={articleId}
+          containerRef={contentRef}
+        />
       )}
       <ArticleLightbox
         src={lightboxSrc}

@@ -9,7 +9,8 @@ export const BackToTopButton: React.FC = () => {
   useEffect(() => {
     const handleScroll = () => {
       const scrolled = window.scrollY;
-      const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const totalHeight =
+        document.documentElement.scrollHeight - window.innerHeight;
       if (totalHeight > 0) {
         setVisible(scrolled / totalHeight > 0.3);
       }

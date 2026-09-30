@@ -20,7 +20,7 @@ import { lenisScopedConfig } from '@/lib/animations';
 export function useScopedLenis(
   wrapperRef: React.RefObject<HTMLElement | null>,
   contentRef: React.RefObject<HTMLElement | null>,
-  isActive: boolean,
+  isActive: boolean
 ) {
   const lenisRef = useRef<Lenis | null>(null);
 

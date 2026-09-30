@@ -5,6 +5,7 @@ Este guia orienta o processo de adição de novos conteúdos à base de conhecim
 ## 🛠️ Passo a Passo para Inserção
 
 ### 1. Verificar a Categoria
+
 Antes de criar o artigo, certifique-se de que a categoria existe no arquivo `types.ts`.
 Se precisar de uma nova categoria, adicione-a ao enum:
 
@@ -17,6 +18,7 @@ export enum Category {
 ```
 
 ### 2. Adicionar ao Arquivo de Constantes
+
 A fonte de dados principal da aplicação é o arquivo `constants.ts`. Localize o array `FAQ_DATA` e adicione seu novo objeto seguindo o padrão:
 
 ```typescript
@@ -39,22 +41,24 @@ Aqui você escreve o conteúdo em **Markdown**.
 ### Subtítulo
 * Liste pontos importantes.
 * Use formatação limpa.
-    `
+    `,
   },
 ];
 ```
 
 ### 3. (Opcional) Criar Arquivo de Backup/Conteúdo
+
 Embora o sistema consuma os dados de `constants.ts`, recomendamos criar um arquivo `.md` na pasta `content/[CATEGORIA]/nome-do-artigo.md` para manter um histórico limpo e facilitar futuras migrações para um CMS ou banco de dados.
 
 ## 🎨 Padrão Editorial (Best Practices)
 
-1.  **Voz e Tom:** Mantenha uma linguagem técnica, porém acessível. Imagine o estilo de publicações como *The Economist* ou *Monocle*.
+1.  **Voz e Tom:** Mantenha uma linguagem técnica, porém acessível. Imagine o estilo de publicações como _The Economist_ ou _Monocle_.
 2.  **Imagens:** Se for adicionar imagens no campo `content`, utilize links do Unsplash ou do seu CDN de preferência: `![Descrição](url_da_imagem)`.
 3.  **IDs:** O `id` deve ser único e descritivo, pois ele é utilizado para a funcionalidade de "Minha Lista" (Reading Queue) via LocalStorage.
 4.  **Tags:** Use tags que facilitem a busca neural da IA. Pense em palavras-chave que um usuário digitaria na busca.
 
 ## ✅ Checklist de Revisão
+
 - [ ] O `id` é único?
 - [ ] A categoria está correta?
 - [ ] O Markdown está renderizando corretamente (fechamento de crases)?

@@ -1,5 +1,5 @@
-"use client";
-import React, { useMemo } from "react";
+'use client';
+import React, { useMemo } from 'react';
 import { ArticleGrid } from './ArticleGrid';
 import { FAQ_DATA } from '@/config/index';
 import { IntroHero } from '../article/IntroHero';

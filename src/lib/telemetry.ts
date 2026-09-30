@@ -1,6 +1,8 @@
 import * as Sentry from '@sentry/react';
 
-const SENTRY_DSN = process.env.NEXT_PUBLIC_SENTRY_DSN || (import.meta as any).env?.VITE_SENTRY_DSN;
+const SENTRY_DSN =
+  process.env.NEXT_PUBLIC_SENTRY_DSN ||
+  (import.meta as any).env?.VITE_SENTRY_DSN;
 const CONSENT_STORAGE_KEY = 'sst_user_cookie_consent';
 
 export function hasUserConsented(): boolean {
@@ -14,7 +16,9 @@ export function initTelemetry() {
   // Privacy by Default: Não inicializa sem o consentimento prévio explícito (LGPD Art. 7, I)
   if (!hasUserConsented()) {
     if (import.meta.env.DEV) {
-      console.log('🔒 [Telemetry] Consent Gate ativo: telemetria bloqueada até consentimento explícito do usuário.');
+      console.log(
+        '🔒 [Telemetry] Consent Gate ativo: telemetria bloqueada até consentimento explícito do usuário.'
+      );
     }
     return;
   }
@@ -40,28 +44,33 @@ export function initTelemetry() {
       beforeSend(event) {
         // Sanitiza dados sensíveis antes do envio
         return event;
-      }
+      },
     });
     isInitialized = true;
   } else {
     // Modo observabilidade local/fallback
     if (import.meta.env.DEV) {
-      console.log('📡 [Telemetry] Sentry DSN não configurado. Telemetria em modo passivo local.');
+      console.log(
+        '📡 [Telemetry] Sentry DSN não configurado. Telemetria em modo passivo local.'
+      );
     }
     isInitialized = true;
   }
 }
 
 // Reportador customizado para capturar falhas em lazy chunks e parsers de conteúdo
-export function reportContentError(error: unknown, context?: Record<string, any>) {
+export function reportContentError(
+  error: unknown,
+  context?: Record<string, any>
+) {
   if (process.env.NODE_ENV === 'development') {
     console.error('🚨 [Content Error / Chunk Failure]:', error, context);
   }
-  
+
   if (hasUserConsented() && SENTRY_DSN) {
     Sentry.captureException(error, {
       extra: context,
-      tags: { source: 'content-chunk-loader' }
+      tags: { source: 'content-chunk-loader' },
     });
   }
 }

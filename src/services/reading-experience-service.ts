@@ -37,7 +37,9 @@ export const ReadingExperienceService = {
   setTypography(pref: TypographyPreferences) {
     try {
       localStorage.setItem(TYPOGRAPHY_KEY, JSON.stringify(pref));
-      window.dispatchEvent(new CustomEvent('sst_typography_updated', { detail: pref }));
+      window.dispatchEvent(
+        new CustomEvent('sst_typography_updated', { detail: pref })
+      );
     } catch {}
   },
 
@@ -56,24 +58,30 @@ export const ReadingExperienceService = {
       const updated: ReadingGoal = {
         ...current,
         targetMinutes,
-        completedNotified: current.elapsedSeconds >= targetMinutes * 60
+        completedNotified: current.elapsedSeconds >= targetMinutes * 60,
       };
       localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('sst_reading_goal_updated', { detail: updated }));
+      window.dispatchEvent(
+        new CustomEvent('sst_reading_goal_updated', { detail: updated })
+      );
     } catch {}
   },
 
-  addReadingTime(seconds: number): { completedNow: boolean; goal: ReadingGoal } {
+  addReadingTime(seconds: number): {
+    completedNow: boolean;
+    goal: ReadingGoal;
+  } {
     try {
       const current = this.getReadingGoal();
       const newElapsed = current.elapsedSeconds + seconds;
       const targetSeconds = current.targetMinutes * 60;
-      const completedNow = !current.completedNotified && newElapsed >= targetSeconds;
+      const completedNow =
+        !current.completedNotified && newElapsed >= targetSeconds;
 
       const updated: ReadingGoal = {
         ...current,
         elapsedSeconds: newElapsed,
-        completedNotified: current.completedNotified || completedNow
+        completedNotified: current.completedNotified || completedNow,
       };
 
       localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
@@ -89,44 +97,58 @@ export const ReadingExperienceService = {
       const updated: ReadingGoal = {
         ...current,
         elapsedSeconds: 0,
-        completedNotified: false
+        completedNotified: false,
       };
       localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
-      window.dispatchEvent(new CustomEvent('sst_reading_goal_updated', { detail: updated }));
+      window.dispatchEvent(
+        new CustomEvent('sst_reading_goal_updated', { detail: updated })
+      );
     } catch {}
   },
 
   // 3. Marcações (Highlights) Locais
   getHighlights(articleId: string): HighlightItem[] {
     try {
-      const all: HighlightItem[] = JSON.parse(localStorage.getItem(HIGHLIGHTS_KEY) || '[]');
-      return all.filter(h => h.articleId === articleId);
+      const all: HighlightItem[] = JSON.parse(
+        localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
+      );
+      return all.filter((h) => h.articleId === articleId);
     } catch {
       return [];
     }
   },
 
-  addHighlight(articleId: string, text: string, color: HighlightItem['color'] = 'yellow'): HighlightItem {
+  addHighlight(
+    articleId: string,
+    text: string,
+    color: HighlightItem['color'] = 'yellow'
+  ): HighlightItem {
     const item: HighlightItem = {
       id: `${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
       articleId,
       text,
       color,
-      createdAt: Date.now()
+      createdAt: Date.now(),
     };
     try {
-      const all: HighlightItem[] = JSON.parse(localStorage.getItem(HIGHLIGHTS_KEY) || '[]');
+      const all: HighlightItem[] = JSON.parse(
+        localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
+      );
       all.unshift(item);
       localStorage.setItem(HIGHLIGHTS_KEY, JSON.stringify(all));
-      window.dispatchEvent(new CustomEvent('sst_highlights_updated', { detail: { articleId } }));
+      window.dispatchEvent(
+        new CustomEvent('sst_highlights_updated', { detail: { articleId } })
+      );
     } catch {}
     return item;
   },
 
   removeHighlight(id: string) {
     try {
-      const all: HighlightItem[] = JSON.parse(localStorage.getItem(HIGHLIGHTS_KEY) || '[]');
-      const filtered = all.filter(h => h.id !== id);
+      const all: HighlightItem[] = JSON.parse(
+        localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
+      );
+      const filtered = all.filter((h) => h.id !== id);
       localStorage.setItem(HIGHLIGHTS_KEY, JSON.stringify(filtered));
       window.dispatchEvent(new CustomEvent('sst_highlights_updated'));
     } catch {}
@@ -145,9 +167,14 @@ export const ReadingExperienceService = {
     const trimmed = query.trim();
     if (!trimmed || trimmed.length < 2) return;
     try {
-      const list = this.getRecentSearches().filter(q => q.toLowerCase() !== trimmed.toLowerCase());
+      const list = this.getRecentSearches().filter(
+        (q) => q.toLowerCase() !== trimmed.toLowerCase()
+      );
       list.unshift(trimmed);
-      localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(list.slice(0, 5)));
+      localStorage.setItem(
+        RECENT_SEARCHES_KEY,
+        JSON.stringify(list.slice(0, 5))
+      );
     } catch {}
   },
 
@@ -163,9 +190,12 @@ export const ReadingExperienceService = {
   addRecentArticle(articleId: string) {
     if (!articleId) return;
     try {
-      const list = this.getRecentArticles().filter(id => id !== articleId);
+      const list = this.getRecentArticles().filter((id) => id !== articleId);
       list.unshift(articleId);
-      localStorage.setItem(RECENT_ARTICLES_KEY, JSON.stringify(list.slice(0, 5)));
+      localStorage.setItem(
+        RECENT_ARTICLES_KEY,
+        JSON.stringify(list.slice(0, 5))
+      );
     } catch {}
-  }
+  },
 };

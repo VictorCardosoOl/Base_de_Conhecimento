@@ -1,8 +1,8 @@
-import fs from "fs";
-import path from "path";
-import matter from "gray-matter";
+import fs from 'fs';
+import path from 'path';
+import matter from 'gray-matter';
 
-const CONTENT_DIR = path.join(process.cwd(), "src", "content", "artigos");
+const CONTENT_DIR = path.join(process.cwd(), 'src', 'content', 'artigos');
 
 export interface FAQItem {
   id: string;
@@ -20,51 +20,54 @@ export interface FAQItem {
 }
 
 function getFiles(dir: string, filesList: string[] = []) {
-    if (!fs.existsSync(dir)) return filesList;
-    const files = fs.readdirSync(dir);
-    for (const file of files) {
-        const name = path.join(dir, file);
-        if (fs.statSync(name).isDirectory()) {
-            getFiles(name, filesList);
-        } else if (name.endsWith(".md")) {
-            filesList.push(name);
-        }
+  if (!fs.existsSync(dir)) return filesList;
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const name = path.join(dir, file);
+    if (fs.statSync(name).isDirectory()) {
+      getFiles(name, filesList);
+    } else if (name.endsWith('.md')) {
+      filesList.push(name);
     }
-    return filesList;
+  }
+  return filesList;
 }
 
 export function getAllArticles(): FAQItem[] {
   const files = getFiles(CONTENT_DIR);
   const catalog: FAQItem[] = [];
 
-  files.forEach(filePath => {
-      const fileContent = fs.readFileSync(filePath, "utf-8");
-      const { data, content } = matter(fileContent.trimStart());
+  files.forEach((filePath) => {
+    const fileContent = fs.readFileSync(filePath, 'utf-8');
+    const { data, content } = matter(fileContent.trimStart());
 
-      const fileId = data.id || path.basename(filePath, ".md");
-      const question = data.question || data.title || path.basename(filePath, ".md");
-      
-      const plainText = content
-          .replace(/```[\s\S]*?```/g, " ")
-          .replace(/<[^>]*>/g, " ")
-          .replace(/\[([^\]]+)\]\([^)]+\)/g, "$1")
-          .replace(/[#*`_~]/g, " ")
-          .replace(/\s+/g, " ")
-          .trim();
+    const fileId = data.id || path.basename(filePath, '.md');
+    const question =
+      data.question || data.title || path.basename(filePath, '.md');
 
-      const sanitizedId = path.basename(fileId).replace(/[^a-zA-Z0-9_-]/g, "");
-      const excerpt = plainText.substring(0, 160).trim() + (plainText.length > 160 ? "..." : "");
+    const plainText = content
+      .replace(/```[\s\S]*?```/g, ' ')
+      .replace(/<[^>]*>/g, ' ')
+      .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+      .replace(/[#*`_~]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
 
-      catalog.push({
-          ...data,
-          id: sanitizedId,
-          question,
-          content,
-          excerpt,
-          searchText: plainText,
-          answer: data.answer || excerpt,
-          category: data.category || "Geral"
-      } as FAQItem);
+    const sanitizedId = path.basename(fileId).replace(/[^a-zA-Z0-9_-]/g, '');
+    const excerpt =
+      plainText.substring(0, 160).trim() +
+      (plainText.length > 160 ? '...' : '');
+
+    catalog.push({
+      ...data,
+      id: sanitizedId,
+      question,
+      content,
+      excerpt,
+      searchText: plainText,
+      answer: data.answer || excerpt,
+      category: data.category || 'Geral',
+    } as FAQItem);
   });
 
   return catalog;
@@ -72,5 +75,5 @@ export function getAllArticles(): FAQItem[] {
 
 export function getArticleById(id: string): FAQItem | null {
   const articles = getAllArticles();
-  return articles.find(a => a.id === id) || null;
+  return articles.find((a) => a.id === id) || null;
 }

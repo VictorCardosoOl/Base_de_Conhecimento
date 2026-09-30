@@ -1,13 +1,32 @@
 ﻿import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useConsent } from '../../contexts/ConsentContext';
-import { X, ShieldCheck, FileText, Lock, Scale, Server, Cpu, Check, RotateCcw, ChevronRight } from 'lucide-react';
+import {
+  X,
+  ShieldCheck,
+  FileText,
+  Lock,
+  Scale,
+  Server,
+  Cpu,
+  Check,
+  RotateCcw,
+  ChevronRight,
+} from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useScopedLenis } from '@/hooks/use-scoped-lenis';
 import { sheetVariants, fadeVariants } from '@/lib/animations';
 
 export const LegalModal: React.FC = () => {
-  const { openLegalModal, setOpenLegalModal, activeLegalTab, setActiveLegalTab, consent, acceptAll, resetConsent } = useConsent();
+  const {
+    openLegalModal,
+    setOpenLegalModal,
+    activeLegalTab,
+    setActiveLegalTab,
+    consent,
+    acceptAll,
+    resetConsent,
+  } = useConsent();
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +57,6 @@ export const LegalModal: React.FC = () => {
   }, [openLegalModal]);
 
   if (!openLegalModal) return null;
-
 
   return createPortal(
     <AnimatePresence>
@@ -76,7 +94,10 @@ export const LegalModal: React.FC = () => {
                   <span className="w-1 h-1 rounded-full bg-border" />
                   <span>LGPD â€¢ Lei 13.709/2018</span>
                 </div>
-                <h2 id="legal-modal-title" className="text-xl sm:text-2xl 2xl:text-3xl font-serif font-light tracking-tight text-text-main truncate">
+                <h2
+                  id="legal-modal-title"
+                  className="text-xl sm:text-2xl 2xl:text-3xl font-serif font-light tracking-tight text-text-main truncate"
+                >
                   Termos de Uso & PolÃ­ticas de Privacidade
                 </h2>
               </div>
@@ -92,13 +113,16 @@ export const LegalModal: React.FC = () => {
             </header>
 
             {/* Abas Superiores de NavegaÃ§Ã£o */}
-            <nav className="shrink-0 bg-bg-island border-b border-border px-6 sm:px-10 flex gap-8 z-10" aria-label="Abas jurÃ­dicas">
+            <nav
+              className="shrink-0 bg-bg-island border-b border-border px-6 sm:px-10 flex gap-8 z-10"
+              aria-label="Abas jurÃ­dicas"
+            >
               <button
                 type="button"
                 onClick={() => setActiveLegalTab('privacy')}
                 className={`py-3.5 text-xs sm:text-sm font-semibold tracking-wide border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
                   activeLegalTab === 'privacy'
-                    ?'border-text-main text-text-main'
+                    ? 'border-text-main text-text-main'
                     : 'border-transparent text-text-muted hover:text-text-main opacity-70 hover:opacity-100'
                 }`}
               >
@@ -110,7 +134,7 @@ export const LegalModal: React.FC = () => {
                 onClick={() => setActiveLegalTab('terms')}
                 className={`py-3.5 text-xs sm:text-sm font-semibold tracking-wide border-b-2 transition-all cursor-pointer flex items-center gap-2 ${
                   activeLegalTab === 'terms'
-                    ?'border-text-main text-text-main'
+                    ? 'border-text-main text-text-main'
                     : 'border-transparent text-text-muted hover:text-text-main opacity-70 hover:opacity-100'
                 }`}
               >
@@ -125,7 +149,10 @@ export const LegalModal: React.FC = () => {
               className="flex-1 overflow-y-auto overscroll-contain px-6 sm:px-12 py-8 sm:py-10 no-scrollbar focus:outline-none"
               tabIndex={0}
             >
-              <div ref={modalContentRef} className="max-w-3xl mx-auto space-y-8 pb-12">
+              <div
+                ref={modalContentRef}
+                className="max-w-3xl mx-auto space-y-8 pb-12"
+              >
                 {activeLegalTab === 'privacy' && (
                   <article className="space-y-8 text-text-body">
                     {/* Badge Informativo de Consent Gate */}
@@ -138,7 +165,14 @@ export const LegalModal: React.FC = () => {
                           PrincÃ­pio do Privacy by Default & Consent Gate Ativo
                         </h4>
                         <p className="text-text-muted">
-                          Esta plataforma opera sob bloqueio tÃ©cnico rigoroso de qualquer rastreador ou telemetria de terceiros atÃ© que haja manifestaÃ§Ã£o de vontade expressa do titular. Seu status atual de consentimento: <strong className="uppercase font-mono text-bg-main px-1.5 py-0.5 rounded bg-text-main">{consent}</strong>.
+                          Esta plataforma opera sob bloqueio tÃ©cnico rigoroso
+                          de qualquer rastreador ou telemetria de terceiros atÃ©
+                          que haja manifestaÃ§Ã£o de vontade expressa do
+                          titular. Seu status atual de consentimento:{' '}
+                          <strong className="uppercase font-mono text-bg-main px-1.5 py-0.5 rounded bg-text-main">
+                            {consent}
+                          </strong>
+                          .
                         </p>
                       </div>
                     </div>
@@ -148,7 +182,11 @@ export const LegalModal: React.FC = () => {
                         1. PolÃ­ticas de Privacidade e Conformidade com a LGPD
                       </h3>
                       <p className="text-sm sm:text-base text-text-muted font-serif leading-relaxed">
-                        A presente PolÃ­tica de Privacidade e Termos de Uso tem como objetivo esclarecer como tratamos e protegemos seus dados, estabelecendo regras de integridade dos serviÃ§os desenvolvidos. Ao navegar nesta base, vocÃª concorda com as diretrizes descritas.
+                        A presente PolÃ­tica de Privacidade e Termos de Uso tem
+                        como objetivo esclarecer como tratamos e protegemos seus
+                        dados, estabelecendo regras de integridade dos serviÃ§os
+                        desenvolvidos. Ao navegar nesta base, vocÃª concorda com
+                        as diretrizes descritas.
                       </p>
                     </div>
 
@@ -159,7 +197,11 @@ export const LegalModal: React.FC = () => {
                         1.1. Coleta e Tratamento de Dados
                       </h4>
                       <p className="text-sm sm:text-base text-text-body/90 leading-relaxed">
-                        Nosso compromisso com a Lei Geral de ProteÃ§Ã£o de Dados (LGPD - Lei nÂº 13.709/2018) Ã© absoluto. Coletamos estritamente o indispensÃ¡vel para a usabilidade e seguranÃ§a da aplicaÃ§Ã£o, operando sob os princÃ­pios de finalidade, necessidade e transparÃªncia.
+                        Nosso compromisso com a Lei Geral de ProteÃ§Ã£o de Dados
+                        (LGPD - Lei nÂº 13.709/2018) Ã© absoluto. Coletamos
+                        estritamente o indispensÃ¡vel para a usabilidade e
+                        seguranÃ§a da aplicaÃ§Ã£o, operando sob os princÃ­pios
+                        de finalidade, necessidade e transparÃªncia.
                       </p>
                     </section>
 
@@ -168,24 +210,56 @@ export const LegalModal: React.FC = () => {
                         1.2. Gerenciamento de Cookies e Scripts de Terceiros
                       </h4>
                       <p className="text-sm sm:text-base text-text-body/90 leading-relaxed">
-                        Para assegurar conformidade integral com a LGPD, implementamos um sistema de <strong>Consent Gate</strong> nativo. Nenhum script de terceiros (incluindo ferramentas de analytics, monitoramento de performance ou rastreadores externos) Ã© executado antes da aprovaÃ§Ã£o explÃ­cita fornecida pelo usuÃ¡rio no banner de privacidade. Ã‰ garantido o direito irrevogÃ¡vel de alterar ou redefinir suas preferÃªncias a qualquer momento.
+                        Para assegurar conformidade integral com a LGPD,
+                        implementamos um sistema de{' '}
+                        <strong>Consent Gate</strong> nativo. Nenhum script de
+                        terceiros (incluindo ferramentas de analytics,
+                        monitoramento de performance ou rastreadores externos)
+                        Ã© executado antes da aprovaÃ§Ã£o explÃ­cita fornecida
+                        pelo usuÃ¡rio no banner de privacidade. Ã‰ garantido o
+                        direito irrevogÃ¡vel de alterar ou redefinir suas
+                        preferÃªncias a qualquer momento.
                       </p>
                     </section>
 
                     <section className="space-y-3">
                       <h4 className="text-base sm:text-lg font-semibold text-text-main">
-                        1.3. SeguranÃ§a e LimitaÃ§Ã£o de Responsabilidade sobre Incidentes CibernÃ©ticos
+                        1.3. SeguranÃ§a e LimitaÃ§Ã£o de Responsabilidade sobre
+                        Incidentes CibernÃ©ticos
                       </h4>
                       <p className="text-sm sm:text-base text-text-body/90 leading-relaxed">
-                        A Plataforma emprega padrÃµes atualizados e rigorosos de seguranÃ§a da informaÃ§Ã£o, incorporando sanitizaÃ§Ã£o de dados, blindagem contra ataques XSS/CSRF, criptografia e infraestrutura resiliente. Contudo, nenhum ecossistema digital Ã© categoricamente invulnerÃ¡vel.
+                        A Plataforma emprega padrÃµes atualizados e rigorosos de
+                        seguranÃ§a da informaÃ§Ã£o, incorporando sanitizaÃ§Ã£o
+                        de dados, blindagem contra ataques XSS/CSRF,
+                        criptografia e infraestrutura resiliente. Contudo,
+                        nenhum ecossistema digital Ã© categoricamente
+                        invulnerÃ¡vel.
                       </p>
 
                       <div className="p-5 rounded-2xl bg-bg-island border border-text-main text-xs sm:text-sm text-text-main italic leading-relaxed space-y-2">
                         <p>
-                          "A Plataforma declara adotar padrÃµes rigorosos e atualizados de seguranÃ§a da informaÃ§Ã£o aplicÃ¡veis ao mercado para proteger os dados armazenados. NÃ£o obstante, o Cliente reconhece que nenhum sistema tecnolÃ³gico Ã© integralmente inviolÃ¡vel. A Plataforma restarÃ¡ expressamente isenta de responsabilidade civil, solidÃ¡ria ou subsidiÃ¡ria por eventuais incidentes de seguranÃ§a, vazamentos de dados ou acessos nÃ£o autorizados decorrentes de ataques cibernÃ©ticos de alta complexidade, vulnerabilidades desconhecidas ('zero-day') ou falhas crÃ­ticas e imprevisÃ­veis na infraestrutura dos provedores de hospedagem terceirizados, desde que a Plataforma comprove a adoÃ§Ã£o prudente das melhores prÃ¡ticas de seguranÃ§a preventivas e corretivas exigidas pela legislaÃ§Ã£o vigente."
+                          "A Plataforma declara adotar padrÃµes rigorosos e
+                          atualizados de seguranÃ§a da informaÃ§Ã£o aplicÃ¡veis
+                          ao mercado para proteger os dados armazenados. NÃ£o
+                          obstante, o Cliente reconhece que nenhum sistema
+                          tecnolÃ³gico Ã© integralmente inviolÃ¡vel. A
+                          Plataforma restarÃ¡ expressamente isenta de
+                          responsabilidade civil, solidÃ¡ria ou subsidiÃ¡ria por
+                          eventuais incidentes de seguranÃ§a, vazamentos de
+                          dados ou acessos nÃ£o autorizados decorrentes de
+                          ataques cibernÃ©ticos de alta complexidade,
+                          vulnerabilidades desconhecidas ('zero-day') ou falhas
+                          crÃ­ticas e imprevisÃ­veis na infraestrutura dos
+                          provedores de hospedagem terceirizados, desde que a
+                          Plataforma comprove a adoÃ§Ã£o prudente das melhores
+                          prÃ¡ticas de seguranÃ§a preventivas e corretivas
+                          exigidas pela legislaÃ§Ã£o vigente."
                         </p>
                         <p className="not-italic text-xs text-text-muted font-sans font-medium">
-                          Em eventos de forÃ§a maior, as responsabilidades limitam-se ao protocolo legal de notificaÃ§Ã£o aos titulares e Ã  Autoridade Nacional de ProteÃ§Ã£o de Dados (ANPD).
+                          Em eventos de forÃ§a maior, as responsabilidades
+                          limitam-se ao protocolo legal de notificaÃ§Ã£o aos
+                          titulares e Ã  Autoridade Nacional de ProteÃ§Ã£o de
+                          Dados (ANPD).
                         </p>
                       </div>
                     </section>
@@ -199,7 +273,8 @@ export const LegalModal: React.FC = () => {
                         2. Termos de ServiÃ§o e Uso da AplicaÃ§Ã£o
                       </h3>
                       <p className="text-sm sm:text-base text-text-muted font-serif leading-relaxed">
-                        Diretrizes de disponibilidade, governanÃ§a tÃ©cnica, licenciamento e propriedade intelectual do sistema.
+                        Diretrizes de disponibilidade, governanÃ§a tÃ©cnica,
+                        licenciamento e propriedade intelectual do sistema.
                       </p>
                     </div>
 
@@ -208,28 +283,65 @@ export const LegalModal: React.FC = () => {
                     <section className="space-y-3">
                       <h4 className="text-base sm:text-lg font-semibold text-text-main flex items-center gap-2">
                         <Server size={18} className="text-text-main" />
-                        2.1. ClÃ¡usula de NÃ­vel de ServiÃ§o (SLA) e ForÃ§a Maior
+                        2.1. ClÃ¡usula de NÃ­vel de ServiÃ§o (SLA) e ForÃ§a
+                        Maior
                       </h4>
                       <p className="text-sm sm:text-base text-text-body/90 leading-relaxed">
-                        Empenhamos os mais altos padrÃµes tÃ©cnicos para manter disponibilidade ininterrupta. No entanto, para proteÃ§Ã£o dos ativos de informaÃ§Ã£o e resposta a ameaÃ§as crÃ­ticas, aplica-se o seguinte regime de contingÃªncia:
+                        Empenhamos os mais altos padrÃµes tÃ©cnicos para manter
+                        disponibilidade ininterrupta. No entanto, para
+                        proteÃ§Ã£o dos ativos de informaÃ§Ã£o e resposta a
+                        ameaÃ§as crÃ­ticas, aplica-se o seguinte regime de
+                        contingÃªncia:
                       </p>
 
                       <div className="p-5 rounded-2xl bg-bg-island border border-text-main text-xs sm:text-sm text-text-main italic leading-relaxed">
-                        "A Plataforma se compromete a empreender os melhores esforÃ§os para garantir a disponibilidade contÃ­nua dos serviÃ§os. Fica estabelecido, contudo, que interrupÃ§Ãµes de acesso causadas por eventos de forÃ§a maior, incluindo, mas nÃ£o se limitando a, ataques de negaÃ§Ã£o de serviÃ§o (DDoS), instabilidades sistÃªmicas no provedor de hospedagem em nuvem ou falhas de infraestrutura de telecomunicaÃ§Ãµes de terceiros, que resultem em indisponibilidade temporÃ¡ria de atÃ© 72 (setenta e duas) horas consecutivas, nÃ£o configurarÃ£o falha na prestaÃ§Ã£o de serviÃ§o, quebra contratual ou ensejarÃ£o qualquer tipo de penalidade, multa, abatimento ou direito a indenizaÃ§Ã£o ao UsuÃ¡rio/Cliente."
+                        "A Plataforma se compromete a empreender os melhores
+                        esforÃ§os para garantir a disponibilidade contÃ­nua dos
+                        serviÃ§os. Fica estabelecido, contudo, que
+                        interrupÃ§Ãµes de acesso causadas por eventos de forÃ§a
+                        maior, incluindo, mas nÃ£o se limitando a, ataques de
+                        negaÃ§Ã£o de serviÃ§o (DDoS), instabilidades sistÃªmicas
+                        no provedor de hospedagem em nuvem ou falhas de
+                        infraestrutura de telecomunicaÃ§Ãµes de terceiros, que
+                        resultem em indisponibilidade temporÃ¡ria de atÃ© 72
+                        (setenta e duas) horas consecutivas, nÃ£o configurarÃ£o
+                        falha na prestaÃ§Ã£o de serviÃ§o, quebra contratual ou
+                        ensejarÃ£o qualquer tipo de penalidade, multa,
+                        abatimento ou direito a indenizaÃ§Ã£o ao
+                        UsuÃ¡rio/Cliente."
                       </div>
                     </section>
 
                     <section className="space-y-3">
                       <h4 className="text-base sm:text-lg font-semibold text-text-main flex items-center gap-2">
                         <Cpu size={18} className="text-text-main" />
-                        2.2. Propriedade Intelectual sobre Desenvolvimentos Customizados
+                        2.2. Propriedade Intelectual sobre Desenvolvimentos
+                        Customizados
                       </h4>
                       <p className="text-sm sm:text-base text-text-body/90 leading-relaxed">
-                        Todo o cÃ³digo-fonte, arquitetura, design visual e organizaÃ§Ã£o dos serviÃ§os permanecem como propriedade intelectual intransferÃ­vel da Plataforma e seus autores.
+                        Todo o cÃ³digo-fonte, arquitetura, design visual e
+                        organizaÃ§Ã£o dos serviÃ§os permanecem como propriedade
+                        intelectual intransferÃ­vel da Plataforma e seus
+                        autores.
                       </p>
 
                       <div className="p-5 rounded-2xl bg-bg-island border border-text-main text-xs sm:text-sm text-text-main italic leading-relaxed">
-                        "Quaisquer solicitaÃ§Ãµes de customizaÃ§Ã£o, novas funcionalidades, mÃ³dulos especÃ­ficos ou integraÃ§Ãµes ('Features Customizadas') demandadas pelo Cliente e desenvolvidas pela Plataforma constituirÃ£o propriedade intelectual exclusiva, integral e definitiva da Plataforma e de seus desenvolvedores. Fica outorgada ao Cliente, restritamente durante a vigÃªncia deste instrumento, uma licenÃ§a de uso revogÃ¡vel, intransferÃ­vel e nÃ£o exclusiva sobre a funcionalidade. A Plataforma reserva-se o direito irrevogÃ¡vel e irrestrito de reaproveitar, comercializar, modificar ou integrar o cÃ³digo-fonte, a arquitetura e a lÃ³gica de programaÃ§Ã£o das referidas customizaÃ§Ãµes em outros projetos ou para outros clientes, sem a necessidade de autorizaÃ§Ã£o prÃ©via, compensaÃ§Ã£o financeira ou repasse de royalties."
+                        "Quaisquer solicitaÃ§Ãµes de customizaÃ§Ã£o, novas
+                        funcionalidades, mÃ³dulos especÃ­ficos ou integraÃ§Ãµes
+                        ('Features Customizadas') demandadas pelo Cliente e
+                        desenvolvidas pela Plataforma constituirÃ£o propriedade
+                        intelectual exclusiva, integral e definitiva da
+                        Plataforma e de seus desenvolvedores. Fica outorgada ao
+                        Cliente, restritamente durante a vigÃªncia deste
+                        instrumento, uma licenÃ§a de uso revogÃ¡vel,
+                        intransferÃ­vel e nÃ£o exclusiva sobre a funcionalidade.
+                        A Plataforma reserva-se o direito irrevogÃ¡vel e
+                        irrestrito de reaproveitar, comercializar, modificar ou
+                        integrar o cÃ³digo-fonte, a arquitetura e a lÃ³gica de
+                        programaÃ§Ã£o das referidas customizaÃ§Ãµes em outros
+                        projetos ou para outros clientes, sem a necessidade de
+                        autorizaÃ§Ã£o prÃ©via, compensaÃ§Ã£o financeira ou
+                        repasse de royalties."
                       </div>
                     </section>
 
@@ -238,7 +350,9 @@ export const LegalModal: React.FC = () => {
                         2.3. AtualizaÃ§Ãµes destes Termos
                       </h4>
                       <p className="text-sm sm:text-base text-text-body/90 leading-relaxed">
-                        Estes termos podem ser atualizados periodicamente para acompanhar inovaÃ§Ãµes tÃ©cnicas ou atualizaÃ§Ãµes regulatÃ³rias da ANPD e da legislaÃ§Ã£o brasileira.
+                        Estes termos podem ser atualizados periodicamente para
+                        acompanhar inovaÃ§Ãµes tÃ©cnicas ou atualizaÃ§Ãµes
+                        regulatÃ³rias da ANPD e da legislaÃ§Ã£o brasileira.
                       </p>
                     </section>
                   </article>
@@ -250,14 +364,20 @@ export const LegalModal: React.FC = () => {
             <footer className="shrink-0 bg-bg-island  border-t border-border px-6 sm:px-10 py-4 flex flex-wrap items-center justify-between gap-4 text-xs z-20">
               <div className="flex items-center gap-2.5">
                 <span className="text-text-muted">Seu consentimento:</span>
-                <span className={`font-mono uppercase font-semibold px-2.5 py-1 rounded-md text-[11px] border ${
-                  consent === 'granted'
-                    ?'bg-text-main text-bg-main border-text-main'
+                <span
+                  className={`font-mono uppercase font-semibold px-2.5 py-1 rounded-md text-[11px] border ${
+                    consent === 'granted'
+                      ? 'bg-text-main text-bg-main border-text-main'
+                      : consent === 'denied'
+                        ? 'bg-bg-island text-text-main border-text-main'
+                        : 'bg-bg-main text-text-main border-border'
+                  }`}
+                >
+                  {consent === 'granted'
+                    ? 'Aceito (Analytics Ativo)'
                     : consent === 'denied'
-                    ?'bg-bg-island text-text-main border-text-main'
-                    : 'bg-bg-main text-text-main border-border'
-                }`}>
-                  {consent === 'granted' ?'Aceito (Analytics Ativo)' : consent === 'denied' ?'Recusado (Bloqueio Total)' : 'Pendente'}
+                      ? 'Recusado (Bloqueio Total)'
+                      : 'Pendente'}
                 </span>
               </div>
 

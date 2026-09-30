@@ -15,7 +15,7 @@ describe('ReadingExperienceService', () => {
     ReadingExperienceService.setTypography({
       fontFamily: 'dyslexic',
       fontSize: 'lg',
-      lineHeight: 'loose'
+      lineHeight: 'loose',
     });
 
     const updated = ReadingExperienceService.getTypography();
@@ -41,8 +41,16 @@ describe('ReadingExperienceService', () => {
   });
 
   it('deve salvar e remover marcações de texto (highlights) por artigo', () => {
-    const h1 = ReadingExperienceService.addHighlight('art-1', 'Trecho importante de NR-01', 'yellow');
-    const h2 = ReadingExperienceService.addHighlight('art-1', 'Outro ponto relevante', 'green');
+    const h1 = ReadingExperienceService.addHighlight(
+      'art-1',
+      'Trecho importante de NR-01',
+      'yellow'
+    );
+    const h2 = ReadingExperienceService.addHighlight(
+      'art-1',
+      'Outro ponto relevante',
+      'green'
+    );
     ReadingExperienceService.addHighlight('art-2', 'Artigo diferente', 'pink');
 
     const art1Highlights = ReadingExperienceService.getHighlights('art-1');
@@ -56,7 +64,7 @@ describe('ReadingExperienceService', () => {
   });
 
   it('deve registrar e limitar a 5 buscas e artigos recentes', () => {
-    ['SST', 'PCMSO', 'LTCAT', 'eSocial', 'CIPA', 'PGR'].forEach(q => {
+    ['SST', 'PCMSO', 'LTCAT', 'eSocial', 'CIPA', 'PGR'].forEach((q) => {
       ReadingExperienceService.addRecentSearch(q);
     });
 

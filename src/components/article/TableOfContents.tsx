@@ -12,7 +12,9 @@ interface TableOfContentsProps {
   onNavigate?: (id: string) => void;
 }
 
-export const TableOfContents: React.FC<TableOfContentsProps> = ({ containerRef }) => {
+export const TableOfContents: React.FC<TableOfContentsProps> = ({
+  containerRef,
+}) => {
   const [items, setItems] = useState<TocItem[]>([]);
   const [activeId, setActiveId] = useState<string>('');
 
@@ -29,14 +31,19 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ containerRef }
       headings.forEach((heading, idx) => {
         let id = heading.id;
         if (!id) {
-          id = `toc-${idx}-${heading.textContent?.toLowerCase().replace(/[^a-z0-9]/g, '-').replace(/-+/g, '-') || idx}`;
+          id = `toc-${idx}-${
+            heading.textContent
+              ?.toLowerCase()
+              .replace(/[^a-z0-9]/g, '-')
+              .replace(/-+/g, '-') || idx
+          }`;
           heading.id = id;
         }
 
         tocItems.push({
           id,
           text: heading.textContent || `Seção ${idx + 1}`,
-          level: heading.tagName.toLowerCase() === 'h2' ? 2 : 3
+          level: heading.tagName.toLowerCase() === 'h2' ? 2 : 3,
         });
       });
 
@@ -65,7 +72,7 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({ containerRef }
       {
         root: container,
         rootMargin: '0px 0px -60% 0px',
-        threshold: 0.1
+        threshold: 0.1,
       }
     );
 

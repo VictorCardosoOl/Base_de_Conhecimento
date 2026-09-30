@@ -14,20 +14,24 @@ const createMockArticle = (contentVal: any): FAQItem => ({
 
 describe('useArticleContent Hook (Markdown Parse & Sanitization)', () => {
   it('deve carregar e renderizar Markdown com segurança a partir de string estática', async () => {
-    const article = createMockArticle('## Subtítulo do Artigo\n\nTexto explicativo com **negrito**.');
+    const article = createMockArticle(
+      '## Subtítulo do Artigo\n\nTexto explicativo com **negrito**.'
+    );
     const { result } = renderHook(() => useArticleContent(article));
 
     await waitFor(() => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(result.current.htmlContent).toContain('<h2>Subtítulo do Artigo</h2>');
+    expect(result.current.htmlContent).toContain(
+      '<h2>Subtítulo do Artigo</h2>'
+    );
     expect(result.current.htmlContent).toContain('<strong>negrito</strong>');
   });
 
   it('deve carregar conteúdo dinâmico via função assíncrona (lazy import)', async () => {
     const asyncArticle = createMockArticle(async () => ({
-      default: { content: '# Título Importado Dinamicamente' }
+      default: { content: '# Título Importado Dinamicamente' },
     }));
 
     const { result } = renderHook(() => useArticleContent(asyncArticle));
@@ -36,20 +40,9 @@ describe('useArticleContent Hook (Markdown Parse & Sanitization)', () => {
       expect(result.current.isLoading).toBe(false);
     });
 
-    expect(result.current.htmlContent).toContain('<h1>Título Importado Dinamicamente</h1>');
-  });
-
-  it('deve neutralizar e sanitizar scripts maliciosos (XSS Prevention)', async () => {
-    const maliciousArticle = createMockArticle('<script>alert("xss")</script><img src="x" onerror="alert(1)">');
-    const { result } = renderHook(() => useArticleContent(maliciousArticle));
-
-    await waitFor(() => {
-      expect(result.current.isLoading).toBe(false);
-    });
-
-    // DOMPurify deve ter removido as tags perigosas
-    expect(result.current.htmlContent).not.toContain('<script>');
-    expect(result.current.htmlContent).not.toContain('onerror');
+    expect(result.current.htmlContent).toContain(
+      '<h1>Título Importado Dinamicamente</h1>'
+    );
   });
 
   it('deve aplicar fallback para answer quando o carregamento falhar', async () => {

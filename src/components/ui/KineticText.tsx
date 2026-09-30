@@ -1,6 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { kineticContainerVariants, kineticWordVariants } from '@/lib/animations';
+import {
+  kineticContainerVariants,
+  kineticWordVariants,
+} from '@/lib/animations';
 
 interface KineticTextProps {
   children: string;
@@ -13,7 +16,7 @@ export const KineticText: React.FC<KineticTextProps> = ({
   children,
   className = '',
   as = 'span',
-  delay = 0
+  delay = 0,
 }) => {
   const words = children.split(' ');
 
@@ -32,12 +35,12 @@ export const KineticText: React.FC<KineticTextProps> = ({
     >
       <span className="inline-flex flex-wrap gap-x-[0.28em]">
         {words.map((word, idx) => (
-          <span 
-            key={idx} 
+          <span
+            key={idx}
             className="inline-block overflow-hidden pb-[0.08em] -mb-[0.08em]"
             style={{ clipPath: 'polygon(0 0, 100% 0, 100% 100%, 0% 100%)' }}
           >
-            <motion.span 
+            <motion.span
               variants={kineticWordVariants}
               className="word-inner inline-block will-change-transform transform-gpu origin-bottom"
             >

@@ -1,4 +1,4 @@
-"use client";
+'use client';
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 export type ConsentStatus = 'granted' | 'denied' | 'pending';
@@ -19,7 +19,9 @@ const CONSENT_STORAGE_KEY = 'sst_user_cookie_consent';
 
 const ConsentContext = createContext<ConsentContextType | undefined>(undefined);
 
-export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => {
   const [consent, setConsent] = useState<ConsentStatus>('pending');
 
   useEffect(() => {
@@ -30,24 +32,32 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({ child
   }, []);
 
   const [openLegalModal, setOpenLegalModal] = useState(false);
-  const [activeLegalTab, setActiveLegalTab] = useState<'terms' | 'privacy'>('privacy');
+  const [activeLegalTab, setActiveLegalTab] = useState<'terms' | 'privacy'>(
+    'privacy'
+  );
 
   const acceptAll = () => {
     localStorage.setItem(CONSENT_STORAGE_KEY, 'granted');
     setConsent('granted');
-    window.dispatchEvent(new CustomEvent('sst_consent_updated', { detail: 'granted' }));
+    window.dispatchEvent(
+      new CustomEvent('sst_consent_updated', { detail: 'granted' })
+    );
   };
 
   const rejectAll = () => {
     localStorage.setItem(CONSENT_STORAGE_KEY, 'denied');
     setConsent('denied');
-    window.dispatchEvent(new CustomEvent('sst_consent_updated', { detail: 'denied' }));
+    window.dispatchEvent(
+      new CustomEvent('sst_consent_updated', { detail: 'denied' })
+    );
   };
 
   const resetConsent = () => {
     localStorage.removeItem(CONSENT_STORAGE_KEY);
     setConsent('pending');
-    window.dispatchEvent(new CustomEvent('sst_consent_updated', { detail: 'pending' }));
+    window.dispatchEvent(
+      new CustomEvent('sst_consent_updated', { detail: 'pending' })
+    );
   };
 
   const hasConsented = consent === 'granted';
@@ -63,7 +73,7 @@ export const ConsentProvider: React.FC<{ children: React.ReactNode }> = ({ child
         openLegalModal,
         setOpenLegalModal,
         activeLegalTab,
-        setActiveLegalTab
+        setActiveLegalTab,
       }}
     >
       {children}
@@ -78,4 +88,3 @@ export const useConsent = (): ConsentContextType => {
   }
   return context;
 };
-

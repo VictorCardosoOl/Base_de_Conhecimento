@@ -1,4 +1,4 @@
-﻿"use client";
+﻿'use client';
 import React, { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, ZoomIn, ZoomOut, RotateCcw } from 'lucide-react';
@@ -9,7 +9,11 @@ interface ArticleLightboxProps {
   onClose: () => void;
 }
 
-export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onClose }) => {
+export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({
+  src,
+  alt,
+  onClose,
+}) => {
   const [scale, setScale] = useState(1);
 
   useEffect(() => {
@@ -35,7 +39,7 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
         onClick={onClose}
       >
         {/* Barra Superior */}
-        <div 
+        <div
           className="w-full max-w-5xl flex items-center justify-between z-10"
           onClick={(e) => e.stopPropagation()}
         >
@@ -45,7 +49,7 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
 
           <div className="flex items-center gap-2">
             <button
-              onClick={() => setScale(s => Math.max(0.5, s - 0.25))}
+              onClick={() => setScale((s) => Math.max(0.5, s - 0.25))}
               aria-label="Diminuir Zoom"
               className="p-2 rounded-lg bg-stone-900/80 hover:bg-stone-800 text-stone-200 border border-stone-700 transition-colors"
             >
@@ -55,7 +59,7 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
               {Math.round(scale * 100)}%
             </span>
             <button
-              onClick={() => setScale(s => Math.min(3, s + 0.25))}
+              onClick={() => setScale((s) => Math.min(3, s + 0.25))}
               aria-label="Aumentar Zoom"
               className="p-2 rounded-lg bg-stone-900/80 hover:bg-stone-800 text-stone-200 border border-stone-700 transition-colors"
             >
@@ -79,14 +83,17 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({ src, alt, onCl
         </div>
 
         {/* Imagem Central com Zoom */}
-        <div 
+        <div
           className="flex-1 w-full flex items-center justify-center overflow-auto p-4"
           onClick={(e) => e.stopPropagation()}
         >
           <motion.img
             src={src}
             alt={alt || 'Imagem ampliada'}
-            style={{ transform: `scale(${scale})`, transition: 'transform 0.2s ease-out' }}
+            style={{
+              transform: `scale(${scale})`,
+              transition: 'transform 0.2s ease-out',
+            }}
             className="max-h-[85vh] max-w-[90vw] object-contain cursor-grab active:cursor-grabbing rounded shadow-2xl select-none"
           />
         </div>

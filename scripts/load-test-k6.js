@@ -7,11 +7,11 @@ import { check, sleep } from 'k6';
  */
 export const options = {
   stages: [
-    { duration: '30s', target: 50 },    // Ramping up: 50 VUs em 30 segundos
-    { duration: '1m', target: 200 },    // Carga sustentada moderada: 200 VUs
-    { duration: '30s', target: 500 },   // Pico de saturação: 500 VUs
-    { duration: '1m', target: 500 },    // Estresse sob 500 VUs simultâneos
-    { duration: '30s', target: 0 },     // Ramp-down / Cooldown
+    { duration: '30s', target: 50 }, // Ramping up: 50 VUs em 30 segundos
+    { duration: '1m', target: 200 }, // Carga sustentada moderada: 200 VUs
+    { duration: '30s', target: 500 }, // Pico de saturação: 500 VUs
+    { duration: '1m', target: 500 }, // Estresse sob 500 VUs simultâneos
+    { duration: '30s', target: 0 }, // Ramp-down / Cooldown
   ],
   thresholds: {
     // 95% das requisições devem responder em menos de 500ms (SLA de Edge/PWA)
@@ -21,12 +21,13 @@ export const options = {
   },
 };
 
-const BASE_URL = __ENV.TARGET_URL || 'https://base-de-conhecimento-seven.vercel.app';
+const BASE_URL =
+  __ENV.TARGET_URL || 'https://base-de-conhecimento-seven.vercel.app';
 
 export default function () {
   // 1. Acesso à página inicial (Acervo)
   const homeRes = http.get(`${BASE_URL}/`, {
-    headers: { 'Accept': 'text/html,application/xhtml+xml' },
+    headers: { Accept: 'text/html,application/xhtml+xml' },
   });
   check(homeRes, {
     'Home status 200': (r) => r.status === 200,
@@ -36,7 +37,9 @@ export default function () {
   sleep(1);
 
   // 2. Consulta a artigo técnico com chunk dinâmico (S-2240)
-  const articleRes = http.get(`${BASE_URL}/artigo/evento-s2240-condicoes-ambientais`);
+  const articleRes = http.get(
+    `${BASE_URL}/artigo/evento-s2240-condicoes-ambientais`
+  );
   check(articleRes, {
     'Artigo status 200': (r) => r.status === 200,
     'Artigo carregado em < 600ms': (r) => r.timings.duration < 600,

@@ -6,7 +6,7 @@ export enum Category {
   EVENTOS = 'Eventos',
   COLETIVO = 'Coletivo',
   FINANCEIRO = 'Financeiro',
-  TI = 'Tecnologia'
+  TI = 'Tecnologia',
 }
 
 export interface FAQItem {

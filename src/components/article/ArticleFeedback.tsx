@@ -7,8 +7,13 @@ interface ArticleFeedbackProps {
   question: string;
 }
 
-export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, question }) => {
-  const [feedbackState, setFeedbackState] = useState<'idle' | 'useful_sent' | 'reporting' | 'reported'>('idle');
+export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({
+  articleId,
+  question,
+}) => {
+  const [feedbackState, setFeedbackState] = useState<
+    'idle' | 'useful_sent' | 'reporting' | 'reported'
+  >('idle');
   const [reportText, setReportText] = useState('');
   const [honeypot, setHoneypot] = useState('');
 
@@ -16,18 +21,18 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
     AnalyticsService.submitFeedback({
       articleId,
       question,
-      type: isUseful ? 'useful_yes' : 'useful_no'
+      type: isUseful ? 'useful_yes' : 'useful_no',
     });
     setFeedbackState('useful_sent');
   };
 
   const handleSendReport = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     // Anti-bot Honeypot check
     if (honeypot) {
-        setFeedbackState('reported');
-        return;
+      setFeedbackState('reported');
+      return;
     }
 
     if (!reportText.trim()) return;
@@ -36,7 +41,7 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
       articleId,
       question,
       type: 'outdated_report',
-      details: reportText.trim()
+      details: reportText.trim(),
     });
     setFeedbackState('reported');
   };
@@ -53,7 +58,8 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
             O que você achou deste conteúdo?
           </h4>
           <p className="text-xs text-text-muted font-sans">
-            Seu feedback rápido nos ajuda a atualizar e melhorar a precisão dos nossos guias continuamente. Leva só um segundo!
+            Seu feedback rápido nos ajuda a atualizar e melhorar a precisão dos
+            nossos guias continuamente. Leva só um segundo!
           </p>
         </div>
 
@@ -63,13 +69,21 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
               onClick={() => handleUseful(true)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs uppercase tracking-wider font-semibold border border-border text-text-main hover:bg-selection transition-colors rounded-none"
             >
-              <ThumbsUp size={13} className="text-emerald-600 dark:text-emerald-400" /> Sim
+              <ThumbsUp
+                size={13}
+                className="text-emerald-600 dark:text-emerald-400"
+              />{' '}
+              Sim
             </button>
             <button
               onClick={() => handleUseful(false)}
               className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs uppercase tracking-wider font-semibold border border-border text-text-main hover:bg-selection transition-colors rounded-none"
             >
-              <ThumbsDown size={13} className="text-amber-600 dark:text-amber-400" /> Não
+              <ThumbsDown
+                size={13}
+                className="text-amber-600 dark:text-amber-400"
+              />{' '}
+              Não
             </button>
             <button
               onClick={() => setFeedbackState('reporting')}
@@ -94,27 +108,31 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({ articleId, que
       </div>
 
       {feedbackState === 'reporting' && (
-        <form onSubmit={handleSendReport} className="mt-6 p-6 border border-border bg-bg-island/50 space-y-4">
+        <form
+          onSubmit={handleSendReport}
+          className="mt-6 p-6 border border-border bg-bg-island/50 space-y-4"
+        >
           <div className="space-y-1">
             <label className="block text-xs uppercase tracking-wider font-semibold text-text-main">
               Descreva a alteração ou divergência observada
             </label>
             <p className="text-[11px] text-text-muted">
-              Indique a portaria, o sistema ou o prazo que diverge da prática atual da empresa.
+              Indique a portaria, o sistema ou o prazo que diverge da prática
+              atual da empresa.
             </p>
           </div>
-          
+
           {/* Honeypot Field */}
           <div style={{ display: 'none' }} aria-hidden="true">
-              <label>Leave this field empty</label>
-              <input 
-                  type="text" 
-                  name="user_contact_info" 
-                  tabIndex={-1} 
-                  autoComplete="off" 
-                  value={honeypot} 
-                  onChange={(e) => setHoneypot(e.target.value)} 
-              />
+            <label>Leave this field empty</label>
+            <input
+              type="text"
+              name="user_contact_info"
+              tabIndex={-1}
+              autoComplete="off"
+              value={honeypot}
+              onChange={(e) => setHoneypot(e.target.value)}
+            />
           </div>
           <textarea
             value={reportText}
