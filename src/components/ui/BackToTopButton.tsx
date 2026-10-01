@@ -7,12 +7,18 @@ export const BackToTopButton: React.FC = () => {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      const scrolled = window.scrollY;
-      const totalHeight =
-        document.documentElement.scrollHeight - window.innerHeight;
-      if (totalHeight > 0) {
-        setVisible(scrolled / totalHeight > 0.3);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const scrolled = window.scrollY;
+          const totalHeight = document.documentElement.scrollHeight - window.innerHeight;
+          if (totalHeight > 0) {
+            setVisible(scrolled / totalHeight > 0.3);
+          }
+          ticking = false;
+        });
+        ticking = true;
       }
     };
 

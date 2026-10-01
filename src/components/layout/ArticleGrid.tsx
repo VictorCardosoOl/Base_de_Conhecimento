@@ -40,7 +40,6 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({
           },
         },
         hover: {
-          y: -1.5,
           transition: {
             type: 'spring',
             stiffness: 450,
@@ -50,35 +49,23 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({
         },
         tap: {
           scale: 0.985,
-          y: 0,
           transition: { type: 'spring', stiffness: 400, damping: 25 },
         },
       }}
       onClick={onClick}
-      className="group cursor-pointer relative py-6 border-b border-border hover:border-transparent flex flex-col justify-between h-full transform-gpu transition-colors duration-300"
+      className="group cursor-pointer relative py-6 border-b border-border flex flex-col justify-between h-full transform-gpu transition-colors duration-300"
     >
-      {/* Background mais delicado: footprint menor (bordas menores) e raio mais suave */}
-      <div className="absolute -inset-y-1 -inset-x-2 sm:-inset-x-3 rounded-lg bg-stone-50/80 dark:bg-white/[0.02] shadow-md shadow-stone-200/10 dark:shadow-black/10 opacity-0 group-hover:opacity-100 transition-all duration-[400ms] ease-out -z-10" />
-
-      {/* Indicador Lateral mais contido e delicado */}
+      {/* Indicador Lateral */}
       <div className="absolute left-0 top-8 bottom-8 w-[1.5px] bg-text-main scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-[400ms] ease-[cubic-bezier(0.25,1,0.5,1)] origin-top z-10 transform-gpu" />
 
-      {/* Container interno: movimento reduzido para ser uma 'sugestão' e não um pulo brusco */}
+      {/* Container interno */}
       <motion.div
         variants={{
           visible: { x: 0 },
-          hover: {
-            x: 4,
-            transition: {
-              type: 'spring',
-              stiffness: 450,
-              damping: 32,
-              mass: 0.6,
-            },
-          },
-          tap: { x: 2 },
+          hover: { x: 0 },
+          tap: { x: 0 },
         }}
-        className="space-y-3 w-full transform-gpu"
+        className="space-y-3 w-full transform-gpu pl-5"
       >
         <div className="space-y-2">
           {/* Header */}

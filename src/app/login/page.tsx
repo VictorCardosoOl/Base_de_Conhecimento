@@ -12,7 +12,7 @@ export default function LoginPage() {
   const navigate = useRouter();
 
   const [honeypot, setHoneypot] = useState('');
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     // Anti-bot Honeypot check
@@ -29,7 +29,7 @@ export default function LoginPage() {
     const isValid = await authenticateAdmin(email, password);
 
     if (isValid) {
-      const sessionToken = btoa(`sst_session_${Date.now()}_${Math.random()}`);
+      const sessionToken = btoa(`sst_session_${Date.now()}_${crypto.randomUUID()}`);
       sessionStorage.setItem('sst_admin_session', sessionToken);
       localStorage.setItem('isAdmin', 'true');
       navigate.push('/admin');
@@ -56,7 +56,7 @@ export default function LoginPage() {
           </p>
           <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-text-muted text-center leading-relaxed">
             <strong className="text-text-main font-semibold">
-              Acesso de DemonstraÃ§Ã£o:
+              Acesso de Demonstração:
             </strong>{' '}
             Credenciais de teste locais:{' '}
             <code className="font-mono text-[11px] font-semibold text-text-main">
@@ -66,7 +66,7 @@ export default function LoginPage() {
             <code className="font-mono text-[11px] font-semibold text-text-main">
               admin
             </code>
-            . O conteÃºdo oficial Ã© versionado via Git/Markdown.
+            . O conteúdo oficial é versionado via Git/Markdown.
           </div>
         </div>
 
@@ -91,10 +91,11 @@ export default function LoginPage() {
           </div>
 
           <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-text-muted">
+            <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-text-muted">
               Email
             </label>
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
@@ -104,10 +105,11 @@ export default function LoginPage() {
             />
           </div>
           <div className="space-y-1">
-            <label className="text-xs font-bold uppercase tracking-wider text-text-muted">
+            <label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-text-muted">
               Senha
             </label>
             <input
+              id="password"
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -118,9 +120,10 @@ export default function LoginPage() {
           </div>
           <button
             type="submit"
-            className="w-full bg-text-main text-bg-main py-3 rounded-lg font-medium hover:opacity-90 transition-opacity mt-4"
+            disabled={isLoading}
+            className="w-full bg-text-main text-bg-main py-3 rounded-lg font-medium hover:opacity-90 transition-opacity mt-4 disabled:opacity-50"
           >
-            Entrar
+            {isLoading ? 'Entrando...' : 'Entrar'}
           </button>
         </form>
       </div>

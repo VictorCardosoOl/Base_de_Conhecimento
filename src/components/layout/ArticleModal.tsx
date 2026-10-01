@@ -1,4 +1,4 @@
-﻿'use client';
+'use client';
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, AnimatePresence, useScroll, useSpring } from 'framer-motion';
 import {
@@ -125,11 +125,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
       url: window.location.href,
     };
 
-    if (
-      navigator.share &&
-      navigator.canShare &&
-      navigator.canShare(shareData)
-    ) {
+    if (navigator.share && navigator.canShare?.(shareData)) {
       try {
         await navigator.share(shareData);
       } catch (err) {
@@ -218,7 +214,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                     <div className="flex items-center gap-4 text-xs 2xl:text-sm font-medium text-text-muted">
                       <button
                         onClick={onClose}
-                        aria-label="Voltar para a pÃ¡gina anterior"
+                        aria-label="Voltar para a página anterior"
                         className="hover:text-blue-600 transition-colors flex items-center gap-1 min-h-[44px] min-w-[44px]"
                       >
                         <ArrowLeft size={16} />
@@ -233,7 +229,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                             onClick={onClose}
                             className="hover:text-blue-600 transition-colors"
                           >
-                            InÃ­cio
+                            Início
                           </button>
                           <ChevronRight size={14} className="text-gray-400" />
                           <span className="uppercase tracking-wide opacity-80">

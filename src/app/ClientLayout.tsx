@@ -4,9 +4,9 @@ import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
 import { pageVariants } from '@/lib/animations';
-import { Sidebar } from '@/components/layout/Sidebar';
+import { Sidebar } from '@/features/navigation/components/Sidebar';
+import { Footer } from '@/features/navigation/components/Footer';
 import { SmoothScroll } from '@/components/ui/SmoothScroll';
-import { Menu } from 'lucide-react';
 import { BackToTopButton } from '@/components/ui/BackToTopButton';
 import { CookieBanner } from '@/components/ui/CookieBanner';
 import { LegalModal } from '@/components/ui/LegalModal';
@@ -117,33 +117,13 @@ export function ClientLayout({
     }
   }, [pathname]);
 
-  const getSidebarPaddingClass = (pos: 'left' | 'right' | 'top' | 'bottom') => {
-    switch (pos) {
-      case 'right':
-        return 'lg:pr-[140px] 2xl:lg:pr-[160px] 3xl:lg:pr-[180px]';
-      case 'top':
-        return 'lg:pt-[140px] 2xl:lg:pt-[160px] 3xl:lg:pt-[180px]';
-      case 'bottom':
-        return 'lg:pb-[140px] 2xl:lg:pb-[160px] 3xl:lg:pb-[180px]';
-      case 'left':
-      default:
-        return 'lg:pl-[140px] 2xl:lg:pl-[160px] 3xl:lg:pl-[180px]';
-    }
-  };
-  const sidebarPaddingClass = getSidebarPaddingClass(sidebarPos);
+
 
   const getMainLayoutPaddingClass = (pos: SidebarPosition) => {
-    switch (pos) {
-      case 'right':
-        return 'lg:pr-[140px] 2xl:pr-[160px] 3xl:pr-[180px] lg:pl-12 2xl:pl-16 3xl:pl-24';
-      case 'top':
-        return 'lg:pt-[140px] 2xl:pt-[160px] 3xl:pt-[180px] lg:px-12 2xl:px-16 3xl:px-24';
-      case 'bottom':
-        return 'lg:pb-[140px] 2xl:pb-[160px] 3xl:pb-[180px] lg:px-12 2xl:px-16 3xl:px-24';
-      case 'left':
-      default:
-        return 'lg:pl-[140px] 2xl:pl-[160px] 3xl:pl-[180px] lg:pr-12 2xl:pr-16 3xl:pr-24';
-    }
+    // Agora que o menu é uma top navbar (StaggeredMenu), o corpo principal
+    // não precisa mais de padding lateral exagerado. Apenas um padding superior
+    // para não ficar debaixo da navbar fixa.
+    return 'pt-24 md:pt-32 px-6 md:px-12 2xl:px-16';
   };
   const mainLayoutPaddingClass = getMainLayoutPaddingClass(sidebarPos);
 
@@ -171,6 +151,7 @@ export function ClientLayout({
             position={sidebarPos}
             onPositionChange={setSidebarPos}
             isArticleOpen={isArticleRoute}
+            isSobreRoute={true}
           />
 
           {isCommandPaletteOpen && (
@@ -197,12 +178,7 @@ export function ClientLayout({
           )}
 
           <main className="w-full relative">
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden fixed top-4 right-4 z-40 p-2.5 bg-bg-island border border-border rounded-full shadow-lg text-text-main mt-[env(safe-area-inset-top)]"
-            >
-              <Menu size={20} strokeWidth={1.5} />
-            </button>
+
 
             <AnimatePresence mode="wait">
               <motion.div
@@ -217,6 +193,8 @@ export function ClientLayout({
               </motion.div>
             </AnimatePresence>
           </main>
+          
+          <Footer />
 
           <CookieBanner />
           <LegalModal />
@@ -282,12 +260,7 @@ export function ClientLayout({
                         ${mainLayoutPaddingClass}
                     `}
           >
-            <button
-              onClick={() => setIsSidebarOpen(true)}
-              className="lg:hidden fixed top-4 right-4 z-40 p-2.5  bg-bg-island border border-border rounded-full shadow-lg text-text-main mt-[env(safe-area-inset-top)]"
-            >
-              <Menu size={20} strokeWidth={1.5} />
-            </button>
+
 
             <AnimatePresence mode="wait">
               <motion.div
@@ -303,11 +276,13 @@ export function ClientLayout({
             </AnimatePresence>
           </div>
         </main>
-
-        <BackToTopButton />
-        <CookieBanner />
-        <LegalModal />
       </div>
+      
+      <Footer />
+      
+      <BackToTopButton />
+      <CookieBanner />
+      <LegalModal />
     </SmoothScroll>
   );
 }

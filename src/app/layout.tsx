@@ -1,11 +1,9 @@
 import '@/assets/styles/global.css';
-import { Metadata } from 'next';
-import Script from 'next/script';
+import { Metadata, Viewport } from 'next';
 import { ClientLayout } from './ClientLayout';
 import { ConsentProvider } from '@/contexts/ConsentContext';
 
 import { Inter, Playfair_Display, Lexend } from 'next/font/google';
-import { Viewport } from 'next';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -59,21 +57,24 @@ export default function RootLayout({
       className={`${inter.variable} ${playfair.variable} ${lexend.variable}`}
     >
       <head>
-        <Script id="theme-script" strategy="beforeInteractive">
-          {`
-            try {
-              var isDark = localStorage.getItem('isDarkMode');
-              var shouldBeDark = isDark === 'true' || (isDark === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
-              if (shouldBeDark) {
-                document.documentElement.classList.add('dark');
-                document.documentElement.style.colorScheme = 'dark';
-              } else {
-                document.documentElement.classList.remove('dark');
-                document.documentElement.style.colorScheme = 'light';
-              }
-            } catch (e) {}
-          `}
-        </Script>
+        <script
+          id="theme-script"
+          dangerouslySetInnerHTML={{
+            __html: `
+              try {
+                var isDark = localStorage.getItem('isDarkMode');
+                var shouldBeDark = isDark === 'true' || (isDark === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
+                if (shouldBeDark) {
+                  document.documentElement.classList.add('dark');
+                  document.documentElement.style.colorScheme = 'dark';
+                } else {
+                  document.documentElement.classList.remove('dark');
+                  document.documentElement.style.colorScheme = 'light';
+                }
+              } catch (e) {}
+            `,
+          }}
+        />
       </head>
       <body
         className="bg-bg-main text-text-main font-sans antialiased overflow-x-hidden selection:bg-selection"
