@@ -57,7 +57,7 @@ export const AnalyticsService = {
   getSearchLogs(): SearchLog[] {
     try {
       const logs = JSON.parse(localStorage.getItem(SEARCH_LOGS_KEY) || '[]');
-      if (logs.length === 0) {
+      if (logs.length === 0 && process.env.NODE_ENV === 'development') {
         // Mock inicial realista caso o banco local ainda esteja limpo (para recrutadores/demo)
         return [
           {
@@ -93,7 +93,8 @@ export const AnalyticsService = {
         ];
       }
       return logs;
-    } catch {
+    } catch (error) {
+      console.warn('Falha ao obter logs de busca do localStorage', error);
       return [];
     }
   },
@@ -150,7 +151,7 @@ export const AnalyticsService = {
       const logs = JSON.parse(
         localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]'
       );
-      if (logs.length === 0) {
+      if (logs.length === 0 && process.env.NODE_ENV === 'development') {
         return [
           {
             articleId: 'pgr',
@@ -170,7 +171,8 @@ export const AnalyticsService = {
         ];
       }
       return logs;
-    } catch {
+    } catch (error) {
+      console.warn('Falha ao obter logs de feedback do localStorage', error);
       return [];
     }
   },
@@ -179,7 +181,8 @@ export const AnalyticsService = {
   getCompletedArticles(): string[] {
     try {
       return JSON.parse(localStorage.getItem(COMPLETED_ARTICLES_KEY) || '[]');
-    } catch {
+    } catch (error) {
+      console.warn('Falha ao obter artigos concluidos do localStorage', error);
       return [];
     }
   },
@@ -193,7 +196,8 @@ export const AnalyticsService = {
         : [...completed, articleId];
       localStorage.setItem(COMPLETED_ARTICLES_KEY, JSON.stringify(updated));
       return !exists;
-    } catch {
+    } catch (error) {
+      console.warn('Falha ao marcar artigo como concluido no localStorage', error);
       return false;
     }
   },

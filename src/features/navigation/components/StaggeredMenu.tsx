@@ -91,10 +91,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       const textInner = textInnerRef.current;
       if (!panel || !plusH || !plusV || !icon || !textInner) return;
 
-      let preLayers: HTMLElement[] = [];
-      if (preContainer) {
-        preLayers = Array.from(preContainer.querySelectorAll('.sm-prelayer')) as HTMLElement[];
-      }
+      const preLayers: HTMLElement[] = preContainer
+        ? (Array.from(preContainer.querySelectorAll('.sm-prelayer')) as HTMLElement[])
+        : [];
       preLayerElsRef.current = preLayers;
 
       const offscreen = position === 'left' ? -100 : 100;
@@ -434,11 +433,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
       <div ref={preLayersRef} className="sm-prelayers" aria-hidden="true">
         {(() => {
           const raw = colors?.length ? colors.slice(0, 4) : ['var(--bg-island)', 'var(--bg-main)'];
-          let arr = [...raw];
-          if (arr.length >= 3) {
-            const mid = Math.floor(arr.length / 2);
-            arr.splice(mid, 1);
-          }
+          const arr = raw.filter((_, idx, array) => array.length < 3 || idx !== Math.floor(array.length / 2));
           return arr.map((c, i) => <div key={c + i} className="sm-prelayer" style={{ background: c }} />);
         })()}
       </div>
@@ -493,15 +488,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
               Minha Lista
             </span>
           </div>
-          {/* Sobre */}
-          <div className="group relative">
-            <a href="/sobre" aria-label="Sobre Nós" className="text-text-main hover:text-white transition-colors duration-300 block">
-               <Info size={24} />
-            </a>
-            <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 text-white text-[10px] uppercase tracking-wider py-1.5 px-3 rounded whitespace-nowrap pointer-events-none shadow-lg z-50">
-              Sobre Nós
-            </span>
-          </div>
+
           {/* Login */}
           <div className="group relative">
             <a href="/login" aria-label="Login" className="text-text-main hover:text-white transition-colors duration-300 block">

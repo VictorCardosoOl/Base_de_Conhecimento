@@ -21,6 +21,12 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
   typography: propTypography,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
+  const [isMounted, setIsMounted] = useState(false);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>('');
   const [typography, setTypography] = useState<any>(propTypography || null);
@@ -117,13 +123,13 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
       });
     }
 
-    if (typeof window === 'undefined') return res;
+    if (!isMounted) return ''; // Previne injeção de HTML sujo no servidor e erros de hidratação
 
     return DOMPurify.sanitize(res, {
       ADD_TAGS: ['mark'],
       ADD_ATTR: ['class', 'data-tooltip'],
     });
-  }, [htmlContent, activeHighlights]);
+  }, [htmlContent, activeHighlights, isMounted]);
 
   const typoClasses = [
     typography?.fontFamily === 'sans'

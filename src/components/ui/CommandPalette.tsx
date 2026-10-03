@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
 import {
   Search,
@@ -152,7 +152,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ref={inputRef}
               value={inputValue}
               onValueChange={setInputValue}
-              placeholder="O que vocÃª procura"
+              placeholder="O que você procura"
               className="flex-1 h-14 bg-transparent outline-none text-base sm:text-lg text-text-main placeholder:text-text-muted font-serif font-light"
             />
             <div className="hidden sm:flex items-center gap-1.5 text-[10px] font-mono uppercase tracking-widest text-text-muted bg-stone-100 dark:bg-white/10 px-2 py-1 rounded-md border border-border">
@@ -182,7 +182,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
             {!inputValue && (
               <div className="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-70">
-                NavegaÃ§Ã£o & Atalhos
+                Navegação & Atalhos
               </div>
             )}
 
@@ -226,7 +226,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                         Minha Lista de Leitura
                       </span>
                       <span className="text-xs text-text-muted truncate">
-                        Acessar seus artigos e tÃ³picos salvos
+                        Acessar seus artigos e tópicos salvos
                       </span>
                     </div>
                   </Command.Item>
@@ -239,7 +239,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                 <div className="px-3 pt-2 pb-1 text-[10px] font-black uppercase tracking-[0.2em] text-text-muted opacity-70">
                   Artigos e Conhecimento
                 </div>
-                {/* Limita a renderizaÃ§Ã£o aos 15 primeiros para garantir resposta 120Hz sem quebra de frame */}
+                {/* Limita a renderização aos 15 primeiros para garantir resposta 120Hz sem quebra de frame */}
                 {filteredArticles.slice(0, 15).map((item) => (
                   <Command.Item
                     key={item.id}

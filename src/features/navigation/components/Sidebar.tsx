@@ -40,14 +40,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   // Mapeia categorias e opções para o StaggeredMenu
   const menuItems = [
-    {
-      label: 'Início',
-      ariaLabel: 'Ver acervo completo',
-      isActive: currentCat === null && !isQueueView && !isSobreRoute,
-      onClick: () => {
-        onSelect(null);
-      },
-    },
     ...Object.values(Category).map((cat) => ({
       label: cat,
       ariaLabel: `Filtrar por módulo ${cat}`,
@@ -81,6 +73,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   const socialItems = [
+    {
+      label: 'Sobre o Projeto',
+      onClick: () => {
+        window.location.href = '/sobre';
+      },
+    },
     {
       label: 'Alertas',
       onClick: handleAlertClick,
