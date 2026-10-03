@@ -57,7 +57,7 @@
     "autoprefixer": "10.4.23",
     "gray-matter": "4.0.3",
     "happy-dom": "^20.14.5",
-    "jsdom": "^30.0.1",
+    "jsdom": "^30.1.1",
     "markdownlint-cli": "^0.49.1",
     "postcss": "^8.5.28",
     "prettier": "^3.9.6",
