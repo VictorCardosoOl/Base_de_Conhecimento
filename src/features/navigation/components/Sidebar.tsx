@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Category } from '@/types/index';
 import { useConsent } from '@/contexts/ConsentContext';
 import StaggeredMenu from './StaggeredMenu';
@@ -37,6 +37,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onLogoClick,
 }) => {
   const { setOpenLegalModal, setActiveLegalTab } = useConsent();
+  const [toastMsg, setToastMsg] = useState<{title: string, msg: string} | null>(null);
+
+  const showToast = (title: string, msg: string) => {
+    setToastMsg({ title, msg });
+    setTimeout(() => setToastMsg(null), 5000);
+  };
 
   // Mapeia categorias e opções para o StaggeredMenu
   const menuItems = [
@@ -53,21 +59,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   const handleAlertClick = async () => {
     if (!('Notification' in window)) {
-      alert('Seu navegador não possui suporte nativo a Web Push Notifications.');
+      showToast('Aviso', 'Seu navegador não possui suporte nativo a Web Push Notifications.');
       return;
     }
     if (Notification.permission === 'granted') {
-      new Notification('SST FAQ Atualizações', {
-        body: 'Notificações corporativas ativadas! Você receberá comunicados urgentes de normas e eSocial.',
-        icon: '/pwa-192x192.png',
-      });
+      showToast('SST FAQ Atualizações', 'Notificações corporativas já estão ativadas! Você receberá comunicados urgentes.');
     } else {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        new Notification('SST FAQ Conectado', {
-          body: 'Notificações ativadas com sucesso.',
-          icon: '/pwa-192x192.png',
-        });
+        showToast('SST FAQ Conectado', 'Notificações ativadas com sucesso.');
       }
     }
   };
@@ -97,14 +97,22 @@ export const Sidebar: React.FC<SidebarProps> = ({
   ];
 
   return (
-    <StaggeredMenu
-      isFixed={true}
-      position="left"
-      items={menuItems}
-      socialItems={socialItems}
-      displaySocials={true}
-      displayItemNumbering={true}
-      onLogoClick={onLogoClick}
-    />
+    <>
+      {toastMsg && (
+        <div className="fixed top-4 right-4 z-[200] bg-stone-900 dark:bg-white text-white dark:text-black p-4 rounded-xl shadow-2xl max-w-sm animate-in fade-in slide-in-from-top-5">
+          <p className="font-bold text-sm">{toastMsg.title}</p>
+          <p className="text-xs mt-1 opacity-90">{toastMsg.msg}</p>
+        </div>
+      )}
+      <StaggeredMenu
+        isFixed={true}
+        position="left"
+        items={menuItems}
+        socialItems={socialItems}
+        displaySocials={true}
+        displayItemNumbering={true}
+        onLogoClick={onLogoClick}
+      />
+    </>
   );
 };

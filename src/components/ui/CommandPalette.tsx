@@ -18,6 +18,13 @@ import { useSearch } from '../../hooks/use-search';
 import { AnalyticsService } from '../../services/analytics-service';
 import { ReadingExperienceService } from '../../services/reading-experience-service';
 import { useFocusTrap } from '../../hooks/use-focus-trap';
+import { useDebounce } from '../../hooks/use-debounce';
+
+const PALETTE_STRINGS = {
+  LIBRARY: ['Biblioteca Completa', 'Todos os documentos'],
+  QUEUE: ['Minha Lista de Leitura', 'Artigos salvos'],
+  THEME: ['Alternar para Modo', 'Tema', 'Claro', 'Escuro'],
+};
 
 interface CommandPaletteProps {
   isOpen: boolean;
@@ -56,20 +63,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   // Manual filter helpers for static items
   const isMatch = (text: string) =>
     text.toLowerCase().includes(inputValue.toLowerCase());
-  const showLibrary =
-    !inputValue ||
-    isMatch('Biblioteca Completa') ||
-    isMatch('Todos os documentos');
-  const showQueue =
-    !inputValue ||
-    isMatch('Minha Lista de Leitura') ||
-    isMatch('Artigos salvos');
-  const showTheme =
-    !inputValue ||
-    isMatch('Alternar para Modo') ||
-    isMatch('Tema') ||
-    isMatch('Claro') ||
-    isMatch('Escuro');
+  
+  const showLibrary = !inputValue || PALETTE_STRINGS.LIBRARY.some(isMatch);
+  const showQueue = !inputValue || PALETTE_STRINGS.QUEUE.some(isMatch);
+  const showTheme = !inputValue || PALETTE_STRINGS.THEME.some(isMatch);
 
   // Reset input when opening
   useEffect(() => {
@@ -80,17 +77,25 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     }
   }, [isOpen]);
 
-  // Telemetria de buscas: registra consultas com debounce para capturar Zero-Result Searches e salvar recentes
+  const debouncedInput = useDebounce(inputValue, 600);
+
+  // Telemetria de buscas via background scheduling
   useEffect(() => {
-    if (!inputValue || inputValue.trim().length < 2) return;
+    if (!debouncedInput || debouncedInput.trim().length < 2) return;
+    
+    const safeInput = debouncedInput.trim().slice(0, 100); // Sanitização básica de tamanho
 
-    const timer = setTimeout(() => {
-      AnalyticsService.logSearch(inputValue, filteredArticles.length);
-      ReadingExperienceService.addRecentSearch(inputValue);
-    }, 600);
+    const logSearchTask = () => {
+      AnalyticsService.logSearch(safeInput, filteredArticles.length);
+      ReadingExperienceService.addRecentSearch(safeInput);
+    };
 
-    return () => clearTimeout(timer);
-  }, [inputValue, filteredArticles.length]);
+    if ('requestIdleCallback' in window) {
+      window.requestIdleCallback(logSearchTask);
+    } else {
+      setTimeout(logSearchTask, 0);
+    }
+  }, [debouncedInput, filteredArticles.length]);
 
   // Lock Body Scroll & Handle ESC
   useEffect(() => {
@@ -174,10 +179,21 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
             aria-live="polite"
             aria-atomic="true"
           >
-            <Command.Empty className="py-12 text-center text-text-muted">
-              <p className="font-serif italic text-base">
-                Nenhum resultado encontrado para sua busca.
+            <Command.Empty className="py-12 px-6 flex flex-col items-center text-center">
+              <p className="font-serif text-lg text-text-main mb-2">
+                Nenhum resultado para "{inputValue}"
               </p>
+              <p className="text-sm text-text-muted mb-6 max-w-sm">
+                Não encontrou o que procurava? Sugira este tópico para que possamos adicioná-lo à nossa base de conhecimento.
+              </p>
+              <button 
+                onClick={() => {
+                  window.location.href = `mailto:suporte@exemplo.com?subject=Sugestão de Artigo: ${encodeURIComponent(inputValue)}`;
+                }}
+                className="px-4 py-2 bg-stone-900 dark:bg-white text-white dark:text-black rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                Solicitar artigo sobre "{inputValue.substring(0, 20)}{inputValue.length > 20 ? '...' : ''}"
+              </button>
             </Command.Empty>
 
             {!inputValue && (

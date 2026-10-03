@@ -20,7 +20,12 @@ import {
   fadeVariants,
   readingProgressSpring,
 } from '@/lib/animations';
-import { ArticleContent } from '../article/ArticleContent';
+import dynamic from 'next/dynamic';
+
+const ArticleContent = dynamic(
+  () => import('../article/ArticleContent').then((mod) => mod.ArticleContent),
+  { ssr: false }
+);
 import { ArticleSkeleton } from '../article/ArticleSkeleton';
 import { ArticleFeedback } from '../article/ArticleFeedback';
 import { ArticleReadingControls } from '../article/ArticleReadingControls';

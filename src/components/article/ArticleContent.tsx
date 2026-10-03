@@ -97,38 +97,78 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
         'transition-transform',
         'hover:opacity-90'
       );
-      const handleClick = () => {
-        setLightboxSrc(img.getAttribute('src'));
-        setLightboxAlt(img.getAttribute('alt') || 'Imagem do Artigo');
-      };
-      img.addEventListener('click', handleClick);
     });
   }, [htmlContent]);
 
+  const handleContentClick = useCallback((e: React.MouseEvent<HTMLDivElement>) => {
+    const target = e.target as HTMLElement;
+    if (target.tagName === 'IMG') {
+      setLightboxSrc(target.getAttribute('src'));
+      setLightboxAlt(target.getAttribute('alt') || 'Imagem do Artigo');
+    }
+  }, []);
+
   const processedHtml = React.useMemo(() => {
     if (!htmlContent) return '';
-    let res = htmlContent;
-    if (activeHighlights.length > 0) {
-      activeHighlights.forEach((h) => {
-        if (!h.text) return;
-        const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-        const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color)
-          ? h.color
-          : 'amber';
-        const regex = new RegExp(`(?![^<]*>)(${escaped})`, 'gi');
-        res = res.replace(
-          regex,
-          `<mark class="sst-highlight-${safeColor}">$1</mark>`
-        );
-      });
-    }
-
     if (!isMounted) return ''; // Previne injeção de HTML sujo no servidor e erros de hidratação
 
-    return DOMPurify.sanitize(res, {
+    // Sanitização inicial segura
+    let safeHtml = DOMPurify.sanitize(htmlContent, {
       ADD_TAGS: ['mark'],
       ADD_ATTR: ['class', 'data-tooltip'],
     });
+
+    if (activeHighlights.length > 0) {
+      try {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(safeHtml, 'text/html');
+        const walker = document.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null);
+        
+        const nodesToReplace: {node: Text, newNodes: Node[]}[] = [];
+        
+        let node;
+        while (node = walker.nextNode()) {
+          const text = node.nodeValue;
+          if (!text || text.trim() === '') continue;
+          
+          let newHtml = text;
+          let matchFound = false;
+          
+          activeHighlights.forEach(h => {
+            if (!h.text) return;
+            const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color) ? h.color : 'amber';
+            
+            // Seguro: aplicado apenas sobre TextNodes, não corrompe HTML e sem Lookaheads perigosos
+            const regex = new RegExp(`(${escaped})`, 'gi');
+            if (regex.test(newHtml)) {
+                matchFound = true;
+                newHtml = newHtml.replace(regex, `<mark class="sst-highlight-${safeColor}">$1</mark>`);
+            }
+          });
+          
+          if (matchFound) {
+            const temp = document.createElement('div');
+            temp.innerHTML = newHtml;
+            nodesToReplace.push({node: node as Text, newNodes: Array.from(temp.childNodes)});
+          }
+        }
+        
+        nodesToReplace.forEach(({node, newNodes}) => {
+          const parent = node.parentNode;
+          if (parent) {
+            newNodes.forEach(n => parent.insertBefore(n, node));
+            parent.removeChild(node);
+          }
+        });
+        
+        safeHtml = doc.body.innerHTML;
+      } catch(e) {
+        // Fallback silencioso em caso de erro no DOMParser
+      }
+    }
+
+    return safeHtml;
   }, [htmlContent, activeHighlights, isMounted]);
 
   const typoClasses = [
@@ -145,6 +185,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
     <div className="relative">
       <div
         ref={contentRef}
+        onClick={handleContentClick}
         className={`gsap-stagger-item article-content-render max-w-4xl mx-auto ${typoClasses}`}
         dangerouslySetInnerHTML={{ __html: processedHtml }}
       />

@@ -1,8 +1,13 @@
 import { Metadata } from 'next';
 import { getArticleById, getAllArticles } from '@/lib/markdown';
 import { notFound } from 'next/navigation';
-import { ArticleContent } from '@/components/article/ArticleContent';
+import dynamic from 'next/dynamic';
 import { marked } from 'marked';
+
+const ArticleContent = dynamic(
+  () => import('@/components/article/ArticleContent').then((mod) => mod.ArticleContent),
+  { loading: () => <div className="animate-pulse h-32 bg-stone-100 dark:bg-stone-900 rounded-xl" /> }
+);
 
 interface Props {
   params: {
