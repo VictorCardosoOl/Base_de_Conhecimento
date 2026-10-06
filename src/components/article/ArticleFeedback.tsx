@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ThumbsUp, ThumbsDown, AlertTriangle, Check, Send } from 'lucide-react';
+import { Star, AlertTriangle, Check, Send } from 'lucide-react';
 import { AnalyticsService } from '../../services/analytics-service';
 
 interface ArticleFeedbackProps {
@@ -17,13 +17,21 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({
   const [reportText, setReportText] = useState('');
   const [honeypot, setHoneypot] = useState('');
 
-  const handleUseful = (isUseful: boolean) => {
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
+
+  const handleRating = (value: number) => {
+    setRating(value);
     AnalyticsService.submitFeedback({
       articleId,
       question,
-      type: isUseful ? 'useful_yes' : 'useful_no',
+      type: 'rating',
+      details: value.toString(),
     });
     setFeedbackState('useful_sent');
+    if (value <= 3) {
+      setTimeout(() => setFeedbackState('reporting'), 1500);
+    }
   };
 
   const handleSendReport = (e: React.FormEvent) => {
@@ -47,62 +55,65 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({
   };
 
   return (
-    <div className="mt-20 pt-10 border-t border-border no-print">
-      <div className="py-6 border-b border-border flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-        <div className="space-y-1">
-          <div className="flex items-center gap-3 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">
-            <span className="w-5 h-[1px] bg-border" />
+    <div className="mt-24 pt-12 border-t border-border no-print">
+      <div className="py-8 flex flex-col items-center justify-center text-center gap-8 max-w-3xl mx-auto">
+        <div className="space-y-3 flex flex-col items-center">
+          <div className="flex items-center justify-center gap-4 text-[10px] font-bold uppercase tracking-[0.25em] text-text-muted">
+            <span className="w-8 h-[1px] bg-border" />
             <span>Avaliação Editorial</span>
+            <span className="w-8 h-[1px] bg-border" />
           </div>
-          <h4 className="text-xl font-serif font-light tracking-tight text-text-main">
+          <h4 className="text-2xl md:text-3xl font-serif font-medium tracking-tight text-text-main">
             O que você achou deste conteúdo?
           </h4>
-          <p className="text-xs text-text-muted font-sans">
+          <p className="text-sm text-text-muted max-w-lg mx-auto">
             Seu feedback rápido nos ajuda a atualizar e melhorar a precisão dos
             nossos guias continuamente. Leva só um segundo!
           </p>
         </div>
 
         {feedbackState === 'idle' && (
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => handleUseful(true)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs uppercase tracking-wider font-semibold border border-border text-text-main hover:bg-selection transition-colors rounded-none"
-            >
-              <ThumbsUp
-                size={13}
-                className="text-emerald-600 dark:text-emerald-400"
-              />{' '}
-              Sim
-            </button>
-            <button
-              onClick={() => handleUseful(false)}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs uppercase tracking-wider font-semibold border border-border text-text-main hover:bg-selection transition-colors rounded-none"
-            >
-              <ThumbsDown
-                size={13}
-                className="text-amber-600 dark:text-amber-400"
-              />{' '}
-              Não
-            </button>
+          <div className="flex flex-col items-center justify-center gap-6">
+            <div className="flex items-center gap-2">
+              {[1, 2, 3, 4, 5].map((star) => (
+                <button
+                  key={star}
+                  onMouseEnter={() => setHoverRating(star)}
+                  onMouseLeave={() => setHoverRating(0)}
+                  onClick={() => handleRating(star)}
+                  className="p-2 text-text-muted hover:text-amber-400 hover:scale-110 transition-all active:scale-95"
+                  aria-label={`Avaliar com ${star} estrelas`}
+                >
+                  <Star
+                    size={28}
+                    strokeWidth={1.5}
+                    className={`transition-colors ${
+                      (hoverRating >= star || rating >= star)
+                        ? 'fill-amber-400 text-amber-400'
+                        : ''
+                    }`}
+                  />
+                </button>
+              ))}
+            </div>
             <button
               onClick={() => setFeedbackState('reporting')}
-              className="flex items-center gap-1.5 px-3.5 py-1.5 text-xs uppercase tracking-wider font-semibold border border-border text-text-muted hover:text-text-main hover:bg-selection transition-colors rounded-none"
+              className="flex items-center gap-2 px-6 py-3 min-h-[44px] text-[11px] uppercase tracking-widest font-semibold text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/10 transition-colors rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-text-main"
             >
-              <AlertTriangle size={13} /> Reportar Ajuste
+              <AlertTriangle size={14} /> Sugerir Evolução
             </button>
           </div>
         )}
 
         {feedbackState === 'useful_sent' && (
-          <div className="flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-emerald-600 dark:text-emerald-400 py-1.5 px-3 border border-emerald-500/30">
+          <div className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest font-semibold text-text-main py-2.5 px-6 border border-border rounded-full">
             <Check size={14} /> Avaliação registrada com sucesso
           </div>
         )}
 
         {feedbackState === 'reported' && (
-          <div className="flex items-center gap-2 text-xs uppercase tracking-wider font-semibold text-emerald-600 dark:text-emerald-400 py-1.5 px-3 border border-emerald-500/30">
-            <Check size={14} /> Apontamento enviado ao comitê de SST
+          <div className="flex items-center justify-center gap-2 text-[11px] uppercase tracking-widest font-semibold text-text-main py-2.5 px-6 border border-border rounded-full">
+            <Check size={14} /> Sugestão enviada com sucesso. Obrigado!
           </div>
         )}
       </div>
@@ -110,13 +121,13 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({
       {feedbackState === 'reporting' && (
         <form
           onSubmit={handleSendReport}
-          className="mt-6 p-6 border border-border bg-bg-island/50 space-y-4"
+          className="mt-4 p-8 border border-border bg-black/[0.02] dark:bg-white/[0.02] max-w-2xl mx-auto space-y-6 rounded-2xl"
         >
-          <div className="space-y-1">
-            <label className="block text-xs uppercase tracking-wider font-semibold text-text-main">
+          <div className="space-y-2 text-center">
+            <label htmlFor="reportText" className="block text-[11px] uppercase tracking-widest font-bold text-text-main">
               Descreva a alteração ou divergência observada
             </label>
-            <p className="text-[11px] text-text-muted">
+            <p className="text-xs text-text-muted max-w-md mx-auto">
               Indique a portaria, o sistema ou o prazo que diverge da prática
               atual da empresa.
             </p>
@@ -124,8 +135,9 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({
 
           {/* Honeypot Field */}
           <div style={{ display: 'none' }} aria-hidden="true">
-            <label>Leave this field empty</label>
+            <label htmlFor="user_contact_info">Leave this field empty</label>
             <input
+              id="user_contact_info"
               type="text"
               name="user_contact_info"
               tabIndex={-1}
@@ -135,26 +147,27 @@ export const ArticleFeedback: React.FC<ArticleFeedbackProps> = ({
             />
           </div>
           <textarea
+            id="reportText"
             value={reportText}
             onChange={(e) => setReportText(e.target.value)}
             placeholder="Exemplo: Na nova portaria MTE de 2026, o prazo do evento S-2220 passou a considerar..."
-            rows={3}
-            className="w-full text-xs p-3 border border-border bg-bg-main text-text-main placeholder:text-text-muted/60 focus:outline-none focus:border-text-main resize-none font-sans"
+            rows={4}
+            className="w-full text-sm p-4 border border-border bg-transparent text-text-main placeholder:text-text-muted/60 focus:outline-none focus:border-text-main resize-none font-sans rounded-xl"
             required
           />
-          <div className="flex justify-end gap-3 pt-1">
+          <div className="flex justify-center gap-4 pt-2">
             <button
               type="button"
               onClick={() => setFeedbackState('idle')}
-              className="px-4 py-1.5 text-xs uppercase tracking-wider text-text-muted hover:text-text-main font-semibold"
+              className="px-6 py-3 min-h-[44px] text-[11px] uppercase tracking-widest text-text-muted hover:text-text-main font-semibold rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-text-main"
             >
               Cancelar
             </button>
             <button
               type="submit"
-              className="flex items-center gap-1.5 px-4 py-1.5 text-xs uppercase tracking-wider font-semibold bg-text-main text-bg-main hover:opacity-90 transition-opacity"
+              className="flex items-center justify-center gap-2 px-8 py-3 min-h-[44px] text-[11px] uppercase tracking-widest font-semibold bg-text-main text-bg-main hover:opacity-90 transition-opacity rounded-full focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-text-main"
             >
-              <Send size={12} /> Enviar Apontamento
+              <Send size={14} /> Enviar Sugestão
             </button>
           </div>
         </form>

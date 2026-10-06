@@ -28,8 +28,10 @@ export const ReadingExperienceService = {
   // 1. Personalização Tipográfica
   getTypography(): TypographyPreferences {
     try {
-      const saved = localStorage.getItem(TYPOGRAPHY_KEY);
-      if (saved) return JSON.parse(saved);
+      if (typeof window !== 'undefined') {
+        const saved = localStorage.getItem(TYPOGRAPHY_KEY);
+        if (saved) return JSON.parse(saved);
+      }
     } catch (err) {
       console.error('Storage Error:', err);
     }

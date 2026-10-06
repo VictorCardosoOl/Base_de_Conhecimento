@@ -59,7 +59,7 @@ export default function LoginPage() {
 
           <form onSubmit={handleLogin} className="space-y-8 flex-grow flex flex-col justify-center max-w-sm">
             {error && (
-              <div className="bg-red-50 text-red-600 p-3 text-xs text-center border border-red-100 font-mono">
+              <div id="login-error" role="alert" aria-live="polite" className="bg-red-50 text-red-600 p-3 text-xs text-center border border-red-100 font-mono">
                 {error}
               </div>
             )}
@@ -87,6 +87,8 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
+                aria-invalid={!!error}
+                aria-describedby={error ? "login-error" : undefined}
                 className="w-full bg-transparent border-0 border-b border-black/20 py-2.5 px-0 text-sm text-black focus:outline-none focus:border-black focus:ring-0 transition-colors placeholder:text-black/20"
                 placeholder="exemplo@email.com"
               />
@@ -107,6 +109,8 @@ export default function LoginPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 required
+                aria-invalid={!!error}
+                aria-describedby={error ? "login-error" : undefined}
                 className="w-full bg-transparent border-0 border-b border-black/20 py-2.5 px-0 text-sm text-black focus:outline-none focus:border-black focus:ring-0 transition-colors placeholder:text-black/20"
                 placeholder="Sua senha secreta"
               />

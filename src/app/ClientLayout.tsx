@@ -197,7 +197,7 @@ export function ClientLayout({
                 }}
                 onToggleTheme={() => setIsDarkMode(!isDarkMode)}
                 isDarkMode={isDarkMode}
-                onSelectCategory={(cat: string) => {
+                onSelectCategory={(cat: any) => {
                   handleCategorySelect(cat);
                   setIsCommandPaletteOpen(false);
                 }}
@@ -264,7 +264,7 @@ export function ClientLayout({
               }}
               onToggleTheme={() => setIsDarkMode(!isDarkMode)}
               isDarkMode={isDarkMode}
-              onSelectCategory={(cat: string) => {
+              onSelectCategory={(cat: any) => {
                 handleCategorySelect(cat);
                 setIsCommandPaletteOpen(false);
               }}

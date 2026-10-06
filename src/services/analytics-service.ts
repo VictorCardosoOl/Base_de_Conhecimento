@@ -7,7 +7,7 @@ export interface SearchLog {
 export interface ContentFeedback {
   articleId: string;
   question: string;
-  type: 'useful_yes' | 'useful_no' | 'outdated_report';
+  type: 'useful_yes' | 'useful_no' | 'outdated_report' | 'rating';
   details?: string;
   timestamp: number;
 }
@@ -56,43 +56,7 @@ export const AnalyticsService = {
 
   getSearchLogs(): SearchLog[] {
     try {
-      const logs = JSON.parse(localStorage.getItem(SEARCH_LOGS_KEY) || '[]');
-      if (logs.length === 0 && process.env.NODE_ENV === 'development') {
-        // Mock inicial realista caso o banco local ainda esteja limpo (para recrutadores/demo)
-        return [
-          {
-            query: 'adicional periculosidade inflamaveis',
-            resultCount: 0,
-            timestamp: Date.now() - 1000 * 60 * 42,
-          },
-          {
-            query: 'como calcular insalubridade grau maximo',
-            resultCount: 0,
-            timestamp: Date.now() - 1000 * 60 * 120,
-          },
-          {
-            query: 'exame retorno ao trabalho prazo',
-            resultCount: 0,
-            timestamp: Date.now() - 1000 * 60 * 240,
-          },
-          {
-            query: 'CAT',
-            resultCount: 4,
-            timestamp: Date.now() - 1000 * 60 * 300,
-          },
-          {
-            query: 'LTCAT',
-            resultCount: 2,
-            timestamp: Date.now() - 1000 * 60 * 500,
-          },
-          {
-            query: 'trabalho em altura nr 35 cinto',
-            resultCount: 0,
-            timestamp: Date.now() - 1000 * 60 * 700,
-          },
-        ];
-      }
-      return logs;
+      return JSON.parse(localStorage.getItem(SEARCH_LOGS_KEY) || '[]');
     } catch (error) {
       console.warn('Falha ao obter logs de busca do localStorage', error);
       return [];
@@ -148,29 +112,7 @@ export const AnalyticsService = {
 
   getFeedbackLogs(): ContentFeedback[] {
     try {
-      const logs = JSON.parse(
-        localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]'
-      );
-      if (logs.length === 0 && process.env.NODE_ENV === 'development') {
-        return [
-          {
-            articleId: 'pgr',
-            question: 'PGR',
-            type: 'outdated_report',
-            details:
-              'A portaria MTE de 2026 alterou o prazo de guarda digital do inventário de riscos.',
-            timestamp: Date.now() - 1000 * 60 * 60 * 12,
-          },
-          {
-            articleId: 'evento-s2210-comunicacao-cat',
-            question:
-              'Evento S-2210 - Comunicação de Acidente de Trabalho (CAT)',
-            type: 'useful_yes',
-            timestamp: Date.now() - 1000 * 60 * 60 * 24,
-          },
-        ];
-      }
-      return logs;
+      return JSON.parse(localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]');
     } catch (error) {
       console.warn('Falha ao obter logs de feedback do localStorage', error);
       return [];

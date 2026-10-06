@@ -7,6 +7,7 @@ import { ArticleHighlightsToolbar } from './ArticleHighlightsToolbar';
 import {
   ReadingExperienceService,
   HighlightItem,
+  TypographyPreferences,
 } from '../../services/reading-experience-service';
 
 interface ArticleContentProps {

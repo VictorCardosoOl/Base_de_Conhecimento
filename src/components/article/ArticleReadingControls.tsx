@@ -80,7 +80,7 @@ export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
   }, [mounted, isOpen]);
 
   return (
-    <div className="relative inline-flex items-center gap-1.5" ref={popoverRef}>
+    <div className="relative inline-flex items-center gap-1" ref={popoverRef}>
       {/* Botão Modo Foco (Zen Mode) */}
       <button
         onClick={onToggleZenMode}
@@ -90,16 +90,13 @@ export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
             : 'Modo Foco (Zen Mode - Sem Distrações)'
         }
         aria-label={isZenMode ? 'Sair do Modo Foco' : 'Ativar Modo Foco'}
-        className={`flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-lg border transition-colors ${
+        className={`p-2 rounded-full transition-colors ${
           isZenMode
-            ? 'bg-text-main text-bg-main border-text-main shadow-sm'
-            : 'border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800'
+            ? 'bg-black/5 dark:bg-white/10 text-text-main'
+            : 'text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5'
         }`}
       >
-        {isZenMode ? <EyeOff size={14} /> : <Eye size={14} />}
-        <span className="hidden sm:inline">
-          {isZenMode ? 'Foco Ativo' : 'Modo Foco'}
-        </span>
+        {isZenMode ? <EyeOff size={16} /> : <Eye size={16} />}
       </button>
 
       {/* Botão de Personalização Tipográfica */}
@@ -107,11 +104,11 @@ export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
         onClick={() => setIsOpen(!isOpen)}
         title="Ajuste a leitura para sua preferência visual"
         aria-label="Ajustar Tipografia e Leitura"
-        className={`p-2 rounded-lg border border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors ${
-          isOpen ? 'bg-stone-100 dark:bg-stone-800 text-text-main' : ''
+        className={`p-2 rounded-full text-text-muted hover:text-text-main hover:bg-black/5 dark:hover:bg-white/5 transition-colors ${
+          isOpen ? 'bg-black/5 dark:bg-white/10 text-text-main' : ''
         }`}
       >
-        <SlidersHorizontal size={14} />
+        <SlidersHorizontal size={16} />
       </button>
 
       {/* Popover Editorial de Configurações */}

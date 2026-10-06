@@ -14,6 +14,7 @@ import { FAQItem } from '@/types/index';
 import { useArticleContent } from '@/hooks/use-article-content';
 import { useReadingGoalTracker } from '@/hooks/use-reading-goal-tracker';
 import { useScopedLenis } from '@/hooks/use-scoped-lenis';
+import { useShare } from '@/hooks/use-share';
 import dynamic from 'next/dynamic';
 
 const ArticleContent = dynamic(
@@ -53,7 +54,6 @@ const ModalArticleContent = ({
           articleId={article.id}
           typography={typography}
         />
-        <ArticleFeedback articleId={article.id} question={article.question} />
       </div>
     </div>
   );
@@ -91,7 +91,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
   const [typography, setTypography] = useState<TypographyPreferences>(() =>
     ReadingExperienceService.getTypography()
   );
-  const [shareFeedback, setShareFeedback] = useState(false);
+  const { shareContent, shareFeedback } = useShare();
 
   // Hook modular para meta de leitura
   const { goalReachedBanner, dismissBanner } = useReadingGoalTracker({
@@ -153,31 +153,9 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
   }, [isOpen, isZenMode, onClose]);
 
   // Compartilhamento nativo via Web Share API
-  const handleShare = async () => {
-    if (!item) return;
-    const shareData = {
-      title: item.question,
-      text: item.answer,
-      url: window.location.href,
-    };
-
-    if (navigator.share && navigator.canShare?.(shareData)) {
-      try {
-        await navigator.share(shareData);
-      } catch (err) {
-        if ((err as Error).name !== 'AbortError') {
-          console.warn('Erro ao compartilhar:', err);
-        }
-      }
-    } else {
-      // Fallback: Copiar URL para o clipboard
-      try {
-        await navigator.clipboard.writeText(window.location.href);
-        setShareFeedback(true);
-        setTimeout(() => setShareFeedback(false), 2000);
-      } catch {
-        alert('Link copiado para a área de transferência!');
-      }
+  const handleShare = () => {
+    if (item) {
+      shareContent(item.question, item.answer, window.location.href);
     }
   };
 
@@ -195,10 +173,47 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
       document.body.style.paddingRight = '';
     }
     return () => {
-      document.body.style.overflow = '';
-      document.body.style.paddingRight = '';
     };
   }, [isOpen]);
+
+  // Pull to close / Overscroll to close
+  useEffect(() => {
+    const container = modalContainerRef.current;
+    if (!container || !isOpen) return;
+
+    let startY = 0;
+    
+    const handleTouchStart = (e: TouchEvent) => {
+      if (container.scrollTop <= 0) {
+        startY = e.touches[0].clientY;
+      } else {
+        startY = 0;
+      }
+    };
+    
+    const handleTouchMove = (e: TouchEvent) => {
+      if (startY > 0 && e.touches[0].clientY > startY + 80) {
+        onClose();
+        startY = 0; // Previne múltiplos triggers
+      }
+    };
+
+    const handleWheel = (e: WheelEvent) => {
+      if (container.scrollTop <= 0 && e.deltaY < -80) {
+        onClose();
+      }
+    };
+
+    container.addEventListener('touchstart', handleTouchStart, { passive: true });
+    container.addEventListener('touchmove', handleTouchMove, { passive: true });
+    container.addEventListener('wheel', handleWheel, { passive: true });
+
+    return () => {
+      container.removeEventListener('touchstart', handleTouchStart);
+      container.removeEventListener('touchmove', handleTouchMove);
+      container.removeEventListener('wheel', handleWheel);
+    };
+  }, [isOpen, onClose]);
 
   if (!mounted) return null;
 
@@ -236,46 +251,32 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                 className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50 transition-transform duration-[120ms] ease-out"
                 style={{ transform: `scaleX(${scrollProgress})` }}
               />
-                  <div
-                    className={`w-full h-16 2xl:h-20 flex items-center justify-between px-6 md:pr-12 2xl:pr-16 ${!isZenMode ? 'lg:pl-52 xl:pl-64' : 'md:pl-12 2xl:pl-16'}`}
-                  >
-                    <div className="flex items-center gap-4 text-xs 2xl:text-sm font-medium text-text-muted">
+                  <div className="w-full h-16 2xl:h-20 flex items-center justify-between px-6 md:px-10 lg:px-16">
+                    <div className="flex items-center gap-2 text-xs text-text-muted">
                       <button
                         onClick={onClose}
                         aria-label="Voltar para a página anterior"
-                        className="hover:text-blue-600 transition-colors flex items-center gap-1 min-h-[44px] min-w-[44px]"
+                        className="hover:text-text-main transition-colors flex items-center gap-2 py-2"
                       >
-                        <ArrowLeft size={16} />
-                        <span className="hidden sm:inline">Voltar</span>
+                        <ArrowLeft size={16} strokeWidth={1.5} />
+                        <span className="hidden sm:inline font-medium uppercase text-[10px] tracking-[0.2em]">Voltar</span>
                       </button>
+                      
                       {!isZenMode && (
                         <>
-                          <span className="text-gray-300 dark:text-gray-700">
-                            |
-                          </span>
-                          <button
-                            onClick={onClose}
-                            className="hover:text-blue-600 transition-colors"
-                          >
-                            Início
-                          </button>
-                          <ChevronRight size={14} className="text-gray-400" />
-                          <span className="uppercase tracking-wide opacity-80">
-                            {item?.category}
-                          </span>
-                          <ChevronRight
-                            size={14}
-                            className="text-gray-400 hidden sm:block"
-                          />
-                          <span className="font-semibold text-text-main truncate max-w-[150px] sm:max-w-xs md:max-w-md hidden sm:block">
-                            {item?.question}
-                          </span>
+                          <div className="w-[1px] h-4 bg-border hidden sm:block mx-3" />
+                          <div className="flex items-center gap-3 text-[10px] uppercase tracking-[0.2em] font-medium opacity-80">
+                            <button onClick={onClose} className="hover:text-text-main transition-colors">INÍCIO</button>
+                            <span className="text-border">/</span>
+                            <span className="text-text-main">{item?.category}</span>
+                          </div>
                         </>
                       )}
                     </div>
 
                     {/* Ações do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
-                    <div className="flex items-center gap-2">
+                    {/* Ações do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
+                    <div className="flex items-center gap-1">
                       {/* Controles de Leitura e Modo Foco */}
                       <ArticleReadingControls
                         isZenMode={isZenMode}
@@ -284,39 +285,38 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                         onTypographyChange={setTypography}
                       />
 
+                      <div className="w-[1px] h-4 bg-border mx-2 hidden sm:block" />
+
                       {/* Impressão Dinâmica (PDF) */}
                       <button
                         onClick={() => window.print()}
                         aria-label="Gerar PDF do Artigo"
-                        className="p-2 sm:p-2.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-text-muted hover:text-text-main transition-colors flex items-center gap-2"
+                        className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-text-muted hover:text-text-main transition-colors flex items-center"
                       >
-                        <Printer size={18} />
-                        <span className="hidden sm:inline text-xs font-semibold uppercase tracking-wider">
-                          PDF
-                        </span>
+                        <Printer size={16} />
                       </button>
 
                       {/* Compartilhar Nativo / Área de Transferência */}
                       <button
                         onClick={handleShare}
                         aria-label="Compartilhar"
-                        className={`p-2 sm:p-2.5 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors ${
+                        className={`p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 transition-colors ${
                           shareFeedback
                             ? 'text-green-600'
                             : 'text-text-muted hover:text-text-main'
                         }`}
                       >
-                        <Share2 size={18} />
+                        <Share2 size={16} />
                       </button>
 
-                      <div className="w-px h-6 bg-border mx-1 md:mx-2" />
+                      <div className="w-[1px] h-4 bg-border mx-2" />
 
                       <button
                         onClick={onClose}
                         aria-label="Fechar Modal de Artigo"
-                        className="p-2 sm:p-2.5 rounded-full hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 text-text-muted transition-colors transform-gpu active:scale-95"
+                        className="p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-950 hover:text-red-600 text-text-muted transition-colors transform-gpu active:scale-95"
                       >
-                        <X size={20} />
+                        <X size={18} />
                       </button>
                     </div>
                   </div>
@@ -367,33 +367,23 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                 <div className="w-full pt-10 pb-6 px-6 md:px-16 2xl:px-24">
                   <div className="max-w-4xl mx-auto text-center space-y-6">
                     {/* Selo Editorial de Gestão de Validade e Auditoria */}
-                    <div className="inline-flex items-center gap-3 py-1 px-3 border-y border-border text-[11px] uppercase tracking-[0.18em] text-text-muted">
-                      <span className="flex items-center gap-1.5 font-medium">
+                    <div className="flex flex-wrap items-center justify-center gap-4 md:gap-6 text-[10px] md:text-[11px] uppercase tracking-[0.2em] text-text-muted font-medium mb-6">
+                      <span className="flex items-center gap-2 text-text-main">
                         <ShieldCheck
-                          size={13}
-                          className="text-emerald-600 dark:text-emerald-400 stroke-[1.75]"
+                          size={16}
+                          className="text-text-main stroke-[1.5]"
                         />
-                        <span>
-                          Auditado:{' '}
-                          <span className="font-semibold text-text-main">
-                            {item?.lastReviewed || item?.date}
-                          </span>
-                        </span>
+                        <span>Auditado: {item?.lastReviewed || item?.date}</span>
                       </span>
                       <span className="w-1 h-1 rounded-full bg-border" />
-                      <span>
-                        Ciclo:{' '}
-                        <span className="font-semibold text-text-main">
-                          {item?.validityMonths || 12}M
-                        </span>
-                      </span>
+                      <span>Ciclo: {item?.validityMonths || 12}M</span>
                       <span className="w-1 h-1 rounded-full bg-border hidden sm:inline" />
-                      <span className="opacity-75 hidden sm:inline">
-                        {item?.verifiedBy || 'Engenharia de SST'}
+                      <span className="hidden sm:inline">
+                        {item?.verifiedBy || 'Eng. SST / Jurídico'}
                       </span>
                     </div>
 
-                    <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-medium text-text-main leading-tight mb-8">
+                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-medium text-text-main leading-tight mb-8">
                       {item?.question}
                     </h1>
 
@@ -424,6 +414,13 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                       </div>
                     )}
                   </div>
+                  
+                  {/* Feedback centralizado na tela toda (abaixo do grid) */}
+                  {item && (
+                    <div className="mt-12 col-span-full">
+                      <ArticleFeedback articleId={item.id} question={item.question} />
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
