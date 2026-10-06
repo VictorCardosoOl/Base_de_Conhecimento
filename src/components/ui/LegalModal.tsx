@@ -1,4 +1,4 @@
-﻿import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { useConsent } from '../../contexts/ConsentContext';
 import {
@@ -13,9 +13,9 @@ import {
   RotateCcw,
   ChevronRight,
 } from 'lucide-react';
-import { motion, AnimatePresence } from 'framer-motion';
 import { useScopedLenis } from '@/hooks/use-scoped-lenis';
-import { sheetVariants, fadeVariants } from '@/lib/animations';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export const LegalModal: React.FC = () => {
   const {
@@ -29,9 +29,36 @@ export const LegalModal: React.FC = () => {
   } = useConsent();
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
+  const backdropRef = useRef<HTMLDivElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
-  // Lenis scoped â€” gerenciado pelo hook centralizado (use-scoped-lenis.ts)
+  const [mounted, setMounted] = useState(false);
+
+  // Lenis scoped — gerenciado pelo hook centralizado (use-scoped-lenis.ts)
   useScopedLenis(modalContainerRef, modalContentRef, openLegalModal);
+
+  // Handle open/close animations
+  useGSAP(() => {
+    if (openLegalModal) {
+      setMounted(true);
+    } else if (mounted) {
+      // Animate out
+      const tl = gsap.timeline({
+        onComplete: () => setMounted(false)
+      });
+      if (backdropRef.current) tl.to(backdropRef.current, { opacity: 0, duration: 0.22, ease: 'power3.in' }, 0);
+      if (dialogRef.current) tl.to(dialogRef.current, { y: '100vh', duration: 0.5, ease: 'power3.in' }, 0);
+    }
+  }, [openLegalModal]);
+
+  useGSAP(() => {
+    if (mounted && openLegalModal) {
+      // Animate in
+      if (backdropRef.current) gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: 0.38, ease: 'power4.out' });
+      if (dialogRef.current) gsap.fromTo(dialogRef.current, { y: '100vh' }, { y: 0, duration: 0.6, ease: 'power4.out' });
+    }
+  }, [mounted]);
+
 
   // Escuta tecla ESC para fechar
   useEffect(() => {
@@ -44,7 +71,7 @@ export const LegalModal: React.FC = () => {
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, [openLegalModal, setOpenLegalModal]);
 
-  // GestÃ£o de overflow do body
+  // Gestão de overflow do body
   useEffect(() => {
     if (openLegalModal) {
       document.body.style.overflow = 'hidden';
@@ -56,61 +83,53 @@ export const LegalModal: React.FC = () => {
     };
   }, [openLegalModal]);
 
-  if (!openLegalModal) return null;
+  if (!mounted) return null;
 
   return createPortal(
-    <AnimatePresence>
-      {openLegalModal && (
-        <>
-          {/* Backdrop Fosco com Blur */}
-          <motion.div
+    <>
+      {/* Backdrop Fosco com Blur */}
+      <div
+        ref={backdropRef}
+        onClick={() => setOpenLegalModal(false)}
+        className="fixed inset-0 bg-black/95 z-[110] will-change-[opacity]"
+      />
+
+      {/* Modal Container Esculpido */}
+      <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="legal-modal-title"
+        className="fixed inset-x-0 bottom-0 top-[4vh] sm:top-[6vh] z-[120] max-w-4xl mx-auto bg-bg-main border-x border-t border-border rounded-t-2xl sm:rounded-t-[2.5rem] shadow-2xl overflow-hidden flex flex-col transform-gpu will-change-[transform,opacity]"
+      >
+        {/* Header Fixo com Identidade Editorial */}
+        <header className="shrink-0 bg-bg-main border-b border-border px-6 sm:px-10 py-5 z-20 flex items-center justify-between gap-4">
+          <div className="space-y-1 min-w-0">
+            <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">
+              <span className="inline-flex items-center gap-1 text-text-main">
+                <ShieldCheck size={13} strokeWidth={2} />
+                Governança Corporativa
+              </span>
+              <span className="w-1 h-1 rounded-full bg-border" />
+              <span>LGPD • Lei 13.709/2018</span>
+            </div>
+            <h2
+              id="legal-modal-title"
+              className="text-xl sm:text-2xl 2xl:text-3xl font-serif font-light tracking-tight text-text-main truncate"
+            >
+              Termos de Uso & Políticas de Privacidade
+            </h2>
+          </div>
+
+          <button
+            type="button"
             onClick={() => setOpenLegalModal(false)}
-            className="fixed inset-0 bg-black/95  z-[110] will-change-[opacity]"
-            variants={fadeVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          />
-
-          {/* Modal Container Esculpido */}
-          <motion.div
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="legal-modal-title"
-            variants={sheetVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="fixed inset-x-0 bottom-0 top-[4vh] sm:top-[6vh] z-[120] max-w-4xl mx-auto bg-bg-main border-x border-t border-border rounded-t-2xl sm:rounded-t-[2.5rem] shadow-2xl overflow-hidden flex flex-col transform-gpu will-change-[transform,opacity]"
+            aria-label="Fechar janela jurídica"
+            className="p-2.5 rounded-full hover:bg-text-main hover:text-bg-main text-text-muted transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
           >
-            {/* Header Fixo com Identidade Editorial */}
-            <header className="shrink-0 bg-bg-main  border-b border-border px-6 sm:px-10 py-5 z-20 flex items-center justify-between gap-4">
-              <div className="space-y-1 min-w-0">
-                <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted">
-                  <span className="inline-flex items-center gap-1 text-text-main">
-                    <ShieldCheck size={13} strokeWidth={2} />
-                    GovernanÃ§a Corporativa
-                  </span>
-                  <span className="w-1 h-1 rounded-full bg-border" />
-                  <span>LGPD â€¢ Lei 13.709/2018</span>
-                </div>
-                <h2
-                  id="legal-modal-title"
-                  className="text-xl sm:text-2xl 2xl:text-3xl font-serif font-light tracking-tight text-text-main truncate"
-                >
-                  Termos de Uso & PolÃ­ticas de Privacidade
-                </h2>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setOpenLegalModal(false)}
-                aria-label="Fechar janela jurÃ­dica"
-                className="p-2.5 rounded-full hover:bg-text-main hover:text-bg-main text-text-muted transition-colors shrink-0 cursor-pointer min-h-[44px] min-w-[44px] flex items-center justify-center"
-              >
-                <X size={20} />
-              </button>
-            </header>
+            <X size={20} />
+          </button>
+        </header>
 
             {/* Abas Superiores de NavegaÃ§Ã£o */}
             <nav
@@ -411,10 +430,9 @@ export const LegalModal: React.FC = () => {
                 </button>
               </div>
             </footer>
-          </motion.div>
+          </div>
         </>
-      )}
-    </AnimatePresence>,
+    ,
     document.body
   );
 };

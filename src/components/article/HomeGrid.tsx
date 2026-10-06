@@ -2,7 +2,7 @@
 import React, { useMemo } from 'react';
 import { ArticleGrid } from './ArticleGrid';
 import { FAQ_DATA } from '@/config/index';
-import { IntroHero } from '../article/IntroHero';
+import { IntroHero } from './IntroHero';
 import { Category } from '@/types/index';
 
 export function HomeGrid({ categoryParam }: { categoryParam: string | null }) {

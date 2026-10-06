@@ -1,9 +1,25 @@
 'use client';
-import React from 'react';
-import { motion } from 'framer-motion';
-import { heroLineVariants } from '@/lib/animations';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export const IntroHero: React.FC = () => {
+  const line1Ref = useRef<HTMLSpanElement>(null);
+  const line2Ref = useRef<HTMLSpanElement>(null);
+
+  useGSAP(() => {
+    if (line1Ref.current && line2Ref.current) {
+      gsap.fromTo(line1Ref.current,
+        { opacity: 0, y: 90, rotate: 1.5 },
+        { opacity: 1, y: 0, rotate: 0, duration: 0.7, ease: 'power3.out' }
+      );
+      gsap.fromTo(line2Ref.current,
+        { opacity: 0, y: 90, rotate: 1.5 },
+        { opacity: 1, y: 0, rotate: 0, duration: 0.7, delay: 0.08, ease: 'power3.out' }
+      );
+    }
+  }, []);
+
   return (
     <div className="w-full relative select-none">
       {/* Container Principal:
@@ -18,26 +34,18 @@ export const IntroHero: React.FC = () => {
         */}
         <div className="lg:col-span-8 h-full flex flex-col justify-end pb-6 lg:pb-10 2xl:pb-14 pointer-events-none select-none z-10 overflow-visible">
           <h1 className="flex flex-col tracking-[-0.045em] font-serif font-normal leading-[0.76] text-text-main overflow-visible">
-            <motion.span
-              initial={{ opacity: 0, y: 90, rotate: 1.5 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              transition={{ duration: 0.7, delay: 0, ease: [0.16, 1, 0.3, 1] }}
-              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 will-change-transform"
+            <span
+              ref={line1Ref}
+              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 will-change-transform opacity-0"
             >
               Base de
-            </motion.span>
-            <motion.span
-              initial={{ opacity: 0, y: 90, rotate: 1.5 }}
-              animate={{ opacity: 1, y: 0, rotate: 0 }}
-              transition={{
-                duration: 0.7,
-                delay: 0.08,
-                ease: [0.16, 1, 0.3, 1],
-              }}
-              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 mt-1 lg:mt-2 will-change-transform"
+            </span>
+            <span
+              ref={line2Ref}
+              className="text-[clamp(4.2rem,9.5vw,13rem)] block transform -translate-x-1 lg:-translate-x-2 mt-1 lg:mt-2 will-change-transform opacity-0"
             >
               Conhecimento
-            </motion.span>
+            </span>
           </h1>
         </div>
 

@@ -1,6 +1,6 @@
 import React from 'react';
-import { SearchBar } from '@/components/ui/SearchBar';
-import { HomeGrid } from '@/components/layout/HomeGrid';
+import { SearchBar } from '@/features/search/components/SearchBar';
+import { HomeGrid } from '@/components/article/HomeGrid';
 
 export default async function Page(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;

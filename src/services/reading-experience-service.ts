@@ -30,7 +30,9 @@ export const ReadingExperienceService = {
     try {
       const saved = localStorage.getItem(TYPOGRAPHY_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
     return { fontSize: 'base', lineHeight: 'relaxed', fontFamily: 'serif' };
   },
 
@@ -40,7 +42,9 @@ export const ReadingExperienceService = {
       window.dispatchEvent(
         new CustomEvent('sst_typography_updated', { detail: pref })
       );
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
   },
 
   // 2. Meta de Leitura Silenciosa (Apenas tempo dentro do artigo)
@@ -48,7 +52,9 @@ export const ReadingExperienceService = {
     try {
       const saved = localStorage.getItem(READING_GOAL_KEY);
       if (saved) return JSON.parse(saved);
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
     return { targetMinutes: 60, elapsedSeconds: 0, completedNotified: false };
   },
 
@@ -64,7 +70,9 @@ export const ReadingExperienceService = {
       window.dispatchEvent(
         new CustomEvent('sst_reading_goal_updated', { detail: updated })
       );
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
   },
 
   addReadingTime(seconds: number): {
@@ -86,7 +94,8 @@ export const ReadingExperienceService = {
 
       localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
       return { completedNow, goal: updated };
-    } catch {
+    } catch (err) {
+      console.error('Storage Error:', err);
       return { completedNow: false, goal: this.getReadingGoal() };
     }
   },
@@ -103,7 +112,9 @@ export const ReadingExperienceService = {
       window.dispatchEvent(
         new CustomEvent('sst_reading_goal_updated', { detail: updated })
       );
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
   },
 
   // 3. Marcações (Highlights) Locais
@@ -113,7 +124,8 @@ export const ReadingExperienceService = {
         localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
       );
       return all.filter((h) => h.articleId === articleId);
-    } catch {
+    } catch (err) {
+      console.error('Storage Error:', err);
       return [];
     }
   },
@@ -139,7 +151,9 @@ export const ReadingExperienceService = {
       window.dispatchEvent(
         new CustomEvent('sst_highlights_updated', { detail: { articleId } })
       );
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
     return item;
   },
 
@@ -151,14 +165,17 @@ export const ReadingExperienceService = {
       const filtered = all.filter((h) => h.id !== id);
       localStorage.setItem(HIGHLIGHTS_KEY, JSON.stringify(filtered));
       window.dispatchEvent(new CustomEvent('sst_highlights_updated'));
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
   },
 
   // 4. Buscas Recentes
   getRecentSearches(): string[] {
     try {
       return JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || '[]');
-    } catch {
+    } catch (err) {
+      console.error('Storage Error:', err);
       return [];
     }
   },
@@ -175,14 +192,17 @@ export const ReadingExperienceService = {
         RECENT_SEARCHES_KEY,
         JSON.stringify(list.slice(0, 5))
       );
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
   },
 
   // 5. Artigos Lidos Recentemente
   getRecentArticles(): string[] {
     try {
       return JSON.parse(localStorage.getItem(RECENT_ARTICLES_KEY) || '[]');
-    } catch {
+    } catch (err) {
+      console.error('Storage Error:', err);
       return [];
     }
   },
@@ -196,6 +216,8 @@ export const ReadingExperienceService = {
         RECENT_ARTICLES_KEY,
         JSON.stringify(list.slice(0, 5))
       );
-    } catch {}
+    } catch (err) {
+      console.error('Storage Error:', err);
+    }
   },
 };

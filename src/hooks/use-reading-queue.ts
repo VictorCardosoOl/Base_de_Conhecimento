@@ -12,8 +12,8 @@ export const useReadingQueue = () => {
       try {
         setQueue(JSON.parse(oldSaved));
         return;
-      } catch (e) {
-        console.error('Erro ao carregar fila legada:', e);
+      } catch (error) {
+        console.error('Reading Queue Error:', error);
       }
     }
 
@@ -21,8 +21,8 @@ export const useReadingQueue = () => {
     if (saved) {
       try {
         setQueue(JSON.parse(saved));
-      } catch (e) {
-        console.error('Erro ao carregar fila', e);
+      } catch (error) {
+        console.error('Reading Queue Error:', error);
       }
     }
   }, []);
@@ -32,8 +32,8 @@ export const useReadingQueue = () => {
     setTimeout(() => {
       try {
         localStorage.setItem('sstfaq_queue', JSON.stringify(next));
-      } catch (err) {
-        console.error('Falha ao persistir fila:', err);
+      } catch (error) {
+        console.error('Reading Queue Error:', error);
       }
     }, 0);
   };

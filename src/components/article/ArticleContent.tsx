@@ -12,7 +12,7 @@ import {
 interface ArticleContentProps {
   htmlContent: string;
   articleId?: string;
-  typography?: any;
+  typography?: TypographyPreferences;
 }
 
 export const ArticleContent: React.FC<ArticleContentProps> = ({
@@ -29,7 +29,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
 
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>('');
-  const [typography, setTypography] = useState<any>(propTypography || null);
+  const [typography, setTypography] = useState<TypographyPreferences | null>(propTypography || null);
   const [activeHighlights, setActiveHighlights] = useState<HighlightItem[]>([]);
 
   useEffect(() => {
@@ -42,8 +42,9 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
       setTypography(ReadingExperienceService.getTypography());
     };
 
-    const handleHighlightsUpdate = (e: any) => {
-      if (articleId && e.detail?.articleId === articleId) {
+    const handleHighlightsUpdate = (e: Event) => {
+      const evt = e as CustomEvent<{ articleId: string }>;
+      if (articleId && evt.detail?.articleId === articleId) {
         setActiveHighlights(ReadingExperienceService.getHighlights(articleId));
       }
     };
@@ -84,8 +85,10 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
         .run({
           nodes: document.querySelectorAll('.language-mermaid'),
         })
-        .catch(() => {});
-    } catch (e) {}
+        .catch((err) => { console.error('Mermaid run error:', err); });
+    } catch (e) {
+      console.error('Mermaid init error:', e);
+    }
   }, [htmlContent]);
 
   useEffect(() => {
@@ -164,7 +167,7 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
         
         safeHtml = doc.body.innerHTML;
       } catch(e) {
-        // Fallback silencioso em caso de erro no DOMParser
+        console.error('Error applying highlights to HTML:', e);
       }
     }
 

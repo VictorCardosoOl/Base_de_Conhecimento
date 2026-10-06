@@ -3,6 +3,7 @@
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { User, Info, Bookmark, Home } from 'lucide-react';
+import Link from 'next/link';
 import './StaggeredMenu.css';
 
 export interface StaggeredMenuItem {
@@ -469,9 +470,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
           {/* Início (Home) */}
           <div className="group relative ml-2">
-            <a href="/" aria-label="Início" className="text-text-main hover:text-text-muted transition-colors duration-300 block">
+            <Link href="/" aria-label="Início" className="text-text-main hover:text-text-muted transition-colors duration-300 block">
                <Home size={22} strokeWidth={1.5} />
-            </a>
+            </Link>
             <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 text-white text-[10px] uppercase tracking-wider py-1.5 px-3 rounded whitespace-nowrap pointer-events-none shadow-lg z-50">
               Início
             </span>
@@ -481,9 +482,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         <div className="flex items-center gap-6 pointer-events-auto sm-nav-icons">
           {/* Minha Lista */}
           <div className="group relative">
-            <a href="/minha-lista" aria-label="Minha Lista" className="text-text-main hover:text-white transition-colors duration-300 block">
+            <Link href="/minha-lista" aria-label="Minha Lista" className="text-text-main hover:text-white transition-colors duration-300 block">
                <Bookmark size={24} />
-            </a>
+            </Link>
             <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 text-white text-[10px] uppercase tracking-wider py-1.5 px-3 rounded whitespace-nowrap pointer-events-none shadow-lg z-50">
               Minha Lista
             </span>
@@ -491,9 +492,9 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
 
           {/* Login */}
           <div className="group relative">
-            <a href="/login" aria-label="Login" className="text-text-main hover:text-white transition-colors duration-300 block">
+            <Link href="/login" aria-label="Login" className="text-text-main hover:text-white transition-colors duration-300 block">
                <User size={24} />
-            </a>
+            </Link>
             <span className="absolute top-full mt-2 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-black/90 text-white text-[10px] uppercase tracking-wider py-1.5 px-3 rounded whitespace-nowrap pointer-events-none shadow-lg z-50">
               Login
             </span>

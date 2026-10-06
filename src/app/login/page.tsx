@@ -1,8 +1,9 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Lock } from 'lucide-react';
+import { BookOpen } from 'lucide-react';
 import { authenticateAdmin } from '@/actions/auth-actions';
+import DitherVeil from '@/components/ui/DitherVeil';
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -25,7 +26,6 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    // Server action hides the expected hash and logic from the client bundle
     const isValid = await authenticateAdmin(email, password);
 
     if (isValid) {
@@ -35,97 +35,125 @@ export default function LoginPage() {
       navigate.push('/admin');
     } else {
       setError(
-        'Credenciais incorretas. Consulte a documentação interna ou utilize as credenciais de teste fornecidas.'
+        'Credenciais incorretas. Verifique seu e-mail e senha.'
       );
       setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-[70vh] p-4">
-      <div className="bg-bg-island border border-border rounded-2xl shadow-sm p-8 max-w-md w-full">
-        <div className="flex flex-col items-center mb-8">
-          <div className="w-12 h-12 bg-selection rounded-full flex items-center justify-center mb-4">
-            <Lock className="text-text-main" size={24} />
+    <div className="flex items-center justify-center w-full min-h-[calc(100vh-200px)]">
+      {/* Container Principal - Sem bordas, integrando-se à página como um corpo só */}
+      <div className="w-full max-w-6xl bg-white text-black flex flex-col md:flex-row">
+        
+        {/* Lado Esquerdo: Formulário */}
+        <div className="w-full md:w-1/2 p-8 md:p-16 flex flex-col justify-center relative z-10 bg-white">
+          <div className="mb-12">
+            <h1 className="text-4xl font-bold font-sans tracking-tight mb-3 text-black">
+              Acesso Restrito
+            </h1>
+            <p className="text-[13px] font-mono tracking-wide text-black/50">
+              Insira suas credenciais para entrar no painel
+            </p>
           </div>
-          <h1 className="text-2xl font-serif text-text-main">
-            Acesso Restrito
-          </h1>
-          <p className="text-text-muted mt-2 text-center">
-            Entre com suas credenciais para acessar o painel administrativo.
-          </p>
-          <div className="mt-4 p-3 bg-blue-500/10 border border-blue-500/20 rounded-lg text-xs text-text-muted text-center leading-relaxed">
-            <strong className="text-text-main font-semibold">
-              Acesso de Demonstração:
-            </strong>{' '}
-            Credenciais de teste locais:{' '}
-            <code className="font-mono text-[11px] font-semibold text-text-main">
-              admin@admin.com
-            </code>{' '}
-            /{' '}
-            <code className="font-mono text-[11px] font-semibold text-text-main">
-              admin
-            </code>
-            . O conteúdo oficial é versionado via Git/Markdown.
+
+          <form onSubmit={handleLogin} className="space-y-8 flex-grow flex flex-col justify-center max-w-sm">
+            {error && (
+              <div className="bg-red-50 text-red-600 p-3 text-xs text-center border border-red-100 font-mono">
+                {error}
+              </div>
+            )}
+
+            {/* Honeypot Field */}
+            <div style={{ display: 'none' }} aria-hidden="true">
+              <label>Leave this field empty</label>
+              <input
+                type="text"
+                name="contact_number"
+                tabIndex={-1}
+                autoComplete="off"
+                value={honeypot}
+                onChange={(e) => setHoneypot(e.target.value)}
+              />
+            </div>
+
+            <div className="relative group">
+              <label htmlFor="email" className="text-[10px] font-bold font-mono tracking-widest text-black/50 uppercase mb-1 block group-focus-within:text-black transition-colors">
+                E-mail
+              </label>
+              <input
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                required
+                className="w-full bg-transparent border-0 border-b border-black/20 py-2.5 px-0 text-sm text-black focus:outline-none focus:border-black focus:ring-0 transition-colors placeholder:text-black/20"
+                placeholder="exemplo@email.com"
+              />
+            </div>
+
+            <div className="relative group">
+              <div className="flex justify-between items-end mb-1">
+                <label htmlFor="password" className="text-[10px] font-bold font-mono tracking-widest text-black/50 uppercase group-focus-within:text-black transition-colors">
+                  Senha
+                </label>
+                <a href="#" className="text-[9px] font-bold font-mono tracking-widest text-black/40 hover:text-black uppercase transition-colors">
+                  Esqueceu a senha?
+                </a>
+              </div>
+              <input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                required
+                className="w-full bg-transparent border-0 border-b border-black/20 py-2.5 px-0 text-sm text-black focus:outline-none focus:border-black focus:ring-0 transition-colors placeholder:text-black/20"
+                placeholder="Sua senha secreta"
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full bg-black text-white py-4 mt-4 rounded-full text-[12px] uppercase tracking-[0.2em] font-bold hover:bg-black/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? 'Entrando...' : 'Entrar'}
+            </button>
+          </form>
+
+          <div className="mt-6 text-center text-[11px] font-mono tracking-widest text-black/60 uppercase">
+            Não possui uma conta?{' '}
+            <a href="/cadastro" className="text-black font-bold hover:underline">
+              Criar conta
+            </a>
           </div>
         </div>
 
-        <form onSubmit={handleLogin} className="space-y-4">
-          {error && (
-            <div className="bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 p-3 rounded-lg text-sm text-center">
-              {error}
-            </div>
-          )}
+        {/* Lado Direito: Gráfico abstrato integrado (Sem borda visível) */}
+        <div className="hidden md:block md:w-1/2 relative min-h-[450px] bg-white">
+          <DitherVeil
+            src="https://images.unsplash.com/photo-1737071371043-761e02b1ef95?q=80&w=1400&auto=format&fit=crop"
+            pattern="floyd"
+            pixelSize={2}
+            inkColor="#000000"
+            paperColor="#ffffff"
+            revealRadius={200}
+            softness={0.6}
+            linger={1}
+            fit="contain"
+            rimColor="#ffffff"
+            palette="duotone"
+            levels={2}
+            contrast={1.15}
+            brightness={0}
+            rim={0}
+            reverse={false}
+            wander={false}
+            clickBurst
+            style={{ width: '100%', height: '100%', position: 'absolute', inset: 0, filter: 'invert(1)', transform: 'scale(1.15)' }}
+          />
+        </div>
 
-          {/* Honeypot Field */}
-          <div style={{ display: 'none' }} aria-hidden="true">
-            <label>Leave this field empty</label>
-            <input
-              type="text"
-              name="contact_number"
-              tabIndex={-1}
-              autoComplete="off"
-              value={honeypot}
-              onChange={(e) => setHoneypot(e.target.value)}
-            />
-          </div>
-
-          <div className="space-y-1">
-            <label htmlFor="email" className="text-xs font-bold uppercase tracking-wider text-text-muted">
-              Email
-            </label>
-            <input
-              id="email"
-              type="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full bg-transparent border border-border rounded-lg p-3 text-text-main focus:outline-none focus:border-text-main transition-colors"
-              placeholder="admin@admin.com"
-            />
-          </div>
-          <div className="space-y-1">
-            <label htmlFor="password" className="text-xs font-bold uppercase tracking-wider text-text-muted">
-              Senha
-            </label>
-            <input
-              id="password"
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              className="w-full bg-transparent border border-border rounded-lg p-3 text-text-main focus:outline-none focus:border-text-main transition-colors"
-              placeholder="admin"
-            />
-          </div>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className="w-full bg-text-main text-bg-main py-3 rounded-lg font-medium hover:opacity-90 transition-opacity mt-4 disabled:opacity-50"
-          >
-            {isLoading ? 'Entrando...' : 'Entrar'}
-          </button>
-        </form>
       </div>
     </div>
   );

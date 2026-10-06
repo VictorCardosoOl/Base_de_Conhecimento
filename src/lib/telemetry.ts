@@ -16,9 +16,7 @@ export function initTelemetry() {
   // Privacy by Default: Não inicializa sem o consentimento prévio explícito (LGPD Art. 7, I)
   if (!hasUserConsented()) {
     if (import.meta.env.DEV) {
-      console.log(
-        '🔒 [Telemetry] Consent Gate ativo: telemetria bloqueada até consentimento explícito do usuário.'
-      );
+      // Consent Gate ativo
     }
     return;
   }
@@ -50,9 +48,7 @@ export function initTelemetry() {
   } else {
     // Modo observabilidade local/fallback
     if (import.meta.env.DEV) {
-      console.log(
-        '📡 [Telemetry] Sentry DSN não configurado. Telemetria em modo passivo local.'
-      );
+      // Sentry DSN não configurado
     }
     isInitialized = true;
   }

@@ -1,12 +1,12 @@
 'use client';
-import React, { useEffect, useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
-import { cardVariants } from '@/lib/animations';
+import React, { useEffect, useState, useRef } from 'react';
 import { ArrowUpRight, Plus, Check } from 'lucide-react';
-import { usePathname } from 'next/navigation';
-import { FAQItem } from '../../types/index';
-import { useReadingQueue } from '../../hooks/use-reading-queue';
-import { ArticleModal } from './ArticleModal';
+import { usePathname, useRouter } from 'next/navigation';
+import { FAQItem } from '@/types/index';
+import { useReadingQueue } from '@/hooks/use-reading-queue';
+
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 interface CardItemProps {
   item: FAQItem;
@@ -15,43 +15,75 @@ interface CardItemProps {
   onToggleQueue: (e?: React.MouseEvent) => void;
 }
 
-export const CardItem: React.FC<CardItemProps & { index?: number }> = ({
+const CardItem: React.FC<CardItemProps & { index?: number }> = ({
   item,
   onClick,
   isInQueue,
   onToggleQueue,
   index = 0,
 }) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  const exploreRef = useRef<HTMLDivElement>(null);
+  const arrowRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (cardRef.current) {
+      gsap.fromTo(cardRef.current,
+        { opacity: 0, y: 18 },
+        { 
+          opacity: 1, 
+          y: 0, 
+          duration: 0.38, 
+          delay: Math.min(0.18, index * 0.022),
+          ease: 'power4.out' 
+        }
+      );
+    }
+  }, []);
+
+  const handleMouseEnter = () => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { scale: 1, duration: 0.3, ease: 'power2.out' });
+    }
+    if (exploreRef.current) {
+      gsap.to(exploreRef.current, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+    }
+    if (arrowRef.current) {
+      gsap.to(arrowRef.current, { x: 0, y: 0, duration: 0.3, ease: 'back.out(1.7)', delay: 0.05 });
+    }
+  };
+
+  const handleMouseLeave = () => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { scale: 1, duration: 0.3, ease: 'power2.out' });
+    }
+    if (exploreRef.current) {
+      gsap.to(exploreRef.current, { opacity: 0, y: 6, duration: 0.2, ease: 'power2.in' });
+    }
+    if (arrowRef.current) {
+      gsap.to(arrowRef.current, { x: -4, y: 4, duration: 0.2, ease: 'power2.in' });
+    }
+  };
+
+  const handleMouseDown = () => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { scale: 0.985, duration: 0.1, ease: 'power1.inOut' });
+    }
+  };
+
+  const handleMouseUp = () => {
+    if (cardRef.current) {
+      gsap.to(cardRef.current, { scale: 1, duration: 0.3, ease: 'power2.out' });
+    }
+  };
+
   return (
-    <motion.div
-      initial="hidden"
-      animate="visible"
-      whileHover="hover"
-      whileTap="tap"
-      variants={{
-        hidden: { opacity: 0, y: 18 },
-        visible: {
-          opacity: 1,
-          y: 0,
-          transition: {
-            duration: 0.38,
-            delay: Math.min(0.18, index * 0.022),
-            ease: [0.16, 1, 0.3, 1],
-          },
-        },
-        hover: {
-          transition: {
-            type: 'spring',
-            stiffness: 450,
-            damping: 32,
-            mass: 0.6,
-          },
-        },
-        tap: {
-          scale: 0.985,
-          transition: { type: 'spring', stiffness: 400, damping: 25 },
-        },
-      }}
+    <div
+      ref={cardRef}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
       onClick={onClick}
       className="group cursor-pointer relative py-6 border-b border-border flex flex-col justify-between h-full transform-gpu transition-colors duration-300"
     >
@@ -59,14 +91,7 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({
       <div className="absolute left-0 top-8 bottom-8 w-[1.5px] bg-text-main scale-y-0 lg:group-hover:scale-y-100 transition-transform duration-[400ms] ease-[cubic-bezier(0.25,1,0.5,1)] origin-top z-10 transform-gpu" />
 
       {/* Container interno */}
-      <motion.div
-        variants={{
-          visible: { x: 0 },
-          hover: { x: 0 },
-          tap: { x: 0 },
-        }}
-        className="space-y-3 w-full transform-gpu pl-5"
-      >
+      <div className="space-y-3 w-full transform-gpu pl-5">
         <div className="space-y-2">
           {/* Header */}
           <div className="flex items-center justify-between">
@@ -109,46 +134,20 @@ export const CardItem: React.FC<CardItemProps & { index?: number }> = ({
             </p>
           </div>
 
-          {/* Botão explorar animado via spring */}
-          <motion.div
-            variants={{
-              visible: { opacity: 0, y: 6 },
-              hover: {
-                opacity: 1,
-                y: 0,
-                transition: {
-                  type: 'spring',
-                  stiffness: 350,
-                  damping: 25,
-                  delay: 0.05,
-                },
-              },
-            }}
-            className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.15em] text-text-main transform-gpu pt-1"
+          {/* Botão explorar animado */}
+          <div
+            ref={exploreRef}
+            className="flex items-center gap-2.5 text-[9px] font-black uppercase tracking-[0.15em] text-text-main transform-gpu pt-1 opacity-0 translate-y-1.5"
             aria-hidden="true"
           >
             Explorar Diretriz
-            <motion.div
-              variants={{
-                visible: { x: -4, y: 4 },
-                hover: {
-                  x: 0,
-                  y: 0,
-                  transition: {
-                    type: 'spring',
-                    stiffness: 350,
-                    damping: 25,
-                    delay: 0.08,
-                  },
-                },
-              }}
-            >
+            <div ref={arrowRef} className="-translate-x-1 translate-y-1">
               <ArrowUpRight size={14} strokeWidth={2} />
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </div>
-      </motion.div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
@@ -159,20 +158,13 @@ export const ArticleGrid = ({
   items: FAQItem[];
   onModalStateChange?: (isOpen: boolean) => void;
 }) => {
-  const [selectedItem, setSelectedItem] = useState<FAQItem | null>(null);
   const { queue, toggleQueue } = useReadingQueue();
-  const location = usePathname();
+  const router = useRouter();
 
-  const handleSetSelected = (item: FAQItem | null) => {
-    setSelectedItem(item);
-    onModalStateChange?.(!!item);
+  const handleSetSelected = (item: FAQItem) => {
+    onModalStateChange?.(true);
+    router.push(`/artigo/${item.id}`, { scroll: false });
   };
-
-  useEffect(() => {
-    if (selectedItem) {
-      handleSetSelected(null);
-    }
-  }, [location]);
 
   return (
     <div className="w-full">
@@ -188,18 +180,6 @@ export const ArticleGrid = ({
           />
         ))}
       </div>
-
-      <AnimatePresence>
-        {selectedItem && (
-          <ArticleModal
-            key="content-modal"
-            isOpen={!!selectedItem}
-            onClose={() => handleSetSelected(null)}
-            layoutId={selectedItem.id}
-            item={selectedItem}
-          />
-        )}
-      </AnimatePresence>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { ArticleGrid } from '@/components/layout/ArticleGrid';
+import { ArticleGrid } from '@/components/article/ArticleGrid';
 import { FAQ_DATA, DEFAULT_LEARNING_TRACKS } from '@/config/index';
 import { useReadingQueue } from '@/hooks/use-reading-queue';
 import { FAQItem, LearningTrack } from '@/types/index';

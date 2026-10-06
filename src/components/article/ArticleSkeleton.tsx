@@ -1,13 +1,20 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import gsap from 'gsap';
+import { useGSAP } from '@gsap/react';
 
 export const ArticleSkeleton: React.FC = () => {
+  const containerRef = useRef<HTMLDivElement>(null);
+
+  useGSAP(() => {
+    if (containerRef.current) {
+      gsap.fromTo(containerRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+    }
+  }, []);
+
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="max-w-4xl mx-auto py-12 space-y-12 min-h-[50vh] relative overflow-hidden"
+    <div
+      ref={containerRef}
+      className="max-w-4xl mx-auto py-12 space-y-12 min-h-[50vh] relative overflow-hidden will-change-[opacity]"
     >
       {/* Cortina editorial sutil e arquitetônica */}
       <div className="space-y-6 max-w-3xl mx-auto">
@@ -30,6 +37,6 @@ export const ArticleSkeleton: React.FC = () => {
           <div className="h-4 bg-stone-200/70 dark:bg-stone-800/70 rounded w-4/5 animate-pulse" />
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
