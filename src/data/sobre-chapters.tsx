@@ -104,3 +104,52 @@ export const chapters: EditorialChapter[] = [
     ]
   }
 ];
+
+export interface TeamMember {
+  id: string;
+  name: string;
+  role: string;
+  group: 'idealizador' | 'consultor';
+  bio: string;
+  /** Caminho em /public, ex.: '/equipe/victor.jpg'. Sem foto, exibe monograma. */
+  photo?: string;
+}
+
+export const team: TeamMember[] = [
+  {
+    id: 'victor-cardoso',
+    name: 'Victor Cardoso',
+    role: 'Idealizador & Arquiteto',
+    group: 'idealizador',
+    bio: 'Idealização, arquitetura de software, design de interface (UI/UX) e desenvolvimento front-end integral da plataforma.',
+  },
+  {
+    id: 'guilherme-cruz',
+    name: 'Guilherme Cruz',
+    role: 'Idealizador & Desenvolvedor',
+    group: 'idealizador',
+    bio: 'Co-idealização e engenharia de software, atuando na estruturação técnica, lógicas do sistema e garantia de consistência.',
+  },
+  {
+    id: 'aron-nascimento',
+    name: 'Aron Nascimento',
+    role: 'Consultor Técnico',
+    group: 'consultor',
+    bio: 'Mentoria e validação técnica das regras de SST e eSocial documentadas na base.',
+  },
+  {
+    id: 'sabrina',
+    name: 'Sabrina',
+    role: 'Consultora Técnica',
+    group: 'consultor',
+    bio: 'Suporte especializado na curadoria e revisão do conteúdo operacional.',
+  },
+  {
+    id: 'joao',
+    name: 'João',
+    role: 'Consultor Técnico',
+    group: 'consultor',
+    bio: 'Apoio técnico na estruturação e precisão dos fluxos e procedimentos.',
+  },
+];
+

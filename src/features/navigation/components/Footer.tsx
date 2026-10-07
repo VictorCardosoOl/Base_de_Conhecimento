@@ -1,6 +1,5 @@
 import React from 'react';
 import Link from 'next/link';
-import { ArrowRight, BookOpen } from 'lucide-react';
 
 const GithubIcon = ({ size = 20, strokeWidth = 1.5, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -24,16 +23,11 @@ const MessageCircleIcon = ({ size = 20, strokeWidth = 1.5, className = "" }) => 
 
 export const Footer = () => {
   return (
-    <footer className="w-full bg-bg-main text-text-body font-sans selection:bg-selection border-t border-border mt-12 pt-16 pb-8">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-start gap-12">
+    <footer className="w-full bg-bg-main text-text-body font-sans selection:bg-selection border-t border-border mt-0 pt-8 pb-6">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-start gap-10">
         
-        {/* Left Side: Logo & Columns */}
+        {/* Left Side: Columns */}
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 w-full lg:w-auto">
-          {/* Logo / Icon */}
-          <div className="flex-shrink-0">
-            <BookOpen size={48} className="text-text-main" strokeWidth={1} />
-          </div>
-
           {/* Links Columns */}
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 lg:gap-24">
             
@@ -92,41 +86,19 @@ export const Footer = () => {
           </div>
         </div>
 
-        {/* Right Side: Newsletter & Giant Text */}
-        <div className="flex flex-col items-start lg:items-end w-full lg:w-auto flex-grow justify-between">
-          
-          <div className="w-full max-w-sm mb-12 lg:mb-0">
-            <span className="text-xs uppercase tracking-widest font-semibold text-text-main mb-4 block lg:text-right">
-              Receba Atualizações
-            </span>
-            <div className="relative">
-              <input 
-                type="email" 
-                placeholder="Seu e-mail" 
-                className="w-full bg-transparent border border-text-main rounded-full py-3 px-6 text-sm text-text-main placeholder:text-text-muted focus:outline-none focus:ring-1 focus:ring-text-main"
-              />
-              <button 
-                type="button" 
-                className="absolute right-2 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center text-text-main hover:opacity-70 transition-opacity"
-                aria-label="Inscrever-se"
-              >
-                <ArrowRight size={18} strokeWidth={1.5} />
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-auto w-full text-left lg:text-right">
+        {/* Right Side: Giant Text */}
+        <div className="flex flex-col items-start lg:items-end w-full lg:w-auto flex-grow justify-end self-end">
+          <div className="w-full text-left lg:text-right">
             <h2 className="font-serif text-[12vw] sm:text-[10vw] lg:text-[7vw] xl:text-[8vw] leading-[0.85] tracking-tighter text-text-main uppercase">
               Base<br />SST
             </h2>
           </div>
-          
         </div>
 
       </div>
 
       {/* Bottom Bar */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-20 pt-6 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] uppercase tracking-widest text-text-muted">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-10 pt-5 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] uppercase tracking-widest text-text-muted">
         <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start">
           <span>Design by Victor Cardoso</span>
           <span>© {new Date().getFullYear()} Base SST</span>

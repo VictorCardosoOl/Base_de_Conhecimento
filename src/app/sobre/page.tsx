@@ -1,8 +1,8 @@
 import React from 'react';
 import { EditorialHero } from '@/features/sobre/components/EditorialHero';
-import { SobreTableOfContents } from '@/features/sobre/components/SobreTableOfContents';
 import { EditorialSection } from '@/features/sobre/components/EditorialSection';
 import { chapters } from '@/data/sobre-chapters';
+import { IdealizadoresSection } from '@/features/sobre/components/IdealizadoresSection';
 
 export const metadata = {
   title: 'Sobre o Projeto | Estudo de Caso',
@@ -19,19 +19,18 @@ export default function SobrePage() {
       ></div>
 
       <EditorialHero />
-      <SobreTableOfContents />
       
-      <div className="pb-32">
-        {chapters.map((chapter) => (
-          <EditorialSection key={chapter.id} chapter={chapter} />
+      <div className="pb-0">
+        {chapters.map((chapter, index) => (
+          <EditorialSection
+            key={chapter.id}
+            chapter={chapter}
+            index={index}
+            total={chapters.length}
+          />
         ))}
+        <IdealizadoresSection number={String(chapters.length + 1).padStart(2, '0')} />
       </div>
-      
-      {/* Subtle Footer for the Editorial Page */}
-      <footer className="py-12 border-t border-black/10 max-w-5xl mx-auto px-6 md:px-12 flex justify-between items-center opacity-60">
-        <span className="font-mono text-[10px] tracking-widest uppercase">Dora Lazarevic ©2026</span>
-        <span className="font-mono text-[10px] tracking-widest uppercase">She'll Be Waiting</span>
-      </footer>
     </main>
   );
 }
