@@ -1,6 +1,6 @@
 import React from 'react';
 import { EditorialHero } from '@/features/sobre/components/EditorialHero';
-import { TableOfContents } from '@/features/sobre/components/TableOfContents';
+import { SobreTableOfContents } from '@/features/sobre/components/SobreTableOfContents';
 import { EditorialSection } from '@/features/sobre/components/EditorialSection';
 import { chapters } from '@/data/sobre-chapters';
 
@@ -19,7 +19,7 @@ export default function SobrePage() {
       ></div>
 
       <EditorialHero />
-      <TableOfContents />
+      <SobreTableOfContents />
       
       <div className="pb-32">
         {chapters.map((chapter) => (

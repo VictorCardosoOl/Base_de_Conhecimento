@@ -502,7 +502,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
         </div>
       </header>
 
-      <aside id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open} data-lenis-prevent="true">
+      <nav id="staggered-menu-panel" ref={panelRef} className="staggered-menu-panel" aria-hidden={!open} aria-label="Menu principal" data-lenis-prevent="true">
         <div className="sm-panel-inner">
           <ul className="sm-panel-list" data-numbering={displayItemNumbering || undefined}>
             {items?.length ? (
@@ -567,7 +567,7 @@ export const StaggeredMenu: React.FC<StaggeredMenuProps> = ({
             </div>
           )}
         </div>
-      </aside>
+      </nav>
     </div>
   );
 };

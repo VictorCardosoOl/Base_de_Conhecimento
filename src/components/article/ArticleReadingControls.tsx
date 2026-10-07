@@ -178,7 +178,7 @@ export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
                 <button
                   key={item.id}
                   onClick={() =>
-                    updatePreference({ fontFamily: item.id as any })
+                    updatePreference({ fontFamily: item.id as TypographyPreferences['fontFamily'] })
                   }
                   className={`w-full flex items-center justify-between px-3 py-1.5 text-xs rounded-lg border transition-colors ${
                     pref.fontFamily === item.id

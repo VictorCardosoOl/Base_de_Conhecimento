@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { FAQ_DATA } from '@/config/index';
 import { AnalyticsService } from '@/services/analytics-service';
+import { logoutAdmin } from '@/actions/auth-actions';
 
 export default function AdminPage() {
   const navigate = useRouter();
@@ -68,9 +69,8 @@ export default function AdminPage() {
         </div>
         <div className="flex gap-3">
           <button
-            onClick={() => {
-              localStorage.removeItem('isAdmin');
-              sessionStorage.removeItem('sst_admin_session');
+            onClick={async () => {
+              await logoutAdmin();
               navigate.push('/login');
             }}
             className="flex items-center gap-2 border border-border text-text-main px-4 py-2 rounded-lg font-medium hover:bg-selection transition-colors text-sm"

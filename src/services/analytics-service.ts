@@ -55,6 +55,7 @@ export const AnalyticsService = {
   },
 
   getSearchLogs(): SearchLog[] {
+    if (typeof window === 'undefined') return [];
     try {
       return JSON.parse(localStorage.getItem(SEARCH_LOGS_KEY) || '[]');
     } catch (error) {
@@ -111,6 +112,7 @@ export const AnalyticsService = {
   },
 
   getFeedbackLogs(): ContentFeedback[] {
+    if (typeof window === 'undefined') return [];
     try {
       return JSON.parse(localStorage.getItem(CONTENT_FEEDBACK_KEY) || '[]');
     } catch (error) {
@@ -121,6 +123,7 @@ export const AnalyticsService = {
 
   // Trilhas de Onboarding: Marcação de artigo lido/concluído
   getCompletedArticles(): string[] {
+    if (typeof window === 'undefined') return [];
     try {
       return JSON.parse(localStorage.getItem(COMPLETED_ARTICLES_KEY) || '[]');
     } catch (error) {

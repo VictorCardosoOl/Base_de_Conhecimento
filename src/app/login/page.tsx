@@ -3,7 +3,12 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { BookOpen } from 'lucide-react';
 import { authenticateAdmin } from '@/actions/auth-actions';
-import DitherVeil from '@/components/ui/DitherVeil';
+import dynamic from 'next/dynamic';
+
+const DitherVeil = dynamic(() => import('@/components/ui/DitherVeil'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-black/5 animate-pulse" />
+});
 
 export default function LoginPage() {
   const [email, setEmail] = useState('');
@@ -29,9 +34,7 @@ export default function LoginPage() {
     const isValid = await authenticateAdmin(email, password);
 
     if (isValid) {
-      const sessionToken = btoa(`sst_session_${Date.now()}_${crypto.randomUUID()}`);
-      sessionStorage.setItem('sst_admin_session', sessionToken);
-      localStorage.setItem('isAdmin', 'true');
+      // A sessão é criada no servidor como cookie httpOnly (ver auth-actions.ts)
       navigate.push('/admin');
     } else {
       setError(

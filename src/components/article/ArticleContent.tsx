@@ -1,6 +1,6 @@
 'use client';
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import mermaid from 'mermaid';
+
 import DOMPurify from 'dompurify';
 import { ArticleLightbox } from './ArticleLightbox';
 import { ArticleHighlightsToolbar } from './ArticleHighlightsToolbar';
@@ -73,23 +73,36 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
   }, []);
 
   useEffect(() => {
-    if (!htmlContent) return;
-    try {
-      mermaid.initialize({
-        startOnLoad: false,
-        theme: document.documentElement.classList.contains('dark')
-          ? 'dark'
-          : 'default',
-        securityLevel: 'loose',
-      });
-      mermaid
-        .run({
-          nodes: document.querySelectorAll('.language-mermaid'),
-        })
-        .catch((err) => { console.error('Mermaid run error:', err); });
-    } catch (e) {
-      console.error('Mermaid init error:', e);
-    }
+    if (!htmlContent || !htmlContent.includes('language-mermaid')) return;
+    
+    const initMermaid = async () => {
+      try {
+        const mermaidModule = await import('mermaid');
+        const mermaid = mermaidModule.default;
+        
+        mermaid.initialize({
+          startOnLoad: false,
+          theme: document.documentElement.classList.contains('dark')
+            ? 'dark'
+            : 'default',
+          securityLevel: 'loose',
+        });
+        
+        const nodes = document.querySelectorAll<HTMLElement>('.language-mermaid');
+        if (nodes.length > 0) {
+          await mermaid.run({ nodes: Array.from(nodes) });
+        }
+      } catch (e) {
+        console.error('Mermaid init error:', e);
+      }
+    };
+    
+    // Pequeno atraso para garantir que o DOMPurify e o React renderizaram o HTML primeiro
+    const timer = setTimeout(() => {
+      initMermaid();
+    }, 100);
+    
+    return () => clearTimeout(timer);
   }, [htmlContent]);
 
   useEffect(() => {

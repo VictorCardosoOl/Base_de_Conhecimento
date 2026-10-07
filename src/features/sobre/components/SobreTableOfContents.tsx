@@ -3,7 +3,7 @@
 import React from 'react';
 import { chapters } from '@/data/sobre-chapters';
 
-export const TableOfContents = () => {
+export const SobreTableOfContents = () => {
   const scrollToSection = (id: string) => {
     const el = document.getElementById(id);
     if (el) {

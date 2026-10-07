@@ -34,14 +34,17 @@ export const metadata: Metadata = {
   manifest: '/manifest.json',
   openGraph: {
     title: 'Base de Conhecimento SST',
-    description: 'Guias e procedimentos consolidados de SST e eSocial.',
+    description:
+      'Respostas diretas e auditadas sobre SST e eSocial: eventos S-2210, S-2220 e S-2240, PGR, PCMSO, LTCAT e prazos legais.',
     type: 'website',
     siteName: 'Base de Conhecimento SST',
+    locale: 'pt_BR',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'Base de Conhecimento SST',
-    description: 'Guias e procedimentos de SST',
+    description:
+      'Respostas diretas e auditadas sobre SST e eSocial, com procedimentos passo a passo.',
   },
 };
 
@@ -73,7 +76,7 @@ export default function RootLayout({
                   document.documentElement.classList.remove('dark');
                   document.documentElement.style.colorScheme = 'light';
                 }
-              } catch (e) {}
+              } catch (e) { /* localStorage bloqueado (modo privado): mantém o tema padrão */ }
             `,
           }}
         />

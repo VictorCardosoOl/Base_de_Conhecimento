@@ -33,7 +33,22 @@ function getFiles(dir: string, filesList: string[] = []) {
   return filesList;
 }
 
+let cachedCatalog: FAQItem[] | null = null;
+let cachedById: Map<string, FAQItem> | null = null;
+const SHOULD_CACHE = process.env.NODE_ENV === 'production';
+
+/** Em produção o conteúdo é imutável após o build: lê o disco apenas uma vez. */
 export function getAllArticles(): FAQItem[] {
+  if (SHOULD_CACHE && cachedCatalog) return cachedCatalog;
+  const catalog = readCatalogFromDisk();
+  if (SHOULD_CACHE) {
+    cachedCatalog = catalog;
+    cachedById = new Map(catalog.map((a) => [a.id, a]));
+  }
+  return catalog;
+}
+
+function readCatalogFromDisk(): FAQItem[] {
   const files = getFiles(CONTENT_DIR);
   const catalog: FAQItem[] = [];
 
@@ -75,5 +90,6 @@ export function getAllArticles(): FAQItem[] {
 
 export function getArticleById(id: string): FAQItem | null {
   const articles = getAllArticles();
-  return articles.find((a) => a.id === id) || null;
+  if (cachedById) return cachedById.get(id) ?? null;
+  return articles.find((a) => a.id === id) ?? null;
 }

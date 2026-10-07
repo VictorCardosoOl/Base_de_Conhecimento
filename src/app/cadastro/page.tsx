@@ -1,7 +1,12 @@
 'use client';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DitherVeil from '@/components/ui/DitherVeil';
+import dynamic from 'next/dynamic';
+
+const DitherVeil = dynamic(() => import('@/components/ui/DitherVeil'), { 
+  ssr: false,
+  loading: () => <div className="w-full h-full bg-black/5 animate-pulse" />
+});
 
 export default function CadastroPage() {
   const [nome, setNome] = useState('');

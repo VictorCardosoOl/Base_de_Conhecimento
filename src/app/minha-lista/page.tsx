@@ -35,8 +35,9 @@ export default function QueuePage() {
     setCompletedArticles(AnalyticsService.getCompletedArticles());
     setReadingGoal(ReadingExperienceService.getReadingGoal());
     setIsMounted(true);
-    const handleGoalUpdate = (e: any) => {
-      if (e.detail) setReadingGoal(e.detail);
+    const handleGoalUpdate = (e: Event) => {
+      const detail = (e as CustomEvent<ReadingGoal | undefined>).detail;
+      if (detail) setReadingGoal(detail);
       else setReadingGoal(ReadingExperienceService.getReadingGoal());
     };
     window.addEventListener('sst_reading_goal_updated', handleGoalUpdate);

@@ -32,12 +32,14 @@ import {
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 
+import { useFocusTrap } from '@/hooks/use-focus-trap';
+
 const ModalArticleContent = ({
   article,
   typography,
 }: {
   article: FAQItem;
-  typography?: any;
+  typography?: TypographyPreferences;
 }) => {
   const { htmlContent, isLoading } = useArticleContent(article);
 
@@ -47,7 +49,6 @@ const ModalArticleContent = ({
 
   return (
     <div className="max-w-4xl mx-auto flex flex-col gap-8">
-      {/* Main Article Content */}
       <div className="flex-1 min-w-0">
         <ArticleContent
           htmlContent={htmlContent}
@@ -65,8 +66,6 @@ interface ArticleModalProps {
   item: FAQItem;
 }
 
-import { useFocusTrap } from '@/hooks/use-focus-trap';
-
 export const ArticleModal: React.FC<ArticleModalProps> = ({
   isOpen,
   onClose,
@@ -76,7 +75,6 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
   const modalContainerRef = useRef<HTMLDivElement>(null);
   const modalContentRef = useRef<HTMLDivElement>(null);
   const backdropRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
 
   const [mounted, setMounted] = useState(false);
   const [scrollProgress, setScrollProgress] = useState(0);
@@ -111,7 +109,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
       if (backdropRef.current) tl.to(backdropRef.current, { opacity: 0, duration: 0.22, ease: 'power3.in' }, 0);
       if (dialogRef.current) tl.to(dialogRef.current, { y: '100vh', duration: 0.5, ease: 'power3.in' }, 0);
     }
-  }, [isOpen]);
+  }, { dependencies: [isOpen, mounted] });
 
   useGSAP(() => {
     if (mounted && isOpen) {
@@ -128,8 +126,9 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
 
     const handleScroll = () => {
       const { scrollTop, scrollHeight, clientHeight } = container;
-      const progress = scrollTop / (scrollHeight - clientHeight);
-      setScrollProgress(progress || 0);
+      const scrollable = scrollHeight - clientHeight;
+      const progress = scrollable > 0 ? scrollTop / scrollable : 0;
+      setScrollProgress(Math.min(1, Math.max(0, progress)));
     };
 
     container.addEventListener('scroll', handleScroll, { passive: true });
@@ -159,20 +158,19 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
     }
   };
 
+  // Trava o scroll do body enquanto aberto e sempre restaura no fechamento/desmontagem
   useEffect(() => {
-    if (isOpen) {
-      // Prevenção do Layout Shift (FOUC Scrollbar)
-      const scrollbarWidth =
-        window.innerWidth - document.documentElement.clientWidth;
-      if (scrollbarWidth > 0) {
-        document.body.style.paddingRight = `${scrollbarWidth}px`;
-      }
-      document.body.style.overflow = 'hidden';
-    } else {
+    if (!isOpen) return;
+    // Prevenção do Layout Shift (FOUC Scrollbar)
+    const scrollbarWidth =
+      window.innerWidth - document.documentElement.clientWidth;
+    if (scrollbarWidth > 0) {
+      document.body.style.paddingRight = `${scrollbarWidth}px`;
+    }
+    document.body.style.overflow = 'hidden';
+    return () => {
       document.body.style.overflow = '';
       document.body.style.paddingRight = '';
-    }
-    return () => {
     };
   }, [isOpen]);
 
@@ -247,7 +245,6 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
             >
               {/* Magnetic Reading Progress Bar */}
               <div
-                ref={progressRef}
                 className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50 transition-transform duration-[120ms] ease-out"
                 style={{ transform: `scaleX(${scrollProgress})` }}
               />
@@ -274,7 +271,6 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                       )}
                     </div>
 
-                    {/* Ações do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
                     {/* Ações do Artigo: Zen Mode, Tipografia, Compartilhar, PDF & Fechar */}
                     <div className="flex items-center gap-1">
                       {/* Controles de Leitura e Modo Foco */}

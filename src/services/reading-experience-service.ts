@@ -23,113 +23,121 @@ const READING_GOAL_KEY = 'sst_reading_goal';
 const HIGHLIGHTS_KEY = 'sst_article_highlights';
 const RECENT_SEARCHES_KEY = 'sst_recent_searches';
 const RECENT_ARTICLES_KEY = 'sst_recent_articles';
+const RECENT_LIMIT = 5;
+
+const DEFAULT_TYPOGRAPHY: TypographyPreferences = {
+  fontSize: 'base',
+  lineHeight: 'relaxed',
+  fontFamily: 'serif',
+};
+
+const logStorageError = (err: unknown) => console.error('Storage Error:', err);
+
+/** Lê e desserializa um valor do localStorage; retorna `fallback` em ausência ou erro. */
+function readJSON<T>(key: string, fallback: T): T {
+  try {
+    if (typeof window === 'undefined') return fallback;
+    const saved = localStorage.getItem(key);
+    return saved ? (JSON.parse(saved) as T) : fallback;
+  } catch (err) {
+    logStorageError(err);
+    return fallback;
+  }
+}
+
+/** Serializa e grava no localStorage, opcionalmente emitindo um CustomEvent. Retorna sucesso. */
+function writeJSON(
+  key: string,
+  value: unknown,
+  event?: { name: string; detail?: unknown }
+): boolean {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+    if (event) {
+      window.dispatchEvent(new CustomEvent(event.name, { detail: event.detail }));
+    }
+    return true;
+  } catch (err) {
+    logStorageError(err);
+    return false;
+  }
+}
+
+/** Insere `value` no topo de uma lista MRU, removendo duplicatas e limitando o tamanho. */
+function pushRecent(
+  key: string,
+  value: string,
+  isSame: (a: string, b: string) => boolean
+) {
+  const list = readJSON<string[]>(key, []).filter((v) => !isSame(v, value));
+  list.unshift(value);
+  writeJSON(key, list.slice(0, RECENT_LIMIT));
+}
 
 export const ReadingExperienceService = {
   // 1. Personalização Tipográfica
   getTypography(): TypographyPreferences {
-    try {
-      if (typeof window !== 'undefined') {
-        const saved = localStorage.getItem(TYPOGRAPHY_KEY);
-        if (saved) return JSON.parse(saved);
-      }
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
-    return { fontSize: 'base', lineHeight: 'relaxed', fontFamily: 'serif' };
+    return readJSON(TYPOGRAPHY_KEY, DEFAULT_TYPOGRAPHY);
   },
 
   setTypography(pref: TypographyPreferences) {
-    try {
-      localStorage.setItem(TYPOGRAPHY_KEY, JSON.stringify(pref));
-      window.dispatchEvent(
-        new CustomEvent('sst_typography_updated', { detail: pref })
-      );
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    writeJSON(TYPOGRAPHY_KEY, pref, { name: 'sst_typography_updated', detail: pref });
   },
 
   // 2. Meta de Leitura Silenciosa (Apenas tempo dentro do artigo)
   getReadingGoal(): ReadingGoal {
-    try {
-      const saved = localStorage.getItem(READING_GOAL_KEY);
-      if (saved) return JSON.parse(saved);
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
-    return { targetMinutes: 60, elapsedSeconds: 0, completedNotified: false };
+    return readJSON<ReadingGoal>(READING_GOAL_KEY, {
+      targetMinutes: 60,
+      elapsedSeconds: 0,
+      completedNotified: false,
+    });
   },
 
   setReadingGoalTarget(targetMinutes: number) {
-    try {
-      const current = this.getReadingGoal();
-      const updated: ReadingGoal = {
-        ...current,
-        targetMinutes,
-        completedNotified: current.elapsedSeconds >= targetMinutes * 60,
-      };
-      localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
-      window.dispatchEvent(
-        new CustomEvent('sst_reading_goal_updated', { detail: updated })
-      );
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    const current = this.getReadingGoal();
+    const updated: ReadingGoal = {
+      ...current,
+      targetMinutes,
+      completedNotified: current.elapsedSeconds >= targetMinutes * 60,
+    };
+    writeJSON(READING_GOAL_KEY, updated, { name: 'sst_reading_goal_updated', detail: updated });
   },
 
   addReadingTime(seconds: number): {
     completedNow: boolean;
     goal: ReadingGoal;
   } {
-    try {
-      const current = this.getReadingGoal();
-      const newElapsed = current.elapsedSeconds + seconds;
-      const targetSeconds = current.targetMinutes * 60;
-      const completedNow =
-        !current.completedNotified && newElapsed >= targetSeconds;
+    const current = this.getReadingGoal();
+    const newElapsed = current.elapsedSeconds + seconds;
+    const completedNow =
+      !current.completedNotified && newElapsed >= current.targetMinutes * 60;
 
-      const updated: ReadingGoal = {
-        ...current,
-        elapsedSeconds: newElapsed,
-        completedNotified: current.completedNotified || completedNow,
-      };
+    const updated: ReadingGoal = {
+      ...current,
+      elapsedSeconds: newElapsed,
+      completedNotified: current.completedNotified || completedNow,
+    };
 
-      localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
-      return { completedNow, goal: updated };
-    } catch (err) {
-      console.error('Storage Error:', err);
+    if (!writeJSON(READING_GOAL_KEY, updated)) {
       return { completedNow: false, goal: this.getReadingGoal() };
     }
+    return { completedNow, goal: updated };
   },
 
   resetReadingGoal() {
-    try {
-      const current = this.getReadingGoal();
-      const updated: ReadingGoal = {
-        ...current,
-        elapsedSeconds: 0,
-        completedNotified: false,
-      };
-      localStorage.setItem(READING_GOAL_KEY, JSON.stringify(updated));
-      window.dispatchEvent(
-        new CustomEvent('sst_reading_goal_updated', { detail: updated })
-      );
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    const updated: ReadingGoal = {
+      ...this.getReadingGoal(),
+      elapsedSeconds: 0,
+      completedNotified: false,
+    };
+    writeJSON(READING_GOAL_KEY, updated, { name: 'sst_reading_goal_updated', detail: updated });
   },
 
   // 3. Marcações (Highlights) Locais
   getHighlights(articleId: string): HighlightItem[] {
-    try {
-      const all: HighlightItem[] = JSON.parse(
-        localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
-      );
-      return all.filter((h) => h.articleId === articleId);
-    } catch (err) {
-      console.error('Storage Error:', err);
-      return [];
-    }
+    return readJSON<HighlightItem[]>(HIGHLIGHTS_KEY, []).filter(
+      (h) => h.articleId === articleId
+    );
   },
 
   addHighlight(
@@ -138,88 +146,47 @@ export const ReadingExperienceService = {
     color: HighlightItem['color'] = 'yellow'
   ): HighlightItem {
     const item: HighlightItem = {
-      id: `${Date.now()}-${Math.random().toString(36).substr(2, 6)}`,
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
       articleId,
       text,
       color,
       createdAt: Date.now(),
     };
-    try {
-      const all: HighlightItem[] = JSON.parse(
-        localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
-      );
-      all.unshift(item);
-      localStorage.setItem(HIGHLIGHTS_KEY, JSON.stringify(all));
-      window.dispatchEvent(
-        new CustomEvent('sst_highlights_updated', { detail: { articleId } })
-      );
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    const all = readJSON<HighlightItem[]>(HIGHLIGHTS_KEY, []);
+    all.unshift(item);
+    writeJSON(HIGHLIGHTS_KEY, all, { name: 'sst_highlights_updated', detail: { articleId } });
     return item;
   },
 
   removeHighlight(id: string) {
-    try {
-      const all: HighlightItem[] = JSON.parse(
-        localStorage.getItem(HIGHLIGHTS_KEY) || '[]'
-      );
-      const filtered = all.filter((h) => h.id !== id);
-      localStorage.setItem(HIGHLIGHTS_KEY, JSON.stringify(filtered));
-      window.dispatchEvent(new CustomEvent('sst_highlights_updated'));
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    const filtered = readJSON<HighlightItem[]>(HIGHLIGHTS_KEY, []).filter(
+      (h) => h.id !== id
+    );
+    writeJSON(HIGHLIGHTS_KEY, filtered, { name: 'sst_highlights_updated' });
   },
 
   // 4. Buscas Recentes
   getRecentSearches(): string[] {
-    try {
-      return JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || '[]');
-    } catch (err) {
-      console.error('Storage Error:', err);
-      return [];
-    }
+    return readJSON<string[]>(RECENT_SEARCHES_KEY, []);
   },
 
   addRecentSearch(query: string) {
     const trimmed = query.trim();
-    if (!trimmed || trimmed.length < 2) return;
-    try {
-      const list = this.getRecentSearches().filter(
-        (q) => q.toLowerCase() !== trimmed.toLowerCase()
-      );
-      list.unshift(trimmed);
-      localStorage.setItem(
-        RECENT_SEARCHES_KEY,
-        JSON.stringify(list.slice(0, 5))
-      );
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    if (trimmed.length < 2) return;
+    pushRecent(
+      RECENT_SEARCHES_KEY,
+      trimmed,
+      (a, b) => a.toLowerCase() === b.toLowerCase()
+    );
   },
 
   // 5. Artigos Lidos Recentemente
   getRecentArticles(): string[] {
-    try {
-      return JSON.parse(localStorage.getItem(RECENT_ARTICLES_KEY) || '[]');
-    } catch (err) {
-      console.error('Storage Error:', err);
-      return [];
-    }
+    return readJSON<string[]>(RECENT_ARTICLES_KEY, []);
   },
 
   addRecentArticle(articleId: string) {
     if (!articleId) return;
-    try {
-      const list = this.getRecentArticles().filter((id) => id !== articleId);
-      list.unshift(articleId);
-      localStorage.setItem(
-        RECENT_ARTICLES_KEY,
-        JSON.stringify(list.slice(0, 5))
-      );
-    } catch (err) {
-      console.error('Storage Error:', err);
-    }
+    pushRecent(RECENT_ARTICLES_KEY, articleId, (a, b) => a === b);
   },
 };

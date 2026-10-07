@@ -10,7 +10,7 @@ import { useReadingQueue } from '@/hooks/use-reading-queue';
 import { initTelemetry } from '@/lib/telemetry';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
-import { FAQItem } from '@/types/index';
+import { Category, FAQItem } from '@/types/index';
 
 // Lazy loaded components para melhorar o tempo de carregamento inicial
 const CommandPalette = lazy(() =>
@@ -27,9 +27,11 @@ const CookieBanner = lazy(() =>
 const LegalModal = lazy(() =>
   import('@/components/ui/LegalModal').then((m) => ({ default: m.LegalModal }))
 );
-const ArticleModal = lazy(() =>
-  import('@/components/article/ArticleModal').then((m) => ({ default: m.ArticleModal }))
-);
+
+type SidebarPosition = 'left' | 'right' | 'top' | 'bottom';
+const SIDEBAR_POSITIONS: SidebarPosition[] = ['left', 'right', 'top', 'bottom'];
+const MAIN_LAYOUT_PADDING_CLASS = 'pt-24 md:pt-32 px-6 md:px-12 2xl:px-16';
+const SOBRE_CATEGORY = 'Sobre' as Category;
 
 export function ClientLayout({
   children,
@@ -58,14 +60,14 @@ export function ClientLayout({
     document.documentElement.style.colorScheme = isDarkMode ? 'dark' : 'light';
   }, [isDarkMode, isMounted]);
 
-  type SidebarPosition = 'left' | 'right' | 'top' | 'bottom';
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [sidebarPos, setSidebarPos] = useState<SidebarPosition>('left');
   const [isCommandPaletteOpen, setIsCommandPaletteOpen] = useState(false);
-  const [currentCategory, setCurrentCategory] = useState<any>(null);
+  const [currentCategory, setCurrentCategory] = useState<Category | null>(null);
 
   useEffect(() => {
-    setSidebarPos((localStorage.getItem('sidebarPos') as any) || 'left');
+    const saved = localStorage.getItem('sidebarPos') as SidebarPosition | null;
+    setSidebarPos(saved && SIDEBAR_POSITIONS.includes(saved) ? saved : 'left');
   }, []);
 
   useEffect(() => {
@@ -86,6 +88,7 @@ export function ClientLayout({
     if (hasConsented) initTelemetry();
   }, [hasConsented]);
 
+  // Atalhos globais. O ESC com a palette aberta é tratado pela própria CommandPalette.
   useEffect(() => {
     const handleGlobalKeys = (e: KeyboardEvent) => {
       const activeTag = document.activeElement?.tagName.toLowerCase();
@@ -97,17 +100,15 @@ export function ClientLayout({
       } else if (e.key === '/' && !isEditing && !isArticleRoute) {
         e.preventDefault();
         setIsCommandPaletteOpen(true);
-      } else if (e.key === 'Escape' && isCommandPaletteOpen) {
-        setIsCommandPaletteOpen(false);
       }
     };
     window.addEventListener('keydown', handleGlobalKeys);
     return () => window.removeEventListener('keydown', handleGlobalKeys);
-  }, [isCommandPaletteOpen, isArticleRoute]);
+  }, [isArticleRoute]);
 
-  const handleCategorySelect = (cat: string | null) => {
+  const handleCategorySelect = (cat: Category | null) => {
     setCurrentCategory(cat);
-    if (cat === 'Sobre') {
+    if (cat === SOBRE_CATEGORY) {
       router.push('/sobre');
     } else if (cat) {
       router.push(`/?category=${encodeURIComponent(cat)}`);
@@ -119,22 +120,25 @@ export function ClientLayout({
 
   useEffect(() => {
     if (pathname === '/sobre') {
-      setCurrentCategory('Sobre');
+      setCurrentCategory(SOBRE_CATEGORY);
     } else if (pathname === '/minha-lista') {
       setCurrentCategory(null);
     }
   }, [pathname]);
 
-  const getMainLayoutPaddingClass = (pos: SidebarPosition) => {
-    return 'pt-24 md:pt-32 px-6 md:px-12 2xl:px-16';
+  const toggleDark = () => setIsDarkMode((prev) => !prev);
+  const goToQueue = (close: () => void) => {
+    router.push('/minha-lista');
+    close();
   };
-  const mainLayoutPaddingClass = getMainLayoutPaddingClass(sidebarPos);
+  const closeSidebar = () => setIsSidebarOpen(false);
+  const closePalette = () => setIsCommandPaletteOpen(false);
 
   const containerRef = useRef<HTMLDivElement>(null);
 
   useGSAP(() => {
     if (!containerRef.current) return;
-    
+
     // Page transition with GSAP
     gsap.fromTo(
       containerRef.current,
@@ -142,6 +146,48 @@ export function ClientLayout({
       { opacity: 1, y: 0, duration: 0.38, ease: 'power4.out', overwrite: 'auto' }
     );
   }, [pathname]);
+
+  const sidebar = (
+    <Sidebar
+      currentCat={currentCategory}
+      onSelect={handleCategorySelect}
+      isDarkMode={isDarkMode}
+      toggleDark={toggleDark}
+      isOpen={isSidebarOpen}
+      onClose={closeSidebar}
+      isQueueView={isQueueView}
+      onSelectQueue={() => goToQueue(closeSidebar)}
+      queueCount={queue.length}
+      onLogoClick={() => {
+        handleCategorySelect(null);
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }}
+      position={sidebarPos}
+      onPositionChange={setSidebarPos}
+      isArticleOpen={isArticleRoute}
+      {...(isSobreRoute ? { isSobreRoute: true } : {})}
+    />
+  );
+
+  const commandPalette = isCommandPaletteOpen && (
+    <Suspense fallback={null}>
+      <CommandPalette
+        isOpen={isCommandPaletteOpen}
+        onClose={closePalette}
+        onSelectArticle={(a: FAQItem) => {
+          router.push(`/artigo/${a.id}`, { scroll: false });
+          closePalette();
+        }}
+        onToggleTheme={toggleDark}
+        isDarkMode={isDarkMode}
+        onSelectCategory={(cat: Category | null) => {
+          handleCategorySelect(cat);
+          closePalette();
+        }}
+        onSelectQueue={() => goToQueue(closePalette)}
+      />
+    </Suspense>
+  );
 
   if (isSobreRoute) {
     return (
@@ -163,60 +209,15 @@ export function ClientLayout({
               background-color: transparent !important;
             }
           `}</style>
-          <Sidebar
-            currentCat={currentCategory as any}
-            onSelect={handleCategorySelect}
-            isDarkMode={isDarkMode}
-            toggleDark={() => setIsDarkMode(!isDarkMode)}
-            isOpen={isSidebarOpen}
-            onClose={() => setIsSidebarOpen(false)}
-            isQueueView={isQueueView}
-            onSelectQueue={() => {
-              router.push('/minha-lista');
-              setIsSidebarOpen(false);
-            }}
-            queueCount={queue.length}
-            onLogoClick={() => {
-              handleCategorySelect(null);
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
-            position={sidebarPos}
-            onPositionChange={setSidebarPos}
-            isArticleOpen={isArticleRoute}
-            isSobreRoute={true}
-          />
-
-          {isCommandPaletteOpen && (
-            <Suspense fallback={null}>
-              <CommandPalette
-                isOpen={isCommandPaletteOpen}
-                onClose={() => setIsCommandPaletteOpen(false)}
-                onSelectArticle={(a: FAQItem) => {
-                  router.push(`/artigo/${a.id}`, { scroll: false });
-                  setIsCommandPaletteOpen(false);
-                }}
-                onToggleTheme={() => setIsDarkMode(!isDarkMode)}
-                isDarkMode={isDarkMode}
-                onSelectCategory={(cat: any) => {
-                  handleCategorySelect(cat);
-                  setIsCommandPaletteOpen(false);
-                }}
-                onSelectQueue={() => {
-                  router.push('/minha-lista');
-                  setIsCommandPaletteOpen(false);
-                }}
-              />
-            </Suspense>
-          )}
-
-
+          {sidebar}
+          {commandPalette}
 
           <main className="w-full relative">
             <div ref={containerRef} className="w-full transform-gpu">
               {children}
             </div>
           </main>
-          
+
           <Footer />
 
           <Suspense fallback={null}>
@@ -231,52 +232,8 @@ export function ClientLayout({
   return (
     <SmoothScroll>
       <div className="flex min-h-screen selection:bg-selection transition-colors duration-500 bg-bg-main">
-        <Sidebar
-          currentCat={currentCategory as any}
-          onSelect={handleCategorySelect}
-          isDarkMode={isDarkMode}
-          toggleDark={() => setIsDarkMode(!isDarkMode)}
-          isOpen={isSidebarOpen}
-          onClose={() => setIsSidebarOpen(false)}
-          isQueueView={isQueueView}
-          onSelectQueue={() => {
-            router.push('/minha-lista');
-            setIsSidebarOpen(false);
-          }}
-          queueCount={queue.length}
-          onLogoClick={() => {
-            handleCategorySelect(null);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-          }}
-          position={sidebarPos}
-          onPositionChange={setSidebarPos}
-          isArticleOpen={isArticleRoute}
-        />
-
-        {isCommandPaletteOpen && (
-          <Suspense fallback={null}>
-            <CommandPalette
-              isOpen={isCommandPaletteOpen}
-              onClose={() => setIsCommandPaletteOpen(false)}
-              onSelectArticle={(a: FAQItem) => {
-                router.push(`/artigo/${a.id}`, { scroll: false });
-                setIsCommandPaletteOpen(false);
-              }}
-              onToggleTheme={() => setIsDarkMode(!isDarkMode)}
-              isDarkMode={isDarkMode}
-              onSelectCategory={(cat: any) => {
-                handleCategorySelect(cat);
-                setIsCommandPaletteOpen(false);
-              }}
-              onSelectQueue={() => {
-                router.push('/minha-lista');
-                setIsCommandPaletteOpen(false);
-              }}
-            />
-          </Suspense>
-        )}
-
-
+        {sidebar}
+        {commandPalette}
 
         <main
           className={`flex-1 w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] relative ${isArticleRoute ? 'z-50' : ''}`}
@@ -284,7 +241,7 @@ export function ClientLayout({
           <div
             className={`max-w-[2000px] 4xl:max-w-[2400px] mx-auto w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
                         px-5 sm:px-8 2xl:px-16 3xl:px-24 4xl:px-32 max-lg:pt-24 max-lg:pb-12 lg:py-12 2xl:py-16 3xl:py-24
-                        ${mainLayoutPaddingClass}
+                        ${MAIN_LAYOUT_PADDING_CLASS}
                     `}
           >
             <div ref={containerRef} className="w-full transform-gpu">
@@ -293,9 +250,9 @@ export function ClientLayout({
           </div>
         </main>
       </div>
-      
+
       <Footer />
-      
+
       <Suspense fallback={null}>
         <BackToTopButton />
         <CookieBanner />
@@ -304,4 +261,3 @@ export function ClientLayout({
     </SmoothScroll>
   );
 }
-

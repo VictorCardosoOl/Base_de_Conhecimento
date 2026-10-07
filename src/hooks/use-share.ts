@@ -20,8 +20,10 @@ export function useShare() {
         await navigator.clipboard.writeText(url);
         setShareFeedback(true);
         setTimeout(() => setShareFeedback(false), 2000);
-      } catch {
-        alert('Link copiado para a área de transferência!');
+      } catch (err) {
+        console.warn('Clipboard indisponível:', err);
+        // Último recurso: permite copiar manualmente em vez de afirmar um sucesso falso
+        window.prompt('Não foi possível copiar automaticamente. Copie o link abaixo:', url);
       }
     }
   };
