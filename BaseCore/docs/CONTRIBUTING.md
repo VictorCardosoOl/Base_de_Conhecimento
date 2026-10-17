@@ -2,34 +2,27 @@
 
 Bem-vindo(a) ao repositório do SST FAQ! Este guia foi feito para manter a base de código limpa, coesa e alinhada às decisões de engenharia arquitetural adotadas.
 
+> Fluxo de branches, padrão de commits, testes, CI e regras de segredos valem para o repositório
+> inteiro e estão no [CONTRIBUTING.md da raiz](../../CONTRIBUTING.md). Este guia trata só do que é
+> específico da BaseCore.
+
 ## 1. Adicionando Novos Artigos de SST
 
-Todo conteúdo de artigos reside isoladamente em arquivos Markdown puros na pasta `src/content/artigos/`. O sistema lê essa pasta e compila automaticamente.
+Os artigos são arquivos Markdown em `src/content/artigos/`. O passo a passo (frontmatter,
+categorias aceitas, o que acontece quando um campo falta e o checklist) está em
+[INSERCAO_ARTIGOS.md](./INSERCAO_ARTIGOS.md).
 
-### Regras do Frontmatter
+## 2. Organização do código e componentização
 
-Todo arquivo `.md` precisa obrigatoriamente iniciar com um cabeçalho YML delimitado por `---`, contendo as chaves de indexação:
+A estrutura (`src/app` para rotas, `src/features/<domínio>` para a lógica e os componentes de
+cada área, e `components/ui`, `hooks` e `lib` só para o que é genérico), as regras de
+dependência e as convenções de nomes e imports estão em [ARQUITETURA.md](./ARQUITETURA.md).
 
-```markdown
----
-id: nome-unico-do-artigo
-category: eSocial (ou qualquer Category válida do types/index.ts)
-date: '08/09/2026'
-tags: [sst, pgr, segurança]
----
+O repositório segue o **Princípio da Responsabilidade Única (SRP)**.
 
-# Seu título aqui (Apenas 1 # no artigo)
-
-Conteúdo do artigo em parágrafos comuns...
-```
-
-> **Atenção:** Se faltar o `id`, o script pulará a conversão deste arquivo no catálogo e emitirá um `⚠️ Warning` no build. O `id` deve ser **único e em kebab-case**.
-
-## 2. Padrões de Componentização (Clean Code)
-
-O repositório é rigoroso em relação ao **Princípio da Responsabilidade Única (SRP)**.
-
-- **Evite God Components:** Nunca agrupe requisições lógicas, formatação, animação e 10 tags HTML soltas no mesmo arquivo. (Vide exemplo do antigo `ArticleView.tsx`, que foi reestruturado em múltiplos micro-componentes).
+- **Evite God Components:** não junte busca de dados, formatação, animação e muita marcação
+  no mesmo arquivo. Extraia hooks e subcomponentes (ex.: o `ClientLayout` delega tema,
+  posição do menu e atalhos a hooks em `features/shell`).
 - **Semântica e Acessibilidade (WCAG):**
   - Elementos clicáveis que não navegam externamente devem ser `<button>`, NÃO `<div> onClick={...}`.
   - Para atalhos complexos, adicione eventos de teclado nativos para uso pleno via (Tab / Espaço / Enter).
@@ -52,11 +45,16 @@ Não engula exceções silenciosamente. Ao manusear promessas, acessos a LocalSt
 
 ## 5. Processo de Build Local
 
-Sempre rode o processo completo ao alterar Markdown, pois o Vite consome um catálogo pré-compilado:
+O site usa um catálogo pré-gerado a partir do Markdown. `npm run dev` e `npm run build`
+regeneram esse catálogo antes de começar (scripts `predev` e `prebuild`, que chamam
+`npm run catalog`):
 
 ```bash
 npm run dev
-# (Isso rodará implicitamente o npm run gen:catalog por baixo dos panos)
 ```
+
+Antes de enviar uma mudança, rode `npm run check` (lint, tipos e testes unitários) e
+`npm run build`. Para subir o projeto completo, com login, veja
+[RODANDO_LOCALMENTE.md](./RODANDO_LOCALMENTE.md).
 
 Obrigado por contribuir e manter o nível técnico do nosso repositório elevado! 🚀

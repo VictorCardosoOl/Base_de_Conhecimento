@@ -1,118 +1,131 @@
-import React, { useState } from 'react';
-import { Category } from '@/types/index';
-import { useConsent } from '@/contexts/ConsentContext';
-import StaggeredMenu from './StaggeredMenu';
+'use client';
+import React, { Suspense, useCallback, useEffect, useRef, useState } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { Category } from '@/features/articles/types';
+import type { ClientSessionSummary } from '@/features/auth/use-session-summary';
+import { AccountMenu } from '@/features/auth/components/AccountMenu';
+import { useToast } from '@/components/ui/Toast';
+import { AppHeader } from './AppHeader';
+import { NavDrawer } from './NavDrawer';
+import './nav.css';
+
+const DRAWER_ID = 'nav-drawer';
 
 interface SidebarProps {
   currentCat: Category | null;
   onSelect: (cat: Category | null) => void;
   isDarkMode: boolean;
   toggleDark: () => void;
-  isOpen: boolean;
-  onClose: () => void;
-  isQueueView?: boolean;
-  onSelectQueue?: () => void;
+  onSelectQueue: () => void;
   queueCount?: number;
   onLogoClick?: () => void;
-  position: 'left' | 'right' | 'top' | 'bottom';
-  onPositionChange: (pos: 'left' | 'right' | 'top' | 'bottom') => void;
-  isArticleOpen?: boolean;
-  isSobreRoute?: boolean;
+  /** Estado da sessão só para a navegação (null enquanto carrega). Não é autorização. */
+  session?: ClientSessionSummary | null;
 }
 
-export const Sidebar: React.FC<SidebarProps> = ({
+/**
+ * Navegação do site: cabeçalho (AppHeader) e menu lateral (NavDrawer) com um estado só.
+ * Esc fecha o menu e devolve o foco ao botão; trocar de página também fecha.
+ */
+export function Sidebar({
   currentCat,
   onSelect,
   isDarkMode,
   toggleDark,
-  isOpen,
-  onClose,
-  isQueueView,
   onSelectQueue,
   queueCount = 0,
-  position,
-  onPositionChange,
-  isArticleOpen,
-  isSobreRoute,
   onLogoClick,
-}) => {
-  const { setOpenLegalModal, setActiveLegalTab } = useConsent();
-  const [toastMsg, setToastMsg] = useState<{title: string, msg: string} | null>(null);
+  session = null,
+}: SidebarProps) {
+  const router = useRouter();
+  const [open, setOpen] = useState(false);
+  const toggleRef = useRef<HTMLButtonElement>(null);
+  const toast = useToast();
+  const pathname = usePathname();
 
-  const showToast = (title: string, msg: string) => {
-    setToastMsg({ title, msg });
-    setTimeout(() => setToastMsg(null), 5000);
-  };
+  const close = useCallback((restoreFocus = false) => {
+    setOpen(false);
+    if (restoreFocus) toggleRef.current?.focus();
+  }, []);
 
-  // Mapeia categorias e opções para o StaggeredMenu
-  const menuItems = [
-    ...Object.values(Category).map((cat) => ({
-      label: cat,
-      ariaLabel: `Filtrar por módulo ${cat}`,
-      isActive: currentCat === cat,
-      onClick: () => {
-        onSelect(cat);
-      },
-    })),
+  // Trocou de página (ex.: abriu um artigo pelo menu): fecha.
+  const lastPath = useRef(pathname);
+  useEffect(() => {
+    if (lastPath.current === pathname) return;
+    lastPath.current = pathname;
+    setOpen(false);
+  }, [pathname]);
 
-  ];
+  useEffect(() => {
+    if (!open) return;
+    const onKey = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') close(true);
+    };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [open, close]);
 
   const handleAlertClick = async () => {
     if (!('Notification' in window)) {
-      showToast('Aviso', 'Seu navegador não possui suporte nativo a Web Push Notifications.');
+      toast.show({ title: 'Alertas indisponíveis', message: 'Este navegador não possui suporte a notificações.' });
       return;
     }
     if (Notification.permission === 'granted') {
-      showToast('SST FAQ Atualizações', 'Notificações corporativas já estão ativadas! Você receberá comunicados urgentes.');
+      toast.show({ tone: 'success', title: 'Alertas ativos', message: 'As notificações já estão permitidas neste navegador.' });
     } else {
       const permission = await Notification.requestPermission();
       if (permission === 'granted') {
-        showToast('SST FAQ Conectado', 'Notificações ativadas com sucesso.');
+        toast.show({ tone: 'success', title: 'Alertas ativados', message: 'Você será avisado neste navegador.' });
+      } else {
+        toast.show({ title: 'Alertas não ativados', message: 'A permissão de notificações foi negada no navegador.' });
       }
     }
   };
 
-  const socialItems = [
-    {
-      label: 'Sobre o Projeto',
-      onClick: () => {
-        window.location.href = '/sobre';
-      },
-    },
-    {
-      label: 'Alertas',
-      onClick: handleAlertClick,
-    },
-    {
-      label: 'LGPD',
-      onClick: () => {
-        setActiveLegalTab('privacy');
-        setOpenLegalModal(true);
-      },
-    },
-    {
-      label: isDarkMode ? 'Modo Claro' : 'Modo Escuro',
-      onClick: toggleDark,
-    },
-  ];
-
   return (
     <>
-      {toastMsg && (
-        <div className="fixed top-4 right-4 z-[200] bg-stone-900 dark:bg-white text-white dark:text-black p-4 rounded-xl shadow-2xl max-w-sm animate-in fade-in slide-in-from-top-5">
-          <p className="font-bold text-sm">{toastMsg.title}</p>
-          <p className="text-xs mt-1 opacity-90">{toastMsg.msg}</p>
-        </div>
-      )}
-      <StaggeredMenu
-        isFixed={true}
-        position="left"
-        items={menuItems}
-        socialItems={socialItems}
-        displaySocials={true}
-        displayItemNumbering={true}
-        onLogoClick={onLogoClick}
+      <AppHeader
+        drawerId={DRAWER_ID}
+        drawerOpen={open}
+        onToggleDrawer={() => setOpen((value) => !value)}
+        toggleRef={toggleRef}
+        queueCount={queueCount}
+        isDarkMode={isDarkMode}
+        onToggleTheme={toggleDark}
+        onAlerts={handleAlertClick}
+        onHome={() => {
+          close();
+          onLogoClick?.();
+        }}
+        accountSlot={<AccountMenu session={session} />}
       />
+      {/* useSearchParams: só o menu espera a URL no cliente, não a página inteira. */}
+      <Suspense fallback={null}>
+      <NavDrawer
+        id={DRAWER_ID}
+        open={open}
+        currentCategory={currentCat}
+        queueCount={queueCount}
+        onSelectCategory={(cat) => {
+          onSelect(cat);
+          close();
+        }}
+        onSelectQueue={() => {
+          onSelectQueue();
+          close();
+        }}
+        onOpenAbout={() => {
+          onSelect(Category.SOBRE);
+          close();
+        }}
+        onOpenPrivacy={() => {
+          // Entrada dos documentos institucionais: Termos → Privacidade → Cookies.
+          router.push('/termos');
+          close();
+        }}
+        onClose={() => close()}
+      />
+      </Suspense>
     </>
   );
-};
+}

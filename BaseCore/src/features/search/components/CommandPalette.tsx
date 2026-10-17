@@ -2,23 +2,18 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Command } from 'cmdk';
 import {
   Search,
-  Hash,
-  Sun,
-  Moon,
-  Archive,
-  Bookmark,
-  Mic,
-  ArrowRight,
 } from 'lucide-react';
-import { FAQItem, Category } from '@/types/index';
-import { FAQ_DATA } from '@/config/index';
-import { useSearch } from '@/hooks/use-search';
-import { AnalyticsService } from '@/services/analytics-service';
-import { ReadingExperienceService } from '@/services/reading-experience-service';
+import { FAQItem, Category } from '@/features/articles/types';
+import { FAQ_DATA } from '@/features/articles/catalog';
+import { useSearch } from '@/features/search/use-search';
+import { ReadingExperienceService } from '@/features/reading/reading-experience-service';
 import { useFocusTrap } from '@/hooks/use-focus-trap';
 import { useDebounce } from '@/hooks/use-debounce';
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
+
+// Fora do componente: um objeto novo a cada render refaria o índice de busca inteiro.
+const PALETTE_SEARCH = { keys: ['question', 'tags', 'answer', 'category', 'searchText'], threshold: 0.4 };
 
 const PALETTE_STRINGS = {
   LIBRARY: ['Biblioteca Completa', 'Todos os documentos'],
@@ -79,10 +74,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   useFocusTrap(modalRef, isOpen);
 
   // Fuzzy Search for Articles
-  const filteredArticles = useSearch(FAQ_DATA, inputValue, {
-    keys: ['question', 'tags', 'answer', 'category', 'searchText'],
-    threshold: 0.4,
-  });
+  const filteredArticles = useSearch(FAQ_DATA, inputValue, PALETTE_SEARCH);
 
   // Manual filter helpers for static items
   const isMatch = (text: string) =>
@@ -103,14 +95,13 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
 
   const debouncedInput = useDebounce(inputValue, 600);
 
-  // Telemetria de buscas via background scheduling
+  // Buscas recentes (só neste aparelho), gravadas em segundo plano.
   useEffect(() => {
     if (!debouncedInput || debouncedInput.trim().length < 2) return;
     
     const safeInput = debouncedInput.trim().slice(0, 100); // Sanitização básica de tamanho
 
     const logSearchTask = () => {
-      AnalyticsService.logSearch(safeInput, filteredArticles.length);
       ReadingExperienceService.addRecentSearch(safeInput);
     };
 
@@ -119,7 +110,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
     } else {
       setTimeout(logSearchTask, 0);
     }
-  }, [debouncedInput, filteredArticles.length]);
+  }, [debouncedInput]);
 
   // Lock Body Scroll & Handle ESC
   useEffect(() => {
@@ -173,7 +164,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
               ref={inputRef}
               value={inputValue}
               onValueChange={setInputValue}
-              placeholder="Lorem"
+              placeholder="O que você procura?"
               className="flex-1 bg-transparent outline-none text-base sm:text-lg text-stone-800 placeholder:text-stone-300 font-sans font-light"
             />
           </div>
@@ -182,13 +173,12 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
           <div className="bg-white dark:bg-white rounded-3xl shadow-[0_8px_30px_rgb(0,0,0,0.08)] border border-stone-200/50 overflow-hidden">
             <Command.List
               className="max-h-[50vh] overflow-y-auto p-4 scroll-py-2 no-scrollbar"
-              data-lenis-prevent
               aria-live="polite"
               aria-atomic="true"
             >
               <Command.Empty className="py-12 px-6 flex flex-col items-center text-center">
                 <p className="font-serif text-lg text-stone-800 mb-2">
-                  Nenhum resultado para "{inputValue}"
+                  Nenhum resultado para &quot;{inputValue}&quot;
                 </p>
                 <p className="text-sm text-stone-500 mb-6 max-w-sm">
                   Não encontrou o que procurava? Sugira este tópico para que possamos adicioná-lo à nossa base de conhecimento.
@@ -199,7 +189,7 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
                   }}
                   className="px-4 py-2 bg-stone-900 text-white rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
                 >
-                  Solicitar artigo sobre "{inputValue.substring(0, 20)}{inputValue.length > 20 ? '...' : ''}"
+                  Solicitar artigo sobre &quot;{inputValue.substring(0, 20)}{inputValue.length > 20 ? '...' : ''}&quot;
                 </button>
               </Command.Empty>
 

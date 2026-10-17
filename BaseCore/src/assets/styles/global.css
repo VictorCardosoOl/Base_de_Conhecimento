@@ -1,11 +1,10 @@
 @import 'tailwindcss';
+@import './glass.css';
+@import './ui.css';
 
-@source "./index.html";
-@source "./components/**/*.{js,ts,jsx,tsx}";
-@source "./layouts/**/*.{js,ts,jsx,tsx}";
-@source "./pages/**/*.{js,ts,jsx,tsx}";
-@source "./hooks/**/*.{js,ts,jsx,tsx}";
-@source "./*.{js,ts,jsx,tsx}";
+/* Classes encontradas pela detecção automática do Tailwind v4 (a partir da raiz do
+   projeto, respeitando o .gitignore). Não há @source: os antigos apontavam para
+   caminhos inexistentes, herdados do Vite. */
 
 @plugin "@tailwindcss/typography";
 
@@ -57,10 +56,16 @@
 
   html {
     font-size: clamp(14px, 0.8rem + 0.4vw, 18px);
+    /* Espaço ocupado pelo banner de cookies (0 quando ele não está visível):
+       o foco por teclado rola o elemento para acima do banner. */
+    scroll-padding-bottom: var(--cookie-banner-h, 0px);
   }
 
   body {
+    /* Fundo base vem da malha (.liquid-backdrop, em glass.css); bg-main fica de reserva. */
     @apply antialiased transition-colors duration-500 bg-bg-main text-text-body font-sans;
+    /* Permite rolar o fim da página para fora de baixo do banner de cookies. */
+    padding-bottom: var(--cookie-banner-h, 0px);
   }
 
   /* Scrollbar Hide */
@@ -206,7 +211,7 @@
 
   /* Decorative quote mark */
   .article-content-render blockquote::before {
-    content: 'â€œ';
+    content: '“';
     display: block;
     font-family: var(--font-serif);
     font-size: 8rem;
@@ -365,7 +370,7 @@
   }
 
   /* 
-   * PERSONALIZAÃ‡ÃƒO TIPOGRÃFICA DO LEITOR
+   * PERSONALIZAÇÃO TIPOGRÁFICA DO LEITOR
    * ------------------------------------
    */
   .article-font-serif p,
@@ -418,7 +423,7 @@
   }
 
   /* 
-   * BLOCOS DE CÃ“DIGO E MERMAID
+   * BLOCOS DE CÓDIGO E MERMAID
    * ------------------------------------
    */
   .article-content-render pre {

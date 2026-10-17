@@ -5,11 +5,15 @@ import { defineConfig, devices } from '@playwright/test';
  */
 export default defineConfig({
   testDir: './e2e',
+  // Apaga as contas que os fluxos reais (signup/users) criam no AuthService local.
+  globalTeardown: './e2e/global-teardown.ts',
   timeout: 30000,
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  workers: process.env.CI ? 1 : undefined,
+  // Localmente, 2 workers: com mais, Next + AuthService + Docker na mesma máquina ficam tão
+  // disputados que a hidratação das páginas atrasa e os fluxos de formulário ficam instáveis.
+  workers: process.env.CI ? 1 : 2,
   reporter: [
     ['html', { outputFolder: 'playwright-report', open: 'never' }],
     ['list'],

@@ -1,112 +1,169 @@
+'use client';
 import React from 'react';
 import Link from 'next/link';
+import { Logo } from '@/components/ui/Logo';
+import { GithubIcon } from '@/components/ui/BrandIcons';
+import { FAQ_DATA } from '@/features/articles/catalog';
+import { recentArticles } from '@/features/articles/article-meta';
+import { Category } from '@/features/articles/types';
+import { useCurrentSession } from '@/features/auth/use-session-summary';
+import { VersionButton } from './VersionButton';
 
-const GithubIcon = ({ size = 20, strokeWidth = 1.5, className = "" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/>
-  </svg>
-);
 
-const InstagramIcon = ({ size = 20, strokeWidth = 1.5, className = "" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <rect width="20" height="20" x="2" y="2" rx="5" ry="5"></rect>
-    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path>
-    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"></line>
-  </svg>
-);
+const SUPPORT_EMAIL = 'suporte@basesst.br';
 
-const MessageCircleIcon = ({ size = 20, strokeWidth = 1.5, className = "" }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={strokeWidth} strokeLinecap="round" strokeLinejoin="round" className={className}>
-    <path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path>
-  </svg>
-);
+const DESIGNERS = [
+  { name: 'Victor Cardoso', href: 'https://victor-cardoso.vercel.app' },
+  { name: 'Guilherme Cruz', href: 'https://gcruz.dev.br' },
+];
 
+// Números do acervo publicado (catálogo do build): nada estimado.
+const PUBLISHED = FAQ_DATA.filter((item) => item.category !== Category.SOBRE);
+const MODULE_COUNTS = Object.values(Category)
+  .filter((cat) => cat !== Category.SOBRE)
+  .map((cat) => ({ cat, count: PUBLISHED.filter((item) => item.category === cat).length }))
+  .filter((entry) => entry.count > 0);
+const RECENT = recentArticles(3);
+
+const linkClass =
+  'inline-flex min-h-8 items-center text-sm text-text-muted hover:text-text-main transition-colors rounded-md glass-focus';
+const headingClass = 'ui-label mb-3';
+
+/**
+ * Rodapé: marca e números do acervo, todos os módulos, artigos atualizados
+ * recentemente, atalhos de conta (conforme a sessão), créditos e documentos legais. Preferências visuais ficam em Minha conta. Nenhum link sem destino.
+ */
 export const Footer = () => {
+  const session = useCurrentSession();
+  const signedIn = session?.authenticated === true;
+
+  const account = signedIn
+    ? [
+        { href: '/conta', label: 'Minha conta' },
+        { href: '/minha-lista', label: 'Minha Lista' },
+      ]
+    : [
+        { href: '/cadastro', label: 'Criar conta' },
+        { href: '/login', label: 'Entrar' },
+        { href: '/minha-lista', label: 'Minha Lista' },
+      ];
+
   return (
-    <footer className="w-full bg-bg-main text-text-body font-sans selection:bg-selection border-t border-border mt-0 pt-8 pb-6">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex flex-col md:flex-row justify-between items-start gap-10">
-        
-        {/* Left Side: Columns */}
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-24 w-full lg:w-auto">
-          {/* Links Columns */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-12 lg:gap-24">
-            
-            {/* Column 1: Módulos */}
-            <div className="flex flex-col gap-4">
-              <span className="text-xs uppercase tracking-widest font-semibold text-text-main mb-2">
-                Módulos
-              </span>
-              <ul className="flex flex-col gap-3">
-                <li><Link href="/?category=eSocial" className="text-sm text-text-muted hover:text-text-main transition-colors">eSocial</Link></li>
-                <li><Link href="/?category=GRO" className="text-sm text-text-muted hover:text-text-main transition-colors">GRO / PGR</Link></li>
-                <li><Link href="/?category=Eventos" className="text-sm text-text-muted hover:text-text-main transition-colors">Eventos SST</Link></li>
-                <li><Link href="/?category=Informacoes" className="text-sm text-text-muted hover:text-text-main transition-colors">Informações</Link></li>
-                <li><Link href="/?category=Coletivo" className="text-sm text-text-muted hover:text-text-main transition-colors">Coletivo</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 2: Explorar */}
-            <div className="flex flex-col gap-4">
-              <span className="text-xs uppercase tracking-widest font-semibold text-text-main mb-2">
-                Explorar
-              </span>
-              <ul className="flex flex-col gap-3">
-                <li><Link href="/" className="text-sm text-text-muted hover:text-text-main transition-colors">Página Inicial</Link></li>
-                <li><Link href="/sobre" className="text-sm text-text-muted hover:text-text-main transition-colors">O Projeto</Link></li>
-                <li><Link href="/minha-lista" className="text-sm text-text-muted hover:text-text-main transition-colors">Trilhas & Lista</Link></li>
-                <li><Link href="#" className="text-sm text-text-muted hover:text-text-main transition-colors">Diretrizes</Link></li>
-                <li><Link href="/login" className="text-sm text-text-muted hover:text-text-main transition-colors">Login Admin</Link></li>
-              </ul>
-            </div>
-
-            {/* Column 3: Contato */}
-            <div className="flex flex-col gap-4">
-              <span className="text-xs uppercase tracking-widest font-semibold text-text-main mb-2">
-                Conecte-se
-              </span>
-              <div className="flex flex-col gap-4">
-                <a href="mailto:contato@sst.com" className="text-sm text-text-muted hover:text-text-main transition-colors">
-                  suporte@basesst.br
-                </a>
-                
-                <div className="flex items-center gap-3 mt-2">
-                  <a href="#" className="w-8 h-8 rounded-full border border-text-muted flex items-center justify-center text-text-muted hover:text-text-main hover:border-text-main transition-colors" aria-label="Instagram">
-                    <InstagramIcon size={14} />
-                  </a>
-                  <a href="#" className="w-8 h-8 rounded-full border border-text-muted flex items-center justify-center text-text-muted hover:text-text-main hover:border-text-main transition-colors" aria-label="WhatsApp">
-                    <MessageCircleIcon size={14} />
-                  </a>
-                  <a href="https://github.com/VictorCardosoOl/Base_de_Conhecimento" className="w-8 h-8 rounded-full border border-text-muted flex items-center justify-center text-text-muted hover:text-text-main hover:border-text-main transition-colors" aria-label="GitHub">
-                    <GithubIcon size={14} />
-                  </a>
-                </div>
+    <footer className="relative z-10 w-full text-text-body font-sans px-3 sm:px-4 pb-20 sm:pb-4 pt-16">
+      <div className="glass-card max-w-[1600px] mx-auto !rounded-[2rem] p-5 sm:p-8 lg:p-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-8 lg:gap-6">
+          <div className="sm:col-span-2 lg:col-span-4 flex flex-col gap-5">
+            <Link href="/" aria-label="Base SST — início" className="self-start rounded-md glass-focus">
+              <Logo />
+            </Link>
+            <p className="text-sm text-text-muted max-w-sm leading-relaxed">
+              Respostas diretas e revisadas sobre Saúde e Segurança do Trabalho e eSocial, para quem opera os eventos no dia a dia.
+            </p>
+            <dl className="grid grid-cols-2 gap-3 max-w-xs">
+              <div className="glass-flat px-3 py-2.5">
+                <dt className="text-xs text-text-muted">Artigos</dt>
+                <dd className="text-xl font-semibold text-text-main tabular-nums">{PUBLISHED.length}</dd>
               </div>
+              <div className="glass-flat px-3 py-2.5">
+                <dt className="text-xs text-text-muted">Módulos</dt>
+                <dd className="text-xl font-semibold text-text-main tabular-nums">{MODULE_COUNTS.length}</dd>
+              </div>
+            </dl>
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <a href={`mailto:${SUPPORT_EMAIL}`} className="ui-link">
+                {SUPPORT_EMAIL}
+              </a>
+              <a
+                href="https://github.com/VictorCardosoOl/Base_de_Conhecimento"
+                className="ui-btn ui-btn--ghost ui-btn--sm ui-btn--icon"
+                aria-label="Código-fonte no GitHub"
+              >
+                <GithubIcon />
+              </a>
             </div>
+          </div>
 
+          <nav aria-label="Módulos" className="lg:col-span-2">
+            <h2 className={headingClass}>Módulos</h2>
+            <ul className="flex flex-col gap-0.5">
+              {MODULE_COUNTS.map(({ cat, count }) => (
+                <li key={cat}>
+                  <Link href={`/?category=${encodeURIComponent(cat)}`} className={`${linkClass} gap-2`}>
+                    {cat}
+                    <span className="text-xs tabular-nums opacity-70">{count}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <nav aria-label="Atualizados recentemente" className="lg:col-span-3">
+            <h2 className={headingClass}>Atualizados recentemente</h2>
+            <ul className="flex flex-col gap-3">
+              {RECENT.map((item) => (
+                <li key={item.id}>
+                  <Link href={`/artigo/${item.id}`} className="group block rounded-md glass-focus">
+                    <span className="block text-sm text-text-main group-hover:underline underline-offset-2 line-clamp-2">
+                      {item.question}
+                    </span>
+                    <span className="block text-xs text-text-muted">
+                      {item.category} · {item.lastReviewed || item.date}
+                    </span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </nav>
+
+          <div className="sm:col-span-2 lg:col-span-3 flex flex-col gap-6">
+            <nav aria-label={signedIn ? 'Sua conta' : 'Participe'}>
+              <h2 className={headingClass}>{signedIn ? 'Sua conta' : 'Participe'}</h2>
+              <ul className="flex flex-col gap-0.5">
+                {account.map((link) => (
+                  <li key={link.href}>
+                    <Link href={link.href} className={linkClass}>
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+                <li>
+                  <Link href="/sobre" className={linkClass}>
+                    Sobre o projeto
+                  </Link>
+                </li>
+              </ul>
+            </nav>
           </div>
         </div>
 
-        {/* Right Side: Giant Text */}
-        <div className="flex flex-col items-start lg:items-end w-full lg:w-auto flex-grow justify-end self-end">
-          <div className="w-full text-left lg:text-right">
-            <h2 className="font-serif text-[12vw] sm:text-[10vw] lg:text-[7vw] xl:text-[8vw] leading-[0.85] tracking-tighter text-text-main uppercase">
-              Base<br />SST
-            </h2>
+        {/* Ordem em todas as larguras: copyright e créditos, versão (centralizada), links institucionais. */}
+        <div className="mt-8 pt-5 border-t border-[color:color-mix(in_srgb,var(--text-main)_9%,transparent)] grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] items-center gap-3 text-xs text-text-muted">
+          <p className="text-center lg:text-left lg:justify-self-start">
+            © {new Date().getFullYear()} Base SST · Design by{' '}
+            {DESIGNERS.map((designer, index) => (
+              <React.Fragment key={designer.href}>
+                {index > 0 && ' and '}
+                <a href={designer.href} target="_blank" rel="noopener noreferrer" className="ui-link whitespace-nowrap">
+                  {designer.name}
+                  <span className="sr-only"> (abre em nova aba)</span>
+                </a>
+              </React.Fragment>
+            ))}
+          </p>
+          <div className="justify-self-center">
+            <VersionButton />
           </div>
-        </div>
-
-      </div>
-
-      {/* Bottom Bar */}
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-10 pt-5 border-t border-border flex flex-col md:flex-row items-center justify-between gap-4 text-[11px] uppercase tracking-widest text-text-muted">
-        <div className="flex items-center gap-4 flex-wrap justify-center md:justify-start">
-          <span>Design by Victor Cardoso</span>
-          <span>© {new Date().getFullYear()} Base SST</span>
-        </div>
-        <div className="flex items-center gap-6 flex-wrap justify-center md:justify-end">
-          <Link href="#" className="hover:text-text-main transition-colors">Termos</Link>
-          <Link href="#" className="hover:text-text-main transition-colors">Privacidade</Link>
-          <Link href="#" className="hover:text-text-main transition-colors">Cookies</Link>
+          <nav aria-label="Documentos legais" className="flex flex-wrap items-center justify-center lg:justify-self-end gap-x-4 gap-y-1">
+            <Link href="/termos" className={linkClass + ' !text-xs'}>
+              Termos de uso
+            </Link>
+            <Link href="/privacidade" className={linkClass + ' !text-xs'}>
+              Privacidade
+            </Link>
+            <Link href="/cookies" className={linkClass + ' !text-xs'}>
+              Preferências de cookie
+            </Link>
+          </nav>
         </div>
       </div>
     </footer>

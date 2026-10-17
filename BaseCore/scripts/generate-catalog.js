@@ -19,8 +19,13 @@ async function getFiles(dir, filesList = []) {
   } catch {
     return filesList;
   }
-  
-  const files = await fs.promises.readdir(dir);
+
+  // Ordem do NTFS (ordinal, sem diferenciar maiúsculas), igual em qualquer sistema.
+  const files = (await fs.promises.readdir(dir)).sort((a, b) => {
+    const x = a.toUpperCase();
+    const y = b.toUpperCase();
+    return x < y ? -1 : x > y ? 1 : 0;
+  });
   for (const file of files) {
     const name = path.join(dir, file);
     const stat = await fs.promises.stat(name);
@@ -33,9 +38,11 @@ async function getFiles(dir, filesList = []) {
   return filesList;
 }
 
+// Ordem fixa (getFiles) e quebras de linha normalizadas: a saída é a mesma no Windows e no
+// Linux (CI), então gerar de novo não suja o git. Estes arquivos ficam fora do Prettier.
 async function generateCatalog() {
   await ensureDir(DATA_DIR);
-  
+
   const files = await getFiles(CONTENT_DIR);
   const catalog = [];
   const mappingLines = [
@@ -44,7 +51,10 @@ async function generateCatalog() {
   const seenIds = new Map();
 
   for (const filePath of files) {
-    const fileContent = await fs.promises.readFile(filePath, 'utf-8');
+    const fileContent = (await fs.promises.readFile(filePath, 'utf-8')).replace(
+      /\r\n?/g,
+      '\n'
+    );
     const { data, content } = matter(fileContent.trimStart());
 
     const fileId = data.id || path.basename(filePath, '.md');
@@ -89,9 +99,12 @@ async function generateCatalog() {
 
   await fs.promises.writeFile(
     path.join(DATA_DIR, 'catalog.json'),
-    JSON.stringify(catalog, null, 2)
+    JSON.stringify(catalog, null, 2) + '\n'
   );
-  await fs.promises.writeFile(path.join(DATA_DIR, 'mapping.ts'), mappingLines.join('\n'));
+  await fs.promises.writeFile(
+    path.join(DATA_DIR, 'mapping.ts'),
+    mappingLines.join('\n') + '\n'
+  );
 }
 
 generateCatalog()

@@ -1,336 +1,205 @@
 'use client';
-import React, { useState, useEffect } from 'react';
-import { ArticleGrid } from '@/components/article/ArticleGrid';
-import { FAQ_DATA, DEFAULT_LEARNING_TRACKS } from '@/config/index';
-import { useReadingQueue } from '@/hooks/use-reading-queue';
-import { FAQItem, LearningTrack } from '@/types/index';
+import React, { useEffect, useState } from 'react';
+import Link from 'next/link';
+import { Bookmark, Check, Clock, GraduationCap, RotateCcw, Target } from 'lucide-react';
+import { ArticleGrid } from '@/features/articles/components/ArticleGrid';
+import { FAQ_DATA } from '@/features/articles/catalog';
+import { DEFAULT_LEARNING_TRACKS, type LearningTrack } from '@/features/reading/learning-tracks';
+import { useReadingQueue } from '@/features/reading/use-reading-queue';
+import { useBrowserSnapshot } from '@/hooks/use-browser-snapshot';
+import type { FAQItem } from '@/features/articles/types';
+import { AnalyticsService } from '@/features/analytics/analytics-service';
+import { READING_EVENTS, ReadingExperienceService, type ReadingGoal } from '@/features/reading/reading-experience-service';
+import { Button, ButtonLink } from '@/components/ui/Button';
+import { EmptyState } from '@/components/ui/StateMessage';
+import { Tabs, tabPanelProps } from '@/components/ui/Tabs';
 
-import { AnalyticsService } from '@/services/analytics-service';
-import {
-  ReadingExperienceService,
-  ReadingGoal,
-} from '@/services/reading-experience-service';
-import {
-  BookOpen,
-  CheckCircle,
-  GraduationCap,
-  Clock,
-  Check,
-  Target,
-  RotateCcw,
-} from 'lucide-react';
+const NO_COMPLETED: string[] = [];
+// Mesmo padrão do ReadingExperienceService quando não há meta salva.
+const DEFAULT_READING_GOAL: ReadingGoal = { targetMinutes: 60, elapsedSeconds: 0, completedNotified: false };
+const readCompletedArticles = () => AnalyticsService.getCompletedArticles();
+const readReadingGoal = () => ReadingExperienceService.getReadingGoal();
+const byId = (ids: string[]) => ids.map((id) => FAQ_DATA.find((a) => a.id === id)).filter(Boolean) as FAQItem[];
 
+type View = 'queue' | 'tracks';
+
+/**
+ * Minha Lista: artigos salvos (o uso mais comum, aberto por padrão), trilhas sugeridas com
+ * progresso e a meta de tempo de leitura. Tudo fica neste navegador (localStorage).
+ */
 export default function QueuePage() {
   const { queue } = useReadingQueue();
-  // removed
-  const [viewMode, setViewMode] = useState<'queue' | 'tracks'>('tracks');
-  const [selectedTrack, setSelectedTrack] = useState<LearningTrack>(
-    DEFAULT_LEARNING_TRACKS[0]
-  );
-  const [completedArticles, setCompletedArticles] = useState<string[]>([]);
-  const [readingGoal, setReadingGoal] = useState<ReadingGoal | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [view, setView] = useState<View>('queue');
+  const [selectedTrack, setSelectedTrack] = useState<LearningTrack>(DEFAULT_LEARNING_TRACKS[0]);
+  // Valores do navegador lidos de forma segura para a hidratação (o servidor não tem
+  // localStorage). Alterações feitas nesta página ficam no estado local.
+  const storedCompleted = useBrowserSnapshot(readCompletedArticles, NO_COMPLETED);
+  const [completedOverride, setCompletedArticles] = useState<string[] | null>(null);
+  const completed = completedOverride ?? storedCompleted;
+  const storedGoal = useBrowserSnapshot(readReadingGoal, DEFAULT_READING_GOAL);
+  const [goalOverride, setReadingGoal] = useState<ReadingGoal | null>(null);
+  const goal = goalOverride ?? storedGoal;
 
   useEffect(() => {
-    setCompletedArticles(AnalyticsService.getCompletedArticles());
-    setReadingGoal(ReadingExperienceService.getReadingGoal());
-    setIsMounted(true);
-    const handleGoalUpdate = (e: Event) => {
+    const onGoal = (e: Event) => {
       const detail = (e as CustomEvent<ReadingGoal | undefined>).detail;
-      if (detail) setReadingGoal(detail);
-      else setReadingGoal(ReadingExperienceService.getReadingGoal());
+      setReadingGoal(detail ?? ReadingExperienceService.getReadingGoal());
     };
-    window.addEventListener('sst_reading_goal_updated', handleGoalUpdate);
-    return () =>
-      window.removeEventListener('sst_reading_goal_updated', handleGoalUpdate);
+    window.addEventListener(READING_EVENTS.readingGoalUpdated, onGoal);
+    return () => window.removeEventListener(READING_EVENTS.readingGoalUpdated, onGoal);
   }, []);
 
-  const handleSelectGoal = (minutes: number) => {
+  const saved = byId(queue);
+  const trackArticles = byId(selectedTrack.articleIds);
+  const doneIn = (track: LearningTrack) => track.articleIds.filter((id) => completed.includes(id)).length;
+  const goalPct = Math.min(100, Math.round((goal.elapsedSeconds / (goal.targetMinutes * 60)) * 100));
+
+  const toggleDone = (articleId: string) => {
+    AnalyticsService.toggleArticleCompletion(articleId);
+    setCompletedArticles(AnalyticsService.getCompletedArticles());
+  };
+  const chooseGoal = (minutes: number) => {
     ReadingExperienceService.setReadingGoalTarget(minutes);
     setReadingGoal(ReadingExperienceService.getReadingGoal());
   };
-
-  const handleResetGoal = () => {
+  const resetGoal = () => {
     ReadingExperienceService.resetReadingGoal();
     setReadingGoal(ReadingExperienceService.getReadingGoal());
   };
 
-  const displayedQueueArticles = queue
-    .map((id) => FAQ_DATA.find((a) => a.id === id))
-    .filter(Boolean) as FAQItem[];
-
-  const trackArticles = selectedTrack.articleIds
-    .map((id) => FAQ_DATA.find((a) => a.id === id))
-    .filter(Boolean) as FAQItem[];
-
-  const handleToggleComplete = (articleId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    AnalyticsService.toggleArticleCompletion(articleId);
-    setCompletedArticles(AnalyticsService.getCompletedArticles());
-  };
-
-  const trackProgress = Math.round(
-    (selectedTrack.articleIds.filter((id) => completedArticles.includes(id))
-      .length /
-      selectedTrack.articleIds.length) *
-      100
-  );
-
-  const goalProgressPct = Math.min(
-    100,
-    Math.round(
-      (readingGoal?.elapsedSeconds ||
-        0 / ((readingGoal?.targetMinutes || 1) * 60)) * 100
-    )
-  );
-
-  if (!isMounted || !readingGoal) return null;
-
   return (
     <div className="space-y-8">
-      <header className="space-y-4 2xl:space-y-6 max-w-5xl">
-        <div className="space-y-1 2xl:space-y-2">
-          <div className="flex items-center gap-3 text-[10px] 2xl:text-xs font-bold uppercase tracking-[0.2em] text-stone-700 dark:text-stone-300 reveal">
-            <div className="w-6 2xl:w-10 h-[0.5px] bg-stone-400" />
-            <span>Educação Corporativa & Gestão do Conhecimento</span>
-          </div>
-
-          <h1 className="text-3xl lg:text-5xl 2xl:text-6xl font-serif font-light leading-tight tracking-tight text-text-main reveal">
-            <span>Trilhas & Lista de Leitura</span>
-          </h1>
+      <header className="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+        <div>
+          <p className="ui-eyebrow">Sua leitura</p>
+          <h1 className="ui-page-title mt-2">Minha Lista</h1>
+          <p className="mt-2 text-text-muted max-w-xl">
+            Artigos salvos para ler depois e trilhas recomendadas. Fica guardado neste navegador.
+          </p>
         </div>
 
-        {/* Card Editorial de Meta de Leitura Direta na Lista */}
-        <div className="p-4 sm:p-5 border border-border bg-bg-island  rounded-xl space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg border border-border bg-bg-main flex items-center justify-center text-text-main">
-                <Target size={15} />
-              </div>
-              <div>
-                <span className="text-xs font-semibold text-text-main uppercase tracking-wider block">
-                  Meta de Leitura Ativa
-                </span>
-                <span className="text-[11px] text-text-muted">
-                  Tempo contabilizado silenciosamente apenas durante a leitura
-                  interna dos artigos
-                </span>
-              </div>
-            </div>
-
-            {/* Seletor direto: 60m, 120m, 180m */}
-            <div className="flex items-center gap-1.5 self-start sm:self-auto">
-              {[60, 120, 180].map((mins) => (
-                <button
-                  key={mins}
-                  onClick={() => handleSelectGoal(mins)}
-                  className={`px-3 py-1 text-xs font-mono font-bold rounded-lg border transition-all ${
-                    readingGoal.targetMinutes === mins
-                      ? 'bg-text-main text-bg-main border-text-main shadow-sm'
-                      : 'border-border text-text-muted hover:text-text-main hover:bg-stone-100 dark:hover:bg-stone-800'
-                  }`}
-                >
-                  {mins} min
-                </button>
+        <section aria-labelledby="goal-title" className="glass-card p-5 w-full lg:max-w-md">
+          <div className="flex items-center justify-between gap-3">
+            <h2 id="goal-title" className="flex items-center gap-2 text-sm font-semibold text-text-main">
+              <Target size={16} aria-hidden="true" className="text-[color:var(--mesh-1)]" /> Meta de leitura
+            </h2>
+            <div className="flex items-center gap-1" role="group" aria-label="Duração da meta">
+              {[60, 120, 180].map((minutes) => (
+                <Button key={minutes} size="sm" variant={goal.targetMinutes === minutes ? 'primary' : 'ghost'} aria-pressed={goal.targetMinutes === minutes} onClick={() => chooseGoal(minutes)}>
+                  {minutes} min
+                </Button>
               ))}
-              <button
-                onClick={handleResetGoal}
-                title="Reiniciar ciclo da meta"
-                aria-label="Reiniciar meta de leitura"
-                className="p-1.5 text-text-muted hover:text-text-main transition-colors ml-1"
-              >
-                <RotateCcw size={13} />
-              </button>
+              <Button size="sm" variant="ghost" icon aria-label="Reiniciar meta de leitura" onClick={resetGoal}>
+                <RotateCcw size={14} aria-hidden="true" />
+              </Button>
             </div>
           </div>
-
-          {/* Barra de Progresso Silencioso da Meta */}
-          <div className="space-y-1 pt-1">
-            <div className="flex justify-between text-[10px] font-mono uppercase tracking-widest text-text-muted">
-              <span>Progresso do Ciclo</span>
-              <span>
-                {goalProgressPct}%{' '}
-                {readingGoal.completedNotified ? '(Meta Atingida)' : ''}
-              </span>
-            </div>
-            <div className="w-full h-1.5 bg-stone-200 dark:bg-stone-800 rounded-full overflow-hidden">
-              <div
-                className="h-full bg-text-main transition-all duration-500 rounded-full"
-                style={{ width: `${goalProgressPct}%` }}
-              />
-            </div>
+          <div className="mt-3 h-2 rounded-full bg-[color:color-mix(in_srgb,var(--text-main)_8%,transparent)] overflow-hidden" role="progressbar" aria-label="Progresso da meta" aria-valuenow={goalPct} aria-valuemin={0} aria-valuemax={100}>
+            <div className="h-full rounded-full bg-[color:var(--mesh-1)] origin-left transition-transform duration-500" style={{ transform: `scaleX(${goalPct / 100})` }} />
           </div>
-        </div>
-
-        {/* SeleÃƒÂ§ÃƒÂ£o entre Trilhas de Onboarding e Fila Individual */}
-        <div className="flex items-center gap-6 pt-2 border-b border-border">
-          <button
-            onClick={() => setViewMode('tracks')}
-            className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${viewMode === 'tracks' ? 'text-text-main' : 'text-text-muted hover:text-text-main'}`}
-          >
-            <GraduationCap size={15} />
-            <span>Trilhas de Onboarding</span>
-            {viewMode === 'tracks' && (
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main" />
-            )}
-          </button>
-          <button
-            onClick={() => setViewMode('queue')}
-            className={`flex items-center gap-2 pb-3 text-xs font-bold uppercase tracking-[0.2em] transition-all relative ${viewMode === 'queue' ? 'text-text-main' : 'text-text-muted hover:text-text-main'}`}
-          >
-            <BookOpen size={15} />
-            <span>Minha Lista ({displayedQueueArticles.length})</span>
-            {viewMode === 'queue' && (
-              <div className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main" />
-            )}
-          </button>
-        </div>
+          <p className="mt-2 text-xs text-text-muted">
+            {goalPct}% de {goal.targetMinutes} min{goal.completedNotified ? ' · meta atingida' : ''} · conta só o tempo lendo artigos.
+          </p>
+        </section>
       </header>
 
-      {/* MODO 1: TRILHAS DE APRENDIZAGEM CURADAS */}
-      {viewMode === 'tracks' && (
-        <div className="space-y-10">
-          {/* Seletor de Trilhas */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {DEFAULT_LEARNING_TRACKS.map((track) => {
-              const isCurrent = selectedTrack.id === track.id;
-              const completedCount = track.articleIds.filter((id) =>
-                completedArticles.includes(id)
-              ).length;
-              const pct = Math.round(
-                (completedCount / track.articleIds.length) * 100
-              );
+      <Tabs<View>
+        label="Minha Lista"
+        idPrefix="lista"
+        value={view}
+        onChange={setView}
+        items={[
+          { id: 'queue', label: <><Bookmark size={14} aria-hidden="true" /> Salvos</>, count: saved.length },
+          { id: 'tracks', label: <><GraduationCap size={14} aria-hidden="true" /> Trilhas</>, count: DEFAULT_LEARNING_TRACKS.length },
+        ]}
+      />
 
-              return (
-                <div
-                  key={track.id}
-                  onClick={() => setSelectedTrack(track)}
-                  className={`p-6 border cursor-pointer transition-all duration-150 flex flex-col justify-between relative ${isCurrent ? 'border-text-main bg-bg-island/80 shadow-sm' : 'border-border bg-bg-main hover:border-text-muted'}`}
-                >
-                  {isCurrent && (
-                    <div className="absolute top-0 left-0 right-0 h-[2px] bg-text-main" />
-                  )}
-                  <div className="space-y-3 mb-6">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] uppercase font-bold tracking-[0.2em] text-text-muted">
-                        {track.badge}
-                      </span>
-                      <span className="flex items-center gap-1 text-[11px] text-text-muted">
-                        <Clock size={12} /> {track.estimatedMinutes} min
-                      </span>
-                    </div>
-                    <h3 className="font-serif font-light text-text-main text-lg leading-snug">
-                      {track.title}
-                    </h3>
-                    <p className="text-xs text-text-muted line-clamp-2 leading-relaxed">
-                      {track.description}
-                    </p>
-                  </div>
-
-                  {/* Barra de Progresso Minimalista */}
-                  <div className="space-y-2 pt-4 border-t border-border/60">
-                    <div className="flex justify-between text-[10px] font-bold uppercase tracking-wider text-text-muted">
-                      <span>ConclusÃƒÂ£o</span>
-                      <span>
-                        {completedCount}/{track.articleIds.length} ({pct}%)
-                      </span>
-                    </div>
-                    <div className="w-full h-[3px] bg-border overflow-hidden">
-                      <div
-                        className="h-full bg-text-main transition-all duration-300"
-                        style={{ width: `${pct}%` }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {/* Detalhes da Trilha Ativa */}
-          <div className="border border-border p-8 bg-bg-island/40 space-y-6">
-            <div className="flex flex-col sm:flex-row sm:items-baseline justify-between gap-2 border-b border-border pb-4">
-              <div>
-                <div className="text-[10px] uppercase font-bold tracking-[0.2em] text-text-muted mb-1">
-                  Trilha Selecionada
-                </div>
-                <h2 className="text-2xl font-serif font-light text-text-main">
-                  {selectedTrack.title}
-                </h2>
-              </div>
-              <span className="text-xs font-mono uppercase tracking-wider text-text-muted">
-                Status:{' '}
-                <strong className="text-text-main">
-                  {trackProgress === 100
-                    ? '100% ConcluÃƒÂ­do'
-                    : `${trackProgress}% Lido`}
-                </strong>
-              </span>
-            </div>
-
-            {/* Lista de Procedimentos da Trilha */}
-            <div className="divide-y divide-border">
-              {trackArticles.map((article, idx) => {
-                const isDone = completedArticles.includes(article.id);
-
-                return (
-                  <div
-                    key={article.id}
-                    className="py-4 flex items-center justify-between gap-4 group"
-                  >
-                    <div className="flex items-center gap-4 min-w-0">
-                      <span className="font-mono text-xs text-text-muted w-6">
-                        {String(idx + 1).padStart(2, '0')}
-                      </span>
-                      <div className="min-w-0">
-                        <h4
-                          className={`text-sm font-medium transition-colors ${isDone ? 'line-through text-text-muted' : 'text-text-main group-hover:text-accent'}`}
-                        >
-                          {article.question}
-                        </h4>
-                        <span className="text-[10px] uppercase tracking-[0.15em] text-text-muted">
-                          {article.category}
-                        </span>
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={(e) => handleToggleComplete(article.id, e)}
-                      className={`flex items-center gap-1.5 px-3 py-1 text-xs uppercase tracking-wider font-semibold transition-colors shrink-0 ${isDone ? 'border border-text-main text-text-main bg-selection' : 'border border-border text-text-muted hover:text-text-main'}`}
-                    >
-                      <Check
-                        size={12}
-                        className={isDone ? 'opacity-100' : 'opacity-30'}
-                      />
-                      <span>{isDone ? 'ConcluÃƒÂ­do' : 'Confirmar'}</span>
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="pt-2">
-            <ArticleGrid items={trackArticles} />
-          </div>
+      {view === 'queue' && (
+        <div {...tabPanelProps('lista', 'queue')}>
+          {saved.length > 0 ? (
+            <ArticleGrid items={saved} />
+          ) : (
+            <EmptyState
+              className="glass-card"
+              title="Nenhum artigo salvo ainda"
+              icon={<Bookmark size={20} aria-hidden="true" />}
+              action={<ButtonLink href="/" variant="primary" size="sm">Explorar artigos</ButtonLink>}
+            >
+              Use o botão de salvar nos cards ou “Salvar” dentro do artigo para montar sua lista.
+            </EmptyState>
+          )}
         </div>
       )}
 
-      {/* MODO 2: LISTA DE LEITURA INDIVIDUAL */}
-      {viewMode === 'queue' && (
-        <div className="space-y-4">
-          <div className="pt-2 w-full max-w-screen-2xl 3xl:max-w-[2100px] mx-auto">
-            <ArticleGrid items={displayedQueueArticles} />
-          </div>
+      {view === 'tracks' && (
+        <div {...tabPanelProps('lista', 'tracks')} className="space-y-8">
+          <ul className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {DEFAULT_LEARNING_TRACKS.map((track) => {
+              const current = selectedTrack.id === track.id;
+              const done = doneIn(track);
+              const pct = Math.round((done / track.articleIds.length) * 100);
+              return (
+                <li key={track.id}>
+                  <button
+                    type="button"
+                    onClick={() => setSelectedTrack(track)}
+                    aria-pressed={current}
+                    className={`glass-card glass-interactive w-full h-full p-6 text-left flex flex-col justify-between gap-5 ${current ? 'ring-2 ring-[color:var(--mesh-1)]' : ''}`}
+                  >
+                    <span className="space-y-2">
+                      <span className="flex items-center justify-between gap-2">
+                        <span className="ui-badge" data-tone="info">{track.badge}</span>
+                        <span className="inline-flex items-center gap-1 text-xs text-text-muted">
+                          <Clock size={12} aria-hidden="true" /> {track.estimatedMinutes} min
+                        </span>
+                      </span>
+                      <span className="block font-serif text-lg leading-snug text-text-main">{track.title}</span>
+                      <span className="block text-sm text-text-muted leading-relaxed">{track.description}</span>
+                    </span>
+                    <span className="block">
+                      <span className="flex justify-between text-xs text-text-muted">
+                        <span>Concluído</span>
+                        <span className="tabular-nums">{done}/{track.articleIds.length}</span>
+                      </span>
+                      <span className="mt-1.5 block h-1.5 rounded-full bg-[color:color-mix(in_srgb,var(--text-main)_8%,transparent)] overflow-hidden" aria-hidden="true">
+                        <span className="block h-full rounded-full bg-[color:var(--mesh-1)] origin-left" style={{ transform: `scaleX(${pct / 100})` }} />
+                      </span>
+                    </span>
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
 
-          {displayedQueueArticles.length === 0 && (
-            <div className="py-12 2xl:py-20 border-t border-border reveal">
-              <p className="text-stone-600 dark:text-stone-400 font-serif italic text-xl 2xl:text-2xl font-light">
-                Sua lista de leitura pessoal estÃƒÂ¡ vazia. Salve artigos
-                clicando no ÃƒÂ­cone de favoritos nos cards.
-              </p>
+          <section aria-labelledby="track-title" className="glass-card p-6 sm:p-8">
+            <div className="flex flex-wrap items-baseline justify-between gap-2">
+              <h2 id="track-title" className="text-2xl font-serif text-text-main">{selectedTrack.title}</h2>
+              <span className="text-sm text-text-muted">
+                {doneIn(selectedTrack)} de {selectedTrack.articleIds.length} lidos
+              </span>
             </div>
-          )}
+            <ol className="mt-4 divide-y divide-[color:color-mix(in_srgb,var(--text-main)_8%,transparent)]">
+              {trackArticles.map((article, index) => {
+                const isDone = completed.includes(article.id);
+                return (
+                  <li key={article.id} className="py-3 flex items-center justify-between gap-4">
+                    <span className="flex items-center gap-4 min-w-0">
+                      <span className="font-mono text-xs text-text-muted w-6 shrink-0">{String(index + 1).padStart(2, '0')}</span>
+                      <span className="min-w-0">
+                        <Link href={`/artigo/${article.id}`} className={`ui-link text-sm font-medium ${isDone ? 'text-text-muted line-through' : ''}`}>
+                          {article.question}
+                        </Link>
+                        <span className="block text-xs text-text-muted">{article.category}</span>
+                      </span>
+                    </span>
+                    <Button size="sm" variant={isDone ? 'primary' : 'secondary'} aria-pressed={isDone} onClick={() => toggleDone(article.id)} aria-label={`${isDone ? 'Desmarcar' : 'Marcar'} “${article.question}” como lido`}>
+                      <Check size={14} aria-hidden="true" /> {isDone ? 'Lido' : 'Marcar como lido'}
+                    </Button>
+                  </li>
+                );
+              })}
+            </ol>
+          </section>
         </div>
       )}
     </div>

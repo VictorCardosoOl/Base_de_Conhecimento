@@ -1,6 +1,5 @@
 import React from 'react';
-import { SearchBar } from '@/features/search/components/SearchBar';
-import { HomeGrid } from '@/components/article/HomeGrid';
+import { HomeGrid } from '@/features/articles/components/HomeGrid';
 
 export default async function Page(props: {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -11,11 +10,8 @@ export default async function Page(props: {
 
   return (
     <div className="w-full">
-      <div className="mb-8 mt-4">
-        <SearchBar />
-      </div>
-
-      <div className="mt-12">
+      {/* A busca fica no cabeçalho (HeaderSearch). */}
+      <div className="mt-4">
         <HomeGrid categoryParam={categoryParam} />
       </div>
     </div>

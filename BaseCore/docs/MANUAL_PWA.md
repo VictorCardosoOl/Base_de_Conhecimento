@@ -1,6 +1,8 @@
 # Manual do Usuário: Aplicativo FAQ SST (PWA)
 
-O **FAQ SST** foi atualizado com a tecnologia **PWA (Progressive Web App)**. Isso significa que você pode instalar o site como se fosse um aplicativo nativo no seu computador ou celular, garantindo acesso ultra-rápido e funcionamento mesmo sem internet.
+O **FAQ SST** foi atualizado com a tecnologia **PWA (Progressive Web App)**. Isso significa que, nos navegadores compatíveis, você pode instalar o site como se fosse um aplicativo no seu computador ou celular (atalho próprio e janela sem barras do navegador).
+
+> **Importante:** o projeto ainda não tem _service worker_. O aplicativo instalado **precisa de internet** — não há modo offline nem cache de artigos no dispositivo.
 
 ---
 
@@ -32,25 +34,23 @@ O **FAQ SST** foi atualizado com a tecnologia **PWA (Progressive Web App)**. Iss
 
 ## ⚡ Funcionalidades Exclusivas
 
-### 1. Acesso Offline 📴
-
-Após instalar ou acessar o site pela primeira vez, ele salva automaticamente os arquivos necessários no seu dispositivo.
-**Teste:** Desligue o Wi-Fi e abra o aplicativo. Você conseguirá navegar, ler artigos e usar a busca normalmente.
-
-### 2. Busca Instantânea 🔍
+### 1. Busca Instantânea 🔍
 
 Utilize o atalho `Ctrl + K` (no computador) a qualquer momento para abrir a busca inteligente. Ela funciona instantaneamente, sem carregamentos.
 
-### 3. Atualizações Automáticas 🔄
+### 2. Sempre na versão atual 🔄
 
-Sempre que você abrir o aplicativo conectado à internet, ele verificará silenciosamente se há novos artigos ou melhorias. Se houver, ele baixará a atualização em segundo plano e a aplicará na próxima vez que você abrir o app.
+O aplicativo instalado abre o próprio site, então cada abertura já mostra a versão publicada mais recente — não há download de atualizações em segundo plano.
 
 ---
 
 ## ❓ Dúvidas Comuns
 
 **Ocupa muito espaço?**
-Não! Diferente de apps da loja que pesam 100MB+, o PWA do FAQ SST ocupa menos de 5MB, pois reaproveita a tecnologia do seu navegador.
+Não. O aplicativo instalado é um atalho para o site: os arquivos ficam apenas no cache comum do navegador.
+
+**Funciona sem internet?**
+Ainda não. Sem conexão, o aplicativo não abre os artigos.
 
 **Preciso atualizar na loja de aplicativos?**
 Não. O aplicativo se atualiza sozinho, igual a um site. Você sempre terá a versão mais recente.

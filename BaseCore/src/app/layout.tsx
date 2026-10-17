@@ -1,7 +1,8 @@
 import '@/assets/styles/global.css';
 import { Metadata, Viewport } from 'next';
-import { ClientLayout } from './ClientLayout';
-import { ConsentProvider } from '@/contexts/ConsentContext';
+import { ClientLayout } from '@/features/shell/components/ClientLayout';
+import { THEME_STORAGE_KEY } from '@/features/shell/theme-storage';
+import { ConsentProvider } from '@/features/consent/ConsentContext';
 
 import { Inter, Playfair_Display, Lexend } from 'next/font/google';
 
@@ -67,7 +68,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{
             __html: `
               try {
-                var isDark = localStorage.getItem('isDarkMode');
+                var isDark = localStorage.getItem('${THEME_STORAGE_KEY}');
                 var shouldBeDark = isDark === 'true' || (isDark === null && window.matchMedia('(prefers-color-scheme: dark)').matches);
                 if (shouldBeDark) {
                   document.documentElement.classList.add('dark');

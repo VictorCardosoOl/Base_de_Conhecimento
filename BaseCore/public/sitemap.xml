@@ -32,12 +32,6 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://[SEU_DOMINIO_AQUI.com.br]/artigo/esocial-sst-transmission</loc>
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://[SEU_DOMINIO_AQUI.com.br]/artigo/esocial-sst</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
@@ -75,12 +69,6 @@
   </url>
   <url>
     <loc>https://[SEU_DOMINIO_AQUI.com.br]/artigo/funcion-rios-e-declarantes-no-esocial---regras-de-identifica--o</loc>
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://[SEU_DOMINIO_AQUI.com.br]/artigo/rotina-de-transmiss-o-dos-eventos-de-sst-ao-esocial</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
@@ -219,12 +207,6 @@
   </url>
   <url>
     <loc>https://[SEU_DOMINIO_AQUI.com.br]/artigo/ppp</loc>
-    <lastmod>2026-09-04</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
-    <loc>https://[SEU_DOMINIO_AQUI.com.br]/artigo/sistema-tribut-rio-e-seu-impacto-nas-notas-fiscais</loc>
     <lastmod>2026-09-04</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>

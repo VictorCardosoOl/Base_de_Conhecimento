@@ -1,13 +1,12 @@
 import { Metadata } from 'next';
-import { getArticleById, getAllArticles } from '@/lib/markdown';
+import { getArticleById, getAllArticles } from '@/features/articles/article-files';
 import { notFound } from 'next/navigation';
-import dynamic from 'next/dynamic';
 import { marked } from 'marked';
-
-const ArticleContent = dynamic(
-  () => import('@/components/article/ArticleContent').then((mod) => mod.ArticleContent),
-  { loading: () => <div className="animate-pulse h-32 bg-stone-100 dark:bg-stone-900 rounded-xl" /> }
-);
+import { sanitizeArticleHtml } from '@/features/articles/sanitize-html';
+import { ArticleHero } from '@/features/articles/components/ArticleHero';
+import { ArticleReader } from '@/features/articles/components/ArticleReader';
+import { ArticleActions } from '@/features/articles/components/ArticleActions';
+import { readingMinutes } from '@/features/articles/article-meta';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -58,8 +57,8 @@ export default async function ArticlePage({ params }: Props) {
     notFound();
   }
 
-  // Parse markdown on the server for bots
-  const htmlContent = await marked.parse(article.content);
+  // Markdown → HTML → sanitização no servidor, antes de qualquer renderização
+  const htmlContent = sanitizeArticleHtml(await marked.parse(article.content));
 
   // Dados estruturados para motores de busca e de resposta (AEO)
   const jsonLd = {
@@ -74,6 +73,7 @@ export default async function ArticlePage({ params }: Props) {
         keywords: article.tags?.join(', '),
         datePublished: article.date,
         dateModified: article.lastReviewed || article.date,
+        ...(article.author && { author: { '@type': 'Person', name: article.author } }),
         ...(article.verifiedBy && {
           reviewedBy: { '@type': 'Person', name: article.verifiedBy },
         }),
@@ -92,17 +92,22 @@ export default async function ArticlePage({ params }: Props) {
   };
 
   return (
-    <article className="max-w-4xl mx-auto p-6 md:p-12 lg:p-16">
+    <article className="max-w-6xl mx-auto space-y-6 xl:space-y-8">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
       />
-      <h1 className="text-3xl font-serif text-text-main mb-8">
-        {article.question}
-      </h1>
-      <div className="prose dark:prose-invert max-w-none">
-        <ArticleContent htmlContent={htmlContent} articleId={article.id} />
-      </div>
+      <ArticleHero
+        article={article}
+        minutes={readingMinutes(article.searchText)}
+        actions={<ArticleActions articleId={article.id} title={article.question} summary={article.answer} />}
+      />
+      <ArticleReader
+        htmlContent={htmlContent}
+        articleId={article.id}
+        title={article.question}
+        summary={article.answer}
+      />
     </article>
   );
 }

@@ -1,8 +1,8 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import { ArticleModal } from '@/components/article/ArticleModal';
-import { FAQ_DATA } from '@/config/index';
+import { ArticleModal } from '@/features/articles/components/ArticleModal';
+import { FAQ_DATA } from '@/features/articles/catalog';
 
 export function ModalWrapper({ id }: { id: string }) {
   const router = useRouter();
