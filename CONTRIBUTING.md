@@ -82,3 +82,8 @@ Cada serviço tem o próprio workflow em `.github/workflows/`, que só roda quan
 - Decisão de arquitetura nova: crie um ADR em `docs/adr/` seguindo o formato dos existentes e acrescente-o
   ao [índice dos ADRs](./docs/adr/README.md).
 - Textos em português, objetivos, e comandos só depois de executados.
+
+## Colaboradores
+
+Quem participa do projeto, as origens que recebem crédito e como pedir a inclusão:
+[CONTRIBUTORS.md](./CONTRIBUTORS.md).

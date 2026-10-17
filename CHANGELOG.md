@@ -59,6 +59,9 @@ Primeira versão com a Base de Conhecimento e o AuthService no mesmo repositóri
 - Testes do Vitest estáveis: o paralelismo foi limitado a metade dos núcleos.
 - Documentação nova: [docs/README.md](./docs/README.md) (índice), guia de autenticação, guia de testes,
   solução de problemas, glossário, índice dos ADRs e [CONTRIBUTING.md](./CONTRIBUTING.md).
+- README da raiz reescrito (2026-10-17): propósito original do projeto, arquitetura, início rápido,
+  testes, segurança, implantação e licenças por pasta. Novo [CONTRIBUTORS.md](./CONTRIBUTORS.md), com os
+  colaboradores e as origens que recebem crédito.
 
 ### Validação (2026-10-15 a 2026-10-17)
 

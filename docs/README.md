@@ -26,6 +26,7 @@
 | Documento | Para quê |
 | --- | --- |
 | [Como contribuir](../CONTRIBUTING.md) | Branches, commits, testes, CI, hooks e segredos |
+| [Colaboradores](../CONTRIBUTORS.md) | Quem participa do projeto, origens e como ser listado |
 | [Testes](./TESTES.md) | O que cada suíte cobre, como rodar e instabilidades conhecidas |
 | [Guia de contribuição da BaseCore](../BaseCore/docs/CONTRIBUTING.md) | Componentes, estilos e build da BaseCore |
 | [Inserção de artigos](../BaseCore/docs/INSERCAO_ARTIGOS.md) | Como escrever e publicar um artigo |
