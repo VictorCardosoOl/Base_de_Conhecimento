@@ -1,6 +1,8 @@
-# Documentação
+# 📚 Documentação
 
 Índice de toda a documentação do repositório. Comece pelo [README da raiz](../README.md).
+
+---
 
 ## Para começar
 
@@ -10,6 +12,8 @@
 | [Rodando localmente](../BaseCore/docs/RODANDO_LOCALMENTE.md) | Passo a passo do ambiente de desenvolvimento, da primeira vez ao dia a dia |
 | [Solução de problemas](./SOLUCAO_DE_PROBLEMAS.md) | Erros comuns de uso e do ambiente local |
 | [Glossário](./GLOSSARIO.md) | Termos de SST e termos técnicos |
+
+---
 
 ## Como o sistema funciona
 
@@ -21,6 +25,8 @@
 | [README da BaseCore](../BaseCore/README.md) | O projeto, rotas, variáveis de ambiente e comandos |
 | [Decisões de arquitetura](./adr/README.md) | Índice dos ADRs 0001 a 0018 |
 
+---
+
 ## Desenvolvimento
 
 | Documento | Para quê |
@@ -31,6 +37,8 @@
 | [Guia de contribuição da BaseCore](../BaseCore/docs/CONTRIBUTING.md) | Componentes, estilos e build da BaseCore |
 | [Inserção de artigos](../BaseCore/docs/INSERCAO_ARTIGOS.md) | Como escrever e publicar um artigo |
 
+---
+
 ## Implantação e operação
 
 | Documento | Para quê |
@@ -40,6 +48,8 @@
 | [Exemplos de proxy](../deploy) | Caddy e Nginx |
 | [CHANGELOG](../CHANGELOG.md) | Mudanças por versão, riscos conhecidos e pendências |
 
+---
+
 ## Páginas e conteúdo da BaseCore
 
 | Documento | Para quê |
@@ -47,6 +57,8 @@
 | [Páginas institucionais](../BaseCore/docs/PAGINAS_INSTITUCIONAIS.md) | Termos de Uso, Privacidade e Preferências de Cookie |
 | [Página Sobre](../BaseCore/docs/PAGINA_SOBRE.md) | Conteúdo e manutenção da página Sobre |
 | [Manual do PWA](../BaseCore/docs/MANUAL_PWA.md) | Instalação como aplicativo |
+
+---
 
 ## Histórico
 

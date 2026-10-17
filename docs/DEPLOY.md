@@ -1,4 +1,4 @@
-# Deploy na Render (plano gratuito)
+# ☁️ Deploy na Render (plano gratuito)
 
 Como pôr a BaseCore e o AuthService no ar na Render, só com recursos gratuitos. A decisão e as alternativas
 estão no [ADR-0018](./adr/0018-render.md); o checklist de produção do AuthService, em
@@ -6,6 +6,8 @@ estão no [ADR-0018](./adr/0018-render.md); o checklist de produção do AuthSer
 
 Limites e comportamentos da Render citados aqui foram conferidos na documentação oficial em 2026-10-17.
 O que não foi verificado na prática está marcado como **não verificado**.
+
+---
 
 ## 1. Topologia
 
@@ -22,6 +24,8 @@ Caminho de uma requisição: navegador → `basecore-sst` (rewrites `/auth/*` e 
 `authservice-sst` → banco pela rede privada. O serviço gratuito pode **enviar** tráfego privado ao banco da
 mesma região, mas não **recebe** tráfego privado; por isso a BaseCore chama o AuthService pela URL pública.
 
+---
+
 ## 2. Limites do plano gratuito
 
 | Limite | Efeito neste projeto |
@@ -34,6 +38,8 @@ mesma região, mas não **recebe** tráfego privado; por isso a BaseCore chama o
 | Saída nas portas 25, 465 e 587 bloqueada | Sem SMTP (seção 10). |
 | Sem Private Service; serviço gratuito não recebe tráfego privado | AuthService público (seção 9). |
 | Deploy a partir de URL pública: sem deploy automático | Cada deploy é manual (seção 7). |
+
+---
 
 ## 3. Banco de dados
 
@@ -68,6 +74,8 @@ unset DATABASE_URL NEW_DATABASE_URL
 
 Depois: trocar o `DATABASE_URL` do AuthService para o banco novo, fazer um deploy, validar (seção 11) e apagar
 o `authservice.dump` (contém hashes de senha e dados pessoais).
+
+---
 
 ## 4. Variáveis
 
@@ -108,6 +116,8 @@ serviço ao `docker build` como argumentos de build. Que isso inclua as variáve
 se o build sair sem login (`/auth/login` com 404), defina `AUTH_AUDIENCE` e `AUTH_ACCESS_COOKIE_NAME` direto no
 serviço.
 
+---
+
 ## 5. Segredos de produção
 
 Regras: chaves novas, nunca as de desenvolvimento; nenhum segredo em tela, log, commit, arquivo versionado ou
@@ -126,6 +136,8 @@ A chave vai direto para a área de transferência, sem aparecer na tela nem ser 
 **Senha do banco:** gerada pela Render e ligada por referência; não precisa ser copiada.
 
 **Senha do primeiro administrador:** escolhida na hora, digitada sem eco (seção 8) e nunca gravada.
+
+---
 
 ## 6. Passo a passo
 
@@ -169,6 +181,8 @@ passo 6.3, se a Render acrescentar um sufixo ao nome.
 4. Corrigir `PUBLIC_APP_URL` e `TRUSTED_ORIGINS` do AuthService com a URL real da BaseCore, se diferente.
 5. Primeiro administrador (seção 8) e validação (seção 11).
 
+---
+
 ## 7. Deploys
 
 Serviços criados por URL pública não fazem deploy automático. Para publicar um commit novo da branch:
@@ -183,6 +197,8 @@ repositório for conectado com deploy automático.
 
 As migrations rodam no comando de início do AuthService (`alembic upgrade head` antes do `uvicorn`), a cada
 deploy e a cada vez que o serviço acorda. Sem migration pendente, o passo leva menos de um segundo.
+
+---
 
 ## 8. Operação sem Shell
 
@@ -221,6 +237,8 @@ GitHub Actions rodando o comando contra a URL externa do banco. Exigiria guardar
 no repositório do Victor e abrir o banco a qualquer IP (os executores do GitHub não têm IP fixo). Para o teste,
 a execução manual basta: sem ela, só crescem tabelas de sessões e contadores vencidos.
 
+---
+
 ## 9. IP do cliente e `TRUSTED_PROXY_COUNT`
 
 No plano gratuito o AuthService é público. Os caminhos até ele têm números de saltos diferentes:
@@ -237,6 +255,8 @@ todos por até 1 minuto). O limite por conta continua valendo. O aviso `deployme
 Medir mesmo assim, para registro (roteiro de `IMPLANTACAO.md`, seção 7, caso B, **pulando o passo 2**, que
 exige AuthService privado): com `0`, o script deve dar `OK` com um IP da Render. Não suba o valor enquanto o
 AuthService for público.
+
+---
 
 ## 10. Email
 
@@ -261,6 +281,8 @@ implementação dependem de aprovação.
 **No painel da Render, quando houver adaptador:** `EMAIL_BACKEND` com o novo valor, as credenciais da opção
 escolhida como segredo (colar no painel, nunca no chat ou no repositório) e o remetente (`EMAIL_FROM`).
 
+---
+
 ## 11. Validação depois do deploy
 
 | # | Conferir | Esperado |
@@ -275,6 +297,8 @@ escolhida como segredo (colar no painel, nunca no chat ou no repositório) e o r
 | 8 | Uma requisição com `Origin` de outro site ao `/auth/login` | `403` "Origem não permitida" |
 | 9 | Primeiro acesso depois de 15 min parado | registrar o tempo (partida a frio) |
 | 10 | `purge-expired` (seção 8) | uma linha de contagens e saída `0` |
+
+---
 
 ## 12. Horas gratuitas
 
@@ -293,6 +317,8 @@ projetos. Mitigação:
 - acompanhar o consumo em **Billing** no painel, uma vez por semana;
 - não manter os serviços acordados com monitoramento ou "pingadores": cada um gastaria o mês inteiro de horas.
 
+---
+
 ## 13. Reversão
 
 | Situação | O que fazer |
@@ -301,6 +327,8 @@ projetos. Mitigação:
 | Migration com problema | Rollback do serviço e, do seu terminal (seção 8), `alembic downgrade -1` contra a URL externa. Dados do teste são descartáveis. |
 | Variável errada | Corrigir no painel; a Render refaz o deploy. Se for `AUTH_*`, novo deploy da BaseCore. |
 | Tirar do ar | Suspender os serviços no painel (não apagar sem decisão do dono). |
+
+---
 
 ## 14. Merge futuro (não executado)
 

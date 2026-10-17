@@ -1,9 +1,10 @@
-# ADR-0005 — Cookies HttpOnly, defesa CSRF por Origin e CORS desligado
+# ADR-0005: Cookies HttpOnly, defesa CSRF por Origin e CORS desligado
 
 - Status: aceito
 - Data: 2026-09-27
 
 ## Decisão
+
 - Tokens **nunca** no corpo das respostas nem acessíveis ao JavaScript.
   - Access: cookie `__Host-kb_at`, com `HttpOnly`, `Secure`, `SameSite=Lax`, `Path=/` e sem `Domain`.
   - Refresh: cookie `__Secure-kb_rt`, com `HttpOnly`, `Secure`, `SameSite=Lax` e `Path=/auth`, então só trafega nas rotas de autenticação.

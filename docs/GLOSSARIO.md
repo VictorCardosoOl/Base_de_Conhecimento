@@ -1,4 +1,9 @@
-# Glossário
+# 📖 Glossário
+
+Termos de Saúde e Segurança do Trabalho usados nos artigos e termos técnicos usados na documentação e no
+código dos dois serviços.
+
+---
 
 ## Domínio (conteúdo da Base)
 
@@ -16,6 +21,8 @@
 | CAT | Comunicação de Acidente de Trabalho |
 | ASO | Atestado de Saúde Ocupacional |
 | CNAB | Padrão de arquivo de troca de dados com bancos (remessa e retorno de cobrança) |
+
+---
 
 ## Técnico
 

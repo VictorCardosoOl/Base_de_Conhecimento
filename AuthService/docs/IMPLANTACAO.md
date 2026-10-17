@@ -1,8 +1,12 @@
-# Implantação em produção: checklist do AuthService
+# 🚢 Implantação em produção: checklist do AuthService
 
 Requisitos que o código não resolve sozinho e dependem da hospedagem. Referências: ADR-0006 (limites e IP do cliente), ADR-0016 (auditoria de 2026-10-14) e `docs/AUDITORIA_AUTENTICACAO.md`. Como a autenticação e os limites de tentativas funcionam: [`docs/AUTENTICACAO.md`](../../docs/AUTENTICACAO.md).
 
 O Render é a referência principal, mas cada item vale para qualquer hospedagem. O que é específico do Render está marcado.
+
+> **Nota:** este checklist descreve uma implantação de produção. O deploy de teste no **plano gratuito** da Render não tem Private Service, Cron Job, Shell nem pre-deploy, e por isso não atende aos itens 2, 4 e 7: o AuthService fica público e `TRUSTED_PROXY_COUNT` fica em `0`. Diferenças, riscos e procedimentos do plano gratuito: [`docs/DEPLOY.md`](../../docs/DEPLOY.md).
+
+---
 
 ## 1. Checklist
 
@@ -16,6 +20,8 @@ O Render é a referência principal, mas cada item vale para qualquer hospedagem
 | 6 | Nenhum `deployment_warning` no log de boot | Log do serviço logo após o deploy. |
 | 7 | `purge-expired` agendado | §5 |
 
+---
+
 ## 2. Por que o IP do cliente importa
 
 O Next repassa o `X-Forwarded-For` que recebe, sem acrescentar nada (verificado no Next 16). O resultado depende do valor de `TRUSTED_PROXY_COUNT`:
@@ -25,6 +31,8 @@ O Next repassa o `X-Forwarded-For` que recebe, sem acrescentar nada (verificado 
 - **N maior que o número real de saltos:** o IP gravado é o de um proxy interno. Não é forjado, mas volta a ser um limite global. Por isso o item 4 exige comparar com o seu IP real.
 
 O limite por conta (ADR-0016) protege cada conta mesmo com o IP errado. Ele não resolve o bloqueio global.
+
+---
 
 ## 3. Verificação com cabeçalho forjado
 
@@ -49,6 +57,8 @@ Resultado em local (2026-10-14), com o Caddy à frente do Next e `TRUSTED_PROXY_
 | Acesso direto ao Next com cabeçalho forjado | `FALHA: o IP gravado é o forjado` |
 
 O segundo caso mostra por que o Next e o AuthService não podem aceitar conexões que não passem pelo proxy de borda.
+
+---
 
 ## 4. Proxy de borda
 
@@ -93,27 +103,35 @@ Se o número de saltos no Render variar (por exemplo, entre regiões ou caminhos
 - o valor é o mesmo em todas as redes testadas;
 - o AuthService não tem acesso público, pois quem chegasse direto poderia definir o cabeçalho.
 
+---
+
 ## 5. Limpeza periódica (`purge-expired`)
 
 O comando remove sessões expiradas ou revogadas há mais de 30 dias, contadores de limite vencidos e links e estados temporários vencidos. Rode uma vez por dia.
 
 | Ambiente | Como agendar |
 | --- | --- |
-| Render | Serviço do tipo **Cron Job** com a mesma imagem do AuthService. Agendamento `0 6 * * *` (UTC, 3h em Brasília). Comando `python -m backend.cli purge-expired`. Mesmas variáveis do AuthService (`DATABASE_URL`, `JWT_PRIVATE_KEY`, `ENVIRONMENT`). O Cron Job acessa o banco pela rede privada. |
+| Render (plano pago) | Serviço do tipo **Cron Job** com a mesma imagem do AuthService. Agendamento `0 6 * * *` (UTC, 3h em Brasília). Comando `python -m backend.cli purge-expired`. Mesmas variáveis do AuthService (`DATABASE_URL`, `JWT_PRIVATE_KEY`, `ENVIRONMENT`). O Cron Job acessa o banco pela rede privada. |
 | Docker Compose (VPS) | `docker compose --profile ops up -d purge` na pasta `AuthService/` ou na raiz (laço diário, fora do `up` padrão) |
 | Linux com cron | `0 6 * * * cd /srv/authservice && .venv/bin/python -m backend.cli purge-expired >> /var/log/authservice-purge.log 2>&1` |
 
 A execução imprime só contagens, sem dados pessoais.
 
+---
+
 ## 6. OpenAPI
 
 Sem `OPENAPI_ENABLED` definido, `/docs` e `/openapi.json` ficam ligados em desenvolvimento e desligados em produção. Ligar explicitamente em produção é possível, mas gera `deployment_warning` no boot. O contrato versionado continua em `docs/openapi.json`.
+
+---
 
 ## 7. Roteiro do primeiro deploy: medição do proxy
 
 Passo a passo para descobrir o `TRUSTED_PROXY_COUNT` certo. Os exemplos usam o Render, mas os passos valem para qualquer hospedagem; troque só os nomes dos painéis.
 
 **Não verificado:** como o proxy do Render trata o `X-Forwarded-For` (§4). Os resultados esperados abaixo são hipóteses; o critério de aprovação é o que decide.
+
+> **Nota:** o roteiro pressupõe o AuthService como Private Service. No plano gratuito ele é público; siga a adaptação de [`docs/DEPLOY.md`](../../docs/DEPLOY.md#9-ip-do-cliente-e-trusted_proxy_count), que mantém `TRUSTED_PROXY_COUNT=0`.
 
 ### 7.1 Pré-requisitos
 

@@ -1,11 +1,13 @@
-# Página "Sobre"
+# 👥 Página "Sobre"
 
 Rota `/sobre`. Conteúdo em `src/features/sobre/about-content.ts` (texto sem JSX) e página em `src/app/sobre/page.tsx`, montada só com componentes e materiais do design system: superfície de leitura no texto corrido, cartões sem desfoque, entrada ao rolar pelo `[data-reveal]` global. Não há mais exceção da rota no `ClientLayout`.
+
+---
 
 ## Origem das informações
 
 | Conteúdo | Fonte |
-|---|---|
+| --- | --- |
 | Origem (conhecimento transmitido oralmente, documentação colaborativa, portal único) | README, "A origem do projeto" |
 | Número de artigos e de módulos | catálogo gerado no build (`FAQ_DATA`) |
 | Ciclo de revisão de 12 meses (padrão) | `catalog.ts` e painel (`validityOf`) |
@@ -16,6 +18,8 @@ Rota `/sobre`. Conteúdo em `src/features/sobre/about-content.ts` (texto sem JSX
 | Repositório público | GitHub (respondeu 200 em 10/10/2026) |
 | Equipe | dados que estavam em `src/data/sobre-chapters.tsx` |
 
+---
+
 ## Retirado da versão anterior (sem respaldo ou desatualizado)
 
 - "Sem depender de bancos de dados": contas e interações usam PostgreSQL.
@@ -24,12 +28,16 @@ Rota `/sobre`. Conteúdo em `src/features/sobre/about-content.ts` (texto sem JSX
 - Resultados sem dado: "diminuição drástica dos chamados", redução de erros e de turnover, promoção, ganhos de LCP e bundle.
 - "ESTD 2026", nome antigo "SST FAQ" e narrativa em primeira pessoa.
 
+---
+
 ## Seções sobre as pessoas
 
 - **Quem faz a Base SST** (`MAINTAINERS`): Victor Cardoso e Guilherme Cruz, em blocos alternados (zigue-zague só no desktop, via grade; HTML sempre na ordem foto → texto → link).
 - **Consultoria técnica** (`CONSULTANTS`): Sabrina Fraguela, Aron Nascimento e João Sanchez, em cartões quadrados com um único link de perfil.
 - Componentes: `src/features/sobre/components/People.tsx`; ícones de LinkedIn e GitHub em `src/components/ui/BrandIcons.tsx` (o lucide-react 1.x não os inclui).
 - Fontes dos textos: README (Créditos), dados da equipe que já existiam no projeto e autoria dos commits no git. Links: os informados pelo responsável pelo projeto em 10/10/2026.
+
+---
 
 ## Pendências (dependem de confirmação)
 

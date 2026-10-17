@@ -1,7 +1,9 @@
-# Testes
+# 🧪 Testes
 
 Como testar cada serviço, o que cada suíte cobre e as instabilidades conhecidas. Os números de
 referência têm data: confira de novo antes de citar.
+
+---
 
 ## Visão geral
 
@@ -15,6 +17,8 @@ referência têm data: confira de novo antes de citar.
 | Tipos | BaseCore | TypeScript (`tsc`) | nada |
 | Build de produção | BaseCore | `next build` | nada (passa com e sem as variáveis `AUTH_*`) |
 | Ponta a ponta (E2E) | BaseCore com AuthService | Playwright | os dois serviços no ar e contas de teste |
+
+---
 
 ## AuthService
 
@@ -44,6 +48,8 @@ pytest
   `python -m backend.scripts.export_openapi` quando a API muda).
 - `tests/test_auditoria_autenticacao.py` reúne as regressões da auditoria de autenticação.
 
+---
+
 ## BaseCore
 
 Na pasta `BaseCore/`, depois de `npm ci`:
@@ -69,6 +75,8 @@ npm run build
   são dinâmicas e leem a configuração só em tempo de requisição; sem ela, falham fechadas
   (`src/tests/auth/authConfigMissing.test.ts`). Para conferir localmente, construa numa cópia sem
   `.env.local` e sem as variáveis no ambiente. A lista de rotas deve ser a mesma do build com as variáveis.
+
+---
 
 ## E2E (Playwright)
 
@@ -97,6 +105,8 @@ Precisa da BaseCore e do AuthService no ar e das contas de teste.
 - Os snapshots visuais (`e2e/visual-regression.spec.ts`) dependem do sistema operacional: as referências
   versionadas são de Windows (`*-win32.png`).
 
+---
+
 ## Instabilidades conhecidas e por quê
 
 | Sintoma | Causa | Situação |
@@ -104,9 +114,12 @@ Precisa da BaseCore e do AuthService no ar e das contas de teste.
 | Vitest: um teste diferente a cada vez estoura 5 s | Paralelismo acima dos núcleos: cada worker monta o próprio jsdom e a CPU satura | Resolvido em 2026-10-15: `maxWorkers: '50%'` em `vitest.config.ts`. Sem aumentar timeout nem usar retry |
 | E2E: renovação silenciosa ou análise de acessibilidade passam do tempo na suíte completa | Next, AuthService, Docker e o navegador disputando a mesma máquina | Mitigado: 2 workers locais (1 no CI). Os mesmos testes passam isolados |
 | E2E: tentativas espalhadas pela virada do minuto não dão `429` na 6ª | Limite em janela fixa | Esperado; ver [AUTENTICACAO.md](./AUTENTICACAO.md#limites-de-tentativas) |
+| Vitest: 1 falha em 502 testes numa execução de 2026-10-17, logo depois do pytest e do Docker | Não identificada: o teste não foi registrado e a falha não se repetiu em 5 execuções seguidas | Em observação. Se voltar, guarde a saída completa para identificar o teste |
 
 Para investigar um teste instável, rode só o arquivo dele e, depois, a suíte completa várias vezes,
 guardando o relatório JSON (`--reporter=json`) de cada execução.
+
+---
 
 ## Números de referência
 
@@ -114,7 +127,7 @@ Medidos de 2026-10-15 a 2026-10-17, numa máquina Windows de 8 núcleos, na estr
 
 | Suíte | Resultado |
 | --- | --- |
-| pytest (AuthService, 2026-10-16) | 301 passaram, cobertura de 97% |
+| pytest (AuthService, 2026-10-17) | 301 passaram (cobertura de 97% medida em 2026-10-16) |
 | ruff e mypy (AuthService) | sem problemas (58 arquivos no mypy) |
 | Vitest (BaseCore, 2026-10-17) | 502 passaram em 44 arquivos, cerca de 90 s |
 | tsc (BaseCore) | 0 erros |

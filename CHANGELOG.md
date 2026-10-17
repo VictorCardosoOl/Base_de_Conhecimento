@@ -1,4 +1,6 @@
-# Changelog
+# 🗒️ Changelog
+
+---
 
 ## 2.0.0 (2026-10-15)
 
@@ -62,6 +64,10 @@ Primeira versão com a Base de Conhecimento e o AuthService no mesmo repositóri
 - README da raiz reescrito (2026-10-17): propósito original do projeto, arquitetura, início rápido,
   testes, segurança, implantação e licenças por pasta. Novo [CONTRIBUTORS.md](./CONTRIBUTORS.md), com os
   colaboradores e as origens que recebem crédito.
+- Revisão editorial da documentação (2026-10-17): padrão visual do README original aplicado aos READMEs e
+  guias, ADRs com formato uniforme e índice com as relações declaradas, e correções factuais conferidas no
+  código (versão dos termos, campos padrão dos artigos, papéis, limites e códigos de erro do AuthService,
+  nome do aplicativo instalável e rodapé que prometia uso offline).
 
 ### Validação (2026-10-15 a 2026-10-17)
 
@@ -95,6 +101,6 @@ pytest 301 (cobertura de 97%), Vitest 502, tsc e ESLint sem erros, build com e s
 - **Serviço `purge` (perfil `ops`):** herda o healthcheck HTTP da imagem do AuthService e aparece como
   `unhealthy` no `docker compose ps`, embora rode a limpeza normalmente. Desligar o healthcheck nesse
   serviço.
-- **Markdownlint:** documentos antigos, não editados nesta versão, ainda têm avisos (o CI não roda o lint
-  de Markdown).
+- **Markdownlint no CI:** desde 2026-10-17 os documentos não têm avisos, mas o CI não roda o lint de
+  Markdown; uma regressão só aparece se alguém rodar o `markdownlint` localmente.
 - **Melhorias futuras:** tela de sessões ativas, checagem de senha vazada e MFA para administradores.

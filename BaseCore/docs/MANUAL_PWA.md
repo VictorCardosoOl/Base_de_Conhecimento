@@ -1,6 +1,6 @@
-# Manual do Usuário: Aplicativo FAQ SST (PWA)
+# 📲 Manual do usuário: aplicativo SST FAQ (PWA)
 
-O **FAQ SST** foi atualizado com a tecnologia **PWA (Progressive Web App)**. Isso significa que, nos navegadores compatíveis, você pode instalar o site como se fosse um aplicativo no seu computador ou celular (atalho próprio e janela sem barras do navegador).
+O **SST FAQ** foi atualizado com a tecnologia **PWA (Progressive Web App)**. Isso significa que, nos navegadores compatíveis, você pode instalar o site como se fosse um aplicativo no seu computador ou celular (atalho próprio e janela sem barras do navegador).
 
 > **Importante:** o projeto ainda não tem _service worker_. O aplicativo instalado **precisa de internet** — não há modo offline nem cache de artigos no dispositivo.
 
@@ -10,10 +10,10 @@ O **FAQ SST** foi atualizado com a tecnologia **PWA (Progressive Web App)**. Iss
 
 ### No Computador (Google Chrome, Edge)
 
-1.  Acesse o site do FAQ SST.
+1.  Acesse o site do SST FAQ.
 2.  Olhe para o lado direito da barra de endereço (onde fica a URL `http://...`).
 3.  Você verá um ícone de **Computador com uma seta para baixo** ou um sinal de **+**.
-4.  Clique nele e selecione **"Instalar FAQ SST"**.
+4.  Clique nele e selecione **"Instalar SST FAQ"** (o nome vem do `public/manifest.json`).
 5.  O site abrirá em uma janela independente, sem barras de navegador, parecendo um programa nativo.
 
 ### No Android (Chrome)

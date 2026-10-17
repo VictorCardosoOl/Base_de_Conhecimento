@@ -1,4 +1,7 @@
-# Auditoria técnica do sistema de autenticação
+# 🛡️ Auditoria técnica do sistema de autenticação
+
+> **Relatório datado.** Registra o estado de 2026-10-14 e as correções feitas em seguida. O funcionamento atual
+> está em [docs/AUTENTICACAO.md](../../docs/AUTENTICACAO.md) e as pendências, no [CHANGELOG](../../CHANGELOG.md).
 
 - Data: 2026-10-14
 - Escopo: AuthService (FastAPI, branch `fix/auditoria-autenticacao` a partir de `feat/conteudo-interacoes`) e a integração com a Base de Conhecimento (Next 16, branch `fix/auditoria-autenticacao` a partir de `feat/refatoracao-ux`).
@@ -23,6 +26,8 @@ A auditoria **confirmou três falhas** e corrigiu as três no código:
 
 A preocupação levantada na reunião de 2026-10-13 ("limpei os dados do site e continuei logado") foi reproduzida. **Não é uma falha**: o que ela mostra está explicado no §5, D4.
 
+---
+
 ## 2. Arquitetura atual
 
 ```text
@@ -44,6 +49,8 @@ Navegador ──(mesma origem)──► Next 16 (Base de Conhecimento, :3000)
   - `authFetch` renova a sessão uma vez em caso de `SESSION_EXPIRED`.
   - Nenhum token fica em `localStorage`, `sessionStorage` ou JavaScript.
 
+---
+
 ## 3. Funcionamento de ponta a ponta
 
 1. **Login** (`POST /auth/login`):
@@ -64,6 +71,8 @@ Navegador ──(mesma origem)──► Next 16 (Base de Conhecimento, :3000)
 5. **Recuperação de senha:** responde sempre 202. O token tem 30 min, é de uso único e vai no fragmento da URL. A redefinição revoga as sessões.
 6. **OAuth:** `state` em cookie e no banco, PKCE e proteção contra pre-hijack. Uma conta local com email não confirmado não é vinculada automaticamente.
 
+---
+
 ## 4. Regras de negócio (implementadas e verificadas pelos testes)
 
 - Cadastro público sempre cria o papel `user`. Para virar editor, a pessoa pede e um admin aprova.
@@ -75,6 +84,8 @@ Navegador ──(mesma origem)──► Next 16 (Base de Conhecimento, :3000)
   - por IP + email: 5/min;
   - **novo:** por conta, 10 a cada 15 min, independente do IP.
 - Também há limites no cadastro, na recuperação de senha, na confirmação de token e no OAuth, e por pessoa nas interações de conteúdo.
+
+---
 
 ## 5. Divergências entre o esperado e o implementado
 
@@ -98,6 +109,8 @@ Navegador ──(mesma origem)──► Next 16 (Base de Conhecimento, :3000)
 
 O refresh token (`kb_rt`) fica no path `/auth`. Por isso algumas ferramentas do navegador não o mostram ao inspecionar a página, e ele sobrevive a uma limpeza parcial. É o comportamento padrão de sessão longa ("continuar conectado"). Encerrar a sessão de verdade exige o logout, que revoga no servidor, ou o novo "Sair de todos os dispositivos".
 
+---
+
 ## 6. Auditoria de segurança
 
 | Área (ASVS) | Resultado |
@@ -114,6 +127,8 @@ O refresh token (`kb_rt`) fica no path `/auth`. Por isso algumas ferramentas do 
 | A07: enumeração | ✅ Login e recuperação não revelam se o email existe. O limite por conta vale também para emails inexistentes (teste). ⚠️ O cadastro responde 409 para email já usado: escolha deliberada, com limite. |
 | OAuth (Cheat Sheet) | ✅ `state` e PKCE, redirecionamento validado, sem vínculo automático com email não confirmado. |
 
+---
+
 ## 7. Qualidade e dívida técnica
 
 - **Pontos fortes:**
@@ -127,6 +142,8 @@ O refresh token (`kb_rt`) fica no path `/auth`. Por isso algumas ferramentas do 
   - `purge-expired` (limpeza de sessões e tokens vencidos) existia sem agendamento. **Corrigido:** serviço `purge` no perfil `ops` do compose e instruções para o Render e para cron (`docs/IMPLANTACAO.md`).
   - Os testes ficam sensíveis à ordem dos limites, porque os buckets ficam no banco. A fixture `configure` isola bem cada teste.
   - A sessão `203.0.113.99 / teste-xff-forjado` no banco local veio de um teste anterior (ADR-0006). Não tem efeito; ela expira sozinha.
+
+---
 
 ## 8. Plano de correção (priorizado)
 
@@ -143,6 +160,8 @@ O refresh token (`kb_rt`) fica no path `/auth`. Por isso algumas ferramentas do 
 | Baixa | Restart do `db` e porta em `127.0.0.1` no compose | ✅ Feito |
 | Baixa | Agendar `purge-expired`; OpenAPI desligado por padrão em produção | ✅ Feito (Etapa 2) |
 | Baixa | Lista de sessões ativas, checagem de senha vazada, MFA para admins | 📋 Recomendação (avaliação no §12) |
+
+---
 
 ## 9. Alterações realizadas
 
@@ -182,6 +201,8 @@ O contrato da API só ganhou o novo código de erro. Nenhuma rota, campo ou migr
 - `docs/IMPLANTACAO.md` (novo): checklist de produção, Render, medição do número de saltos e agendamento.
 - Texto do limite por IP corrigido (30 tentativas esgotam o limite; 429 a partir da 31ª) neste relatório, nos ADRs 0006 e 0016 e no `INTEGRACAO_AUTH.md` da Base.
 
+---
+
 ## 10. Testes e validação (resultados reais desta execução)
 
 | Verificação | Resultado |
@@ -212,12 +233,16 @@ A validação local usou um backup do `.env` e reverteu tudo ao final: o hash do
 
 Um caso de teste foi trocado durante a execução: `"não-é-ip"` virou `"nao-e-ip"`. Cabeçalhos HTTP só aceitam ASCII, e o cliente de teste se recusava a enviar o valor original. A falha era do teste, não do servidor.
 
+---
+
 ## 11. Estado final
 
 - As três falhas confirmadas estão corrigidas no código e cobertas por testes de regressão.
 - **Risco residual (alta, depende da implantação):** enquanto não houver um proxy de borda que sobrescreva o `X-Forwarded-For`, os limites por IP continuam funcionando como limite global. O login de todos ainda pode ser bloqueado por 1 minuto de cada vez, agora só com 30 **falhas** por minuto (D1). A força bruta contra uma conta, por sua vez, agora está contida pelo limite por conta. A configuração e a verificação estão prontas e validadas em local; falta medir na hospedagem escolhida (`docs/IMPLANTACAO.md`, §4).
 - Novo trade-off aceito: alguém pode bloquear o login de uma pessoa específica por até 15 minutos. A recuperação de senha continua disponível (ADR-0016).
 - Na época da auditoria, as alterações estavam só em branches locais dos dois repositórios. Desde 2026-10-15, fazem parte do monorepo (`AuthService/` e `BaseCore/`, ADR-0017 em [`../../docs/adr/0017-monorepo.md`](../../docs/adr/0017-monorepo.md)).
+
+---
 
 ## 12. Recomendações futuras
 

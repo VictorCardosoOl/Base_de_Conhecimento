@@ -1,7 +1,9 @@
-# Como contribuir
+# 🤝 Como contribuir
 
 Guia para quem altera o código ou a documentação deste repositório. Para escrever artigos, veja
 [BaseCore/docs/INSERCAO_ARTIGOS.md](./BaseCore/docs/INSERCAO_ARTIGOS.md).
+
+---
 
 ## Fluxo de trabalho
 
@@ -12,6 +14,8 @@ Guia para quem altera o código ou a documentação deste repositório. Para esc
 4. Abra um Pull Request para a `main` descrevendo o que mudou, por quê, como testou e se há algo que
    depende da implantação. Peça revisão de alguém da equipe.
 5. Só faça o merge com o CI verde e a revisão aprovada. Não use `push --force` na `main`.
+
+---
 
 ## Mensagens de commit
 
@@ -28,6 +32,8 @@ feat(conta): botão para sair de todos os dispositivos
 - No corpo, explique o motivo e o efeito quando não for óbvio.
 - Um commit por mudança lógica; evite misturar refatoração com correção.
 
+---
+
 ## Testes
 
 - Toda correção de defeito vem com um teste que **falha antes** e passa depois.
@@ -38,6 +44,8 @@ feat(conta): botão para sair de todos os dispositivos
 - Teste instável não se resolve aumentando timeout nem com retry: encontre a causa. Veja
   [docs/TESTES.md](./docs/TESTES.md#instabilidades-conhecidas-e-por-quê).
 - Mudou a API do AuthService? Regenere o contrato: `python -m backend.scripts.export_openapi`.
+
+---
 
 ## Antes de abrir o PR
 
@@ -57,6 +65,8 @@ manualmente. O prettier está instalado, mas `npm run format:check` ainda acusa 
 faz parte do CI. Instalar os hooks e padronizar a formatação estão registrados como pendência no
 [CHANGELOG](./CHANGELOG.md).
 
+---
+
 ## CI
 
 Cada serviço tem o próprio workflow em `.github/workflows/`, que só roda quando a pasta dele muda:
@@ -67,6 +77,8 @@ Cada serviço tem o próprio workflow em `.github/workflows/`, que só roda quan
 | `ci-authservice.yml` | `AuthService/` | ruff, mypy, migrations (ida, volta e ida), pytest com cobertura, build da imagem e gitleaks (só os commits do push ou do pull request) |
 | `codeql.yml` | `AuthService/` | análise de segurança do código Python |
 
+---
+
 ## Segredos
 
 - **Nunca** versione `.env`, `.env.local`, `.env.e2e.local`, a pasta `keys/` ou chaves `.pem`. Os
@@ -75,6 +87,8 @@ Cada serviço tem o próprio workflow em `.github/workflows/`, que só roda quan
 - Não coloque token, senha ou chave em mensagens de commit, logs, issues ou documentação.
 - Se um segredo for parar no Git, avise a equipe e troque o segredo (apagar o commit não basta).
 
+---
+
 ## Documentação
 
 - Mudou um comportamento? Atualize o documento correspondente na mesma mudança
@@ -82,6 +96,8 @@ Cada serviço tem o próprio workflow em `.github/workflows/`, que só roda quan
 - Decisão de arquitetura nova: crie um ADR em `docs/adr/` seguindo o formato dos existentes e acrescente-o
   ao [índice dos ADRs](./docs/adr/README.md).
 - Textos em português, objetivos, e comandos só depois de executados.
+
+---
 
 ## Colaboradores
 

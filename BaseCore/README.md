@@ -72,7 +72,7 @@ A plataforma é o coração operacional da equipe. Ela centraliza as orientaçõ
   Command palette global acionada por `Ctrl+K` / `Cmd+K`.
 
 - 📖 **Leitura confortável**  
-  Artigos em Markdown, com tipografia própria e tooltips de glossário inseridos automaticamente.
+  Artigos em Markdown, com tipografia própria e tooltips de glossário inseridos automaticamente (o mecanismo existe, mas o glossário, `src/data/glossary.json`, ainda está vazio).
 
 - 📋 **Fila de leitura**  
   Página dedicada (`/minha-lista`) para organizar o que ler.
@@ -86,8 +86,14 @@ A plataforma é o coração operacional da equipe. Ela centraliza as orientaçõ
 - 🔗 **Links com pré-visualização**  
   Metadados OpenGraph e Twitter Cards para compartilhar artigos.
 
+- 👤 **Contas e papéis**  
+  Cadastro, login, recuperação de senha e login social, com os papéis Administrador, Editor e Leitor verificados no servidor.
+
+- 💬 **Interações nos artigos**  
+  Avaliações, sugestões de correção e comentários, com moderação por editores e administradores.
+
 - 🛠️ **Área administrativa**  
-  Login, listagem de artigos e editor para quem mantém o conteúdo.
+  Painel, editor de artigos, pedidos de acesso de editor e gestão de usuários.
 
 - ♿ **Acessibilidade**  
   Tags semânticas e uso do teclado (Enter, Espaço e Esc).
@@ -165,7 +171,7 @@ Versões conforme o `package.json`.
 ```bash
 git clone https://github.com/VictorCardosoOl/Base_de_Conhecimento.git
 cd Base_de_Conhecimento/BaseCore
-npm install
+npm ci
 npm run dev
 ```
 
@@ -221,11 +227,13 @@ de requisição. Os rewrites `/auth/*` e `/content/*`, porém, são fixados no b
 | `npm run dev` | servidor de desenvolvimento em http://localhost:3000 (gera o catálogo antes) |
 | `npm run dev:all` | sobe o AuthService (Docker) e depois o `npm run dev` |
 | `npm run auth:up`, `auth:stop`, `auth:status`, `auth:logs` | controlam o AuthService pelo compose da pasta `../AuthService` |
+| `npm run start:all` e `npm run stop:all` | sobem o AuthService e a BaseCore em modo de produção; param o AuthService |
 | `npm run build` e `npm run start` | build de produção e servidor de produção na porta 3000 |
 | `npm run catalog` | gera `src/data/catalog.json` e `src/data/mapping.ts` a partir dos artigos |
 | `npm run lint`, `npm run typecheck`, `npm test` | ESLint, TypeScript e Vitest; `npm run check` roda os três |
 | `npm run test:coverage` | Vitest com cobertura (mínimo de 70%) |
 | `npm run test:e2e` | Playwright contra a Base e o AuthService no ar |
+| `npm run lint:md` e `npm run format:check` | markdownlint dos artigos e verificação do Prettier (fora do CI; ver [CONTRIBUTING.md](../CONTRIBUTING.md)). No Windows, o `lint:md` não expande o glob: use `npx markdownlint --config .markdownlint.json "src/content/artigos/**/*.md"` |
 
 Para subir tudo em containers, use o `docker-compose.yml` da raiz do repositório
 ([README da raiz](../README.md)). Guia completo do ambiente local:
@@ -280,7 +288,7 @@ Contribuições são bem-vindas, seja para melhorar o conteúdo, corrigir um err
 4. **Valide localmente** com o ambiente de desenvolvimento e confira se o resultado aparece como esperado:
 
    ```bash
-   npm install
+   npm ci
    npm run dev
    ```
 
@@ -372,7 +380,7 @@ Dúvidas, sugestões ou propostas de colaboração:
 
 <div align="center">
 
-Feito com 💚 — conhecimento do time simples de encontrar, mesmo offline.
+Feito com 💚: conhecimento do time simples de encontrar.
 
 ⭐ Se gostou, deixe uma estrela no repositório!
 

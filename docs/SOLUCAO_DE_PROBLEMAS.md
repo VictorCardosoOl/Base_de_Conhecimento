@@ -1,7 +1,9 @@
-# Solução de problemas
+# 🩺 Solução de problemas
 
 Problemas comuns ao usar e rodar a Base SST. Detalhes de autenticação em
 [AUTENTICACAO.md](./AUTENTICACAO.md); de testes em [TESTES.md](./TESTES.md).
+
+---
 
 ## Uso
 
@@ -38,6 +40,8 @@ O AuthService gravou a sessão, mas o servidor da BaseCore não a enxerga. Causa
 
 O console do navegador mostra "[auth] Sessão renovada, mas o destino voltou ao login" quando o detector
 de loop interrompe as voltas.
+
+---
 
 ## Ambiente local
 

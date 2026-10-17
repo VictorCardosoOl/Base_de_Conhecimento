@@ -7,7 +7,8 @@
 
 A Base de Conhecimento (Next.js) e o AuthService (FastAPI) viviam em repositórios separados, lado a lado na
 mesma pasta (`../AuthService`). A Base depende do AuthService inteiro (login, contas, papéis e as interações
-dos artigos, ADR-0015), e o trabalho do AuthService existia só como commits locais, sem cópia remota.
+dos artigos, ADR-0015). O projeto de origem do AuthService estava publicado em `https-shini/AuthService`,
+mas o trabalho feito para a Base (27 commits) existia só como commits locais, sem cópia remota.
 
 ## Decisão
 

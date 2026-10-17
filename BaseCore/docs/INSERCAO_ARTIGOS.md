@@ -1,9 +1,11 @@
-# Inserção de novos artigos
+# ✍️ Inserção de novos artigos
 
 Os artigos são arquivos Markdown em `src/content/artigos/`. Não há banco nem painel de
 publicação: o artigo entra no site pelo git. Antes de `npm run dev` e de `npm run build`,
 o script `scripts/generate-catalog.js` gera o catálogo em `src/data/`. A arquitetura está em
 [ARQUITETURA.md](./ARQUITETURA.md).
+
+---
 
 ## Passo a passo
 
@@ -37,8 +39,9 @@ Conteúdo em **Markdown**...
 | `tags`                  | não          | lista vazia                                                       |
 | `answer`                | não          | os primeiros 160 caracteres do texto                              |
 | `validityMonths`        | não          | 12 meses para `GRO` e `eSocial`; sem prazo nas demais             |
-| `lastReviewed`          | não          | o valor de `date`                                                 |
-| `verifiedBy`            | não          | "Engenharia de SST / Jurídico Trabalhista"                        |
+| `lastReviewed`          | não          | a data de revisão não aparece (não usa o valor de `date`)         |
+| `verifiedBy`            | não          | o revisor não aparece (nenhum valor padrão)                       |
+| `author`                | não          | o autor não aparece                                               |
 
 **Categorias aceitas** (maiúsculas e acentos não importam):
 
@@ -78,6 +81,8 @@ O comando regenera o catálogo. Abra o artigo pela home (modal) e por `/artigo/<
 commit do `.md` **e** dos arquivos alterados em `src/data/`: eles são versionados e gerados
 sempre do mesmo jeito, então o diff mostra só o que mudou.
 
+---
+
 ## Padrão editorial
 
 1. **Voz e tom:** linguagem técnica, porém acessível.
@@ -85,6 +90,8 @@ sempre do mesmo jeito, então o diff mostra só o que mudou.
    mudar o `id` de um artigo existente tira esse artigo das listas já salvas.
 3. **Tags:** palavras que alguém digitaria na busca. A busca indexa título, tags, resumo,
    categoria e texto.
+
+---
 
 ## Checklist de revisão
 

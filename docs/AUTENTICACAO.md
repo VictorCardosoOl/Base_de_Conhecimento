@@ -1,8 +1,10 @@
-# Autenticação
+# 🔐 Autenticação
 
 Referência única de como contas, sessões e permissões funcionam na Base SST. Os detalhes de cada
 decisão estão nos ADRs (`AuthService/docs/adr/`); o histórico da integração está em
 [`BaseCore/docs/INTEGRACAO_AUTH.md`](../BaseCore/docs/INTEGRACAO_AUTH.md).
+
+---
 
 ## Peças
 
@@ -20,6 +22,8 @@ flowchart LR
 - `/admin/*` são páginas da BaseCore. A API administrativa do AuthService (`/admin/users`,
   `/admin/role-requests`) é chamada pelo servidor da BaseCore, nunca pelo navegador.
 
+---
+
 ## Cookies
 
 | Cookie | Nome em desenvolvimento | Nome em produção | Caminho | Atributos |
@@ -33,6 +37,8 @@ flowchart LR
   renovação sempre parte do navegador.
 - `AUTH_ACCESS_COOKIE_NAME` da BaseCore precisa ser igual a `ACCESS_COOKIE_NAME` do AuthService.
 
+---
+
 ## Login
 
 1. A tela de login envia `POST /auth/login` com email e senha.
@@ -43,6 +49,8 @@ flowchart LR
 4. Se der certo, abre uma sessão no banco e grava os dois cookies.
 5. A tela volta para o destino pedido (`?next=`). Se a conta tem senha temporária, vai antes para a troca
    de senha.
+
+---
 
 ## Sessão e renovação
 
@@ -66,6 +74,8 @@ flowchart LR
   "Não foi possível manter a sessão neste navegador". A marca de volta é apagada quando o destino abre
   com sessão válida, então uma volta legítima logo depois não é confundida com loop.
 
+---
+
 ## Proteção das páginas da BaseCore
 
 1. `src/proxy.ts` faz uma checagem rápida em `/admin` e `/conta`: sem o cookie de access, vai direto
@@ -74,6 +84,12 @@ flowchart LR
    `GET /auth/me`, que confere no banco a sessão, o status da conta e o papel atual. O papel dentro do
    JWT nunca basta.
 3. Esconder links no menu é só conveniência visual.
+4. Sem configuração de autenticação válida (`AUTH_*` ausentes ou incompletas), nada concede acesso: o
+   `proxy.ts` manda ao login, as páginas protegidas e as Server Actions respondem "indisponível" e o
+   servidor registra o motivo no log. A configuração só é lida em tempo de requisição, então o build passa
+   sem ela.
+
+---
 
 ## Papéis
 
@@ -87,6 +103,8 @@ flowchart LR
   administrador aprova.
 - O cadastro público cria sempre o papel `user`.
 
+---
+
 ## Senha temporária
 
 - Contas criadas por um administrador, ou com senha redefinida por ele, nascem com
@@ -97,6 +115,8 @@ flowchart LR
   e sair continuam liberados.
 - Na tela, a mensagem é "Troque a senha temporária em Minha conta antes de continuar."
 
+---
+
 ## Cadastro, confirmação de email e recuperação de senha
 
 - O cadastro público só funciona com `PUBLIC_REGISTRATION_ENABLED=true`.
@@ -104,6 +124,8 @@ flowchart LR
   token no fragmento da URL (`#token=`), que não vai para logs de servidor.
 - `POST /auth/password/forgot` responde `202` sempre, exista ou não a conta.
 - Redefinir a senha encerra as sessões abertas.
+
+---
 
 ## Login social (OAuth com PKCE)
 
@@ -115,6 +137,8 @@ flowchart LR
   vinculada automaticamente, para impedir que alguém crie a conta antes do dono e espere o vínculo.
 - Conta nova pelo provedor passa por uma etapa de usuário, nome e aceite dos termos (15 min).
 
+---
+
 ## Saída
 
 | Ação | O que acontece |
@@ -125,6 +149,8 @@ flowchart LR
 | Apagar só o `kb_at` | Não encerra a sessão: o login renova com o `kb_rt` e volta ao destino |
 | Apagar todos os cookies do site | Encerra neste navegador, mas a sessão continua válida no banco até vencer |
 
+---
+
 ## Proxy `/auth` e `/content` e CSRF
 
 - `next.config.ts` cria os rewrites `/auth/:path*` e `/content/:path*` para `AUTH_INTERNAL_URL`. Os
@@ -132,6 +158,8 @@ flowchart LR
 - O AuthService recusa mutações cujo `Origin` (ou `Referer`) não esteja em `TRUSTED_ORIGINS`, e recusa
   mutação com cookie e sem origem (`403`). O rewrite do Next repassa o `Origin` do navegador.
 - As respostas da API saem com `Cache-Control: no-store` e cabeçalhos de segurança próprios.
+
+---
 
 ## Limites de tentativas
 
@@ -144,7 +172,7 @@ com `Retry-After`.
 | Login | 5 por minuto | IP + email | só falhas |
 | Login | 10 a cada 15 min | conta (email), em qualquer IP | só falhas |
 | Troca da própria senha | 5 por minuto | usuário | todas as tentativas |
-| Cadastro | 10 por hora | IP | todas |
+| Cadastro | 10 por hora (30 a cada 10 min no `.env.example` de desenvolvimento) | IP | todas |
 | Disponibilidade de nome de usuário | 60 por minuto | IP | todas |
 | Recuperação de senha | 10 por IP e 3 por email, a cada 15 min | IP e email | todas |
 | Uso de link (redefinir senha, confirmar email) | 20 a cada 15 min | IP | todas |
@@ -176,6 +204,8 @@ Riscos aceitos:
   ([`AuthService/docs/IMPLANTACAO.md`](../AuthService/docs/IMPLANTACAO.md)). O valor do
   `X-Forwarded-For` é validado como IP; um valor inválido é ignorado.
 
+---
+
 ## Erros da API
 
 | Código | HTTP | Quando |
@@ -188,6 +218,11 @@ Riscos aceitos:
 | `RATE_LIMITED` | 429 | limite de tentativas, com `Retry-After` |
 | `VALIDATION_ERROR` | 400 | dados inválidos |
 | `CONFLICT` | 409 | conflito de regra (ex.: email ou usuário já em uso) |
+
+Lista completa dos códigos, inclusive `NOT_FOUND`, `METHOD_NOT_ALLOWED`, `SERVICE_UNAVAILABLE` e
+`INTERNAL_ERROR`: `AuthService/backend/core/errors.py`.
+
+---
 
 ## Onde está no código
 

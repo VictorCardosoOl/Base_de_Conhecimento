@@ -1,10 +1,12 @@
-# Integração com o AuthService
+# 🔗 Integração com o AuthService
 
 > **Documento histórico.** Registra como a integração foi construída, etapa por etapa, até a versão
 > 2.0.0. A referência atual de autenticação é [docs/AUTENTICACAO.md](../../docs/AUTENTICACAO.md); se
 > houver diferença, vale ela.
 
 Contrato que a Base de Conhecimento consome do AuthService, validado em 2026-09-27 contra a branch `feat/fase-1-auth-persistente` (32/32 verificações em execução real, além da verificação do token no Node com `jose`).
+
+---
 
 ## Topologia
 
@@ -18,6 +20,8 @@ Navegador ──▶ Next.js (mesma origem) ──rewrite /auth/*──▶ AuthSe
 - `/admin/*` **não** é repassado: são páginas da Base de Conhecimento.
 - Sem `AUTH_INTERNAL_URL`, o proxy fica desligado. Isso é temporário: a variável passa a ser obrigatória quando o login falso for removido.
 
+---
+
 ## Configuração (`.env.local`, só servidor)
 
 | Variável                  | Exemplo local                                                | Deve bater com (AuthService) |
@@ -29,6 +33,8 @@ Navegador ──▶ Next.js (mesma origem) ──rewrite /auth/*──▶ AuthSe
 | `AUTH_JWKS_URL`           | opcional; padrão `<AUTH_INTERNAL_URL>/.well-known/jwks.json` | —                            |
 
 No AuthService: `TRUSTED_ORIGINS` deve conter a origem do Next (ex.: `http://localhost:3000`).
+
+---
 
 ## Endpoints usados
 
@@ -46,6 +52,8 @@ Erros sempre no formato `{"error": {"code", "message"}}`. As rotas de recuperaç
 confirmação de email e login social estão na seção "Recuperação de senha, login social e
 termos", no fim deste documento.
 
+---
+
 ## Cookies
 
 | Cookie                               | Atributos                                             | Visível para              |
@@ -59,11 +67,15 @@ Consequências para o Next:
 - **O servidor Next nunca vê o cookie de refresh** nas páginas. A renovação sempre parte do navegador: ao receber `401 SESSION_EXPIRED`, ele chama `POST /auth/refresh` e repete a requisição.
 - Como o `Max-Age` do access é igual ao TTL, depois da expiração o cookie de access simplesmente some. O servidor deve tratar "sem cookie" como "sessão a renovar no navegador", e não como logout.
 
+---
+
 ## Access token (JWT)
 
 - `alg=EdDSA` (Ed25519), com `kid`. Validar com `jose`: `jwtVerify(token, createRemoteJWKSet(jwksUrl), { issuer, audience, algorithms: ['EdDSA'] })`.
 - Claims: `sub` (UUID do usuário), `iss`, `aud=knowledge-api`, `iat`, `exp`, `jti`, `role` (`admin` | `user`) e `sid` (sessão).
 - A validação local só pela assinatura aceita um token de sessão já revogada até o `exp` (≤ 10 min). Decisões sensíveis (acesso ao `/admin`) usam `GET /auth/me`, que confere a sessão no banco.
+
+---
 
 ## Papéis → permissões na Base de Conhecimento
 
@@ -76,13 +88,19 @@ Consequências para o Next:
 A autorização é sempre decidida no servidor, com o papel e o status atuais vindos de
 `GET /auth/me` (o `role` do JWT nunca basta). Esconder links é só UX.
 
+---
+
 ## Refresh concorrente
 
 Várias abas podem renovar ao mesmo tempo: reapresentar o refresh token anterior até 10 s depois da rotação é tratado como concorrência legítima (ADR-0008 do AuthService). O cliente ainda deve fazer uma única chamada de refresh por vez dentro da aba.
 
+---
+
 ## CSRF
 
 O AuthService recusa mutações cujo `Origin` (ou `Referer`) não esteja em `TRUSTED_ORIGINS`, e recusa cookie sem origem. **Verificado através do rewrite:** o Next repassa o `Origin` do navegador, e a proteção segue ativa (403 para origem estranha e para cookie sem origem).
+
+---
 
 ## IP do cliente (rate limit) — requisito de deploy
 
@@ -92,6 +110,8 @@ Verificado: o rewrite do Next (dev e `next start`) **não adiciona** `X-Forwarde
 - Desde o ADR-0016 do AuthService, há também um limite **por conta** (10 tentativas em 15 min), independente do IP. Desde 2026-10-15, os três limites contam só as tentativas que **falham**: login correto não consome limite, e o bloqueio global por IP passou a exigir 30 falhas por minuto. O IP vindo do `X-Forwarded-For` é validado.
 - Produção: só use `TRUSTED_PROXY_COUNT>0` se a camada à frente do Next sobrescrever o `X-Forwarded-For`, ou se o número de saltos tiver sido medido. Valide com `python -m backend.scripts.verify_client_ip` do AuthService, que forja o header e confere o IP gravado. Exemplos de proxy (Caddy, Nginx), passos para o Render e o checklist completo estão em `docs/IMPLANTACAO.md` do AuthService.
 - O Next e o AuthService não podem aceitar conexões que não passem pelo proxy de borda: com acesso direto ao Next, o IP forjado é gravado (validado em local em 2026-10-14).
+
+---
 
 ## Sessão no servidor (etapa 2)
 
@@ -116,6 +136,8 @@ Verificado: o rewrite do Next (dev e `next start`) **não adiciona** `X-Forwarde
 
 Como o cookie de access expira junto com o token (`Max-Age` = TTL), um usuário com sessão válida pode chegar a `/login?next=...` só porque o access venceu. **A página de login deve primeiro tentar `POST /auth/refresh`** e, se der certo, voltar para `next` sem pedir senha.
 
+---
+
 ## Login real (etapa 3)
 
 - `src/features/auth/client.ts` (navegador) chama só `/auth/*` na mesma origem e **nunca lê nem guarda tokens**:
@@ -128,6 +150,8 @@ Como o cookie de access expira junto com o token (`Max-Age` = TTL), um usuário 
 - Logout real no botão **Sair** do painel e na página 403 ("Sair e entrar com outra conta"). Sem essa opção no 403, a renovação silenciosa reabriria a mesma sessão.
 - Removidos: `src/actions/auth-actions.ts` (hash de `admin@admin.com`), as credenciais exibidas na tela e no README, a "sessão" em `localStorage`/`sessionStorage` e o honeypot do login.
 - E2E: `Fluxo 4` usa `E2E_ADMIN_EMAIL`/`E2E_ADMIN_PASSWORD` e é pulado sem elas. Nenhuma credencial fica no código.
+
+---
 
 ## Auditoria da integração (antes de novas funcionalidades)
 
@@ -187,6 +211,8 @@ concluídos e meta de leitura) e foi corrigido igual. A lista de leitura passou 
 estado único compartilhado (`useSyncExternalStore`): o contador do menu atualiza na hora ao
 salvar um artigo. Varredura com todas as chaves do armazenamento preenchidas: nenhuma página
 com divergência de hidratação.
+
+---
 
 ## Gestão de usuários e troca obrigatória de senha
 
@@ -253,6 +279,8 @@ Contrato do AuthService: ADR-0009 (branch `feat/gestao-usuarios` do AuthService)
 - Sem envio de email: não há "esqueci minha senha"; a redefinição é feita por um admin.
 - `e2e/users.spec.ts` cria uma conta nova a cada execução no banco local.
 
+---
+
 ## Cadastro público, pedidos de acesso de editor e usuários de teste
 
 Contrato do AuthService: ADR-0010 (branch `feat/cadastro-e-solicitacoes` do AuthService).
@@ -310,6 +338,8 @@ Contrato do AuthService: ADR-0010 (branch `feat/cadastro-e-solicitacoes` do Auth
 - Os testes de cadastro e de gestão criam contas `cadastro-*`/`e2e-*` no banco local a cada
   execução (o AuthService não tem exclusão de contas, só desativação).
 
+---
+
 ## Usuário e nome de exibição
 
 Contrato do AuthService: ADR-0011 (branch `feat/usuario-e-nome` do AuthService). Esta versão da
@@ -330,6 +360,8 @@ resposta é tratada como fora do contrato (falha fechada) e as áreas logadas fi
 - Contas que já existiam receberam usuário e nome derivados do email pela migration do
   AuthService; as contas de teste foram ajustadas para `admin`, `editor` e `leitor`.
 
+---
+
 ## Navegação: menu de conta
 
 - A navegação fica em `src/features/navigation/` (`AppHeader` + `NavDrawer`). No cabeçalho, o
@@ -346,6 +378,8 @@ resposta é tratada como fora do contrato (falha fechada) e as áreas logadas fi
   consultou a sessão; os testes E2E esperam por esse sinal antes de interagir.
 - Login e cadastro usam o layout em duas colunas do GitHub (`AuthSplitLayout`). A lógica continua
   a do AuthService. O efeito de imagem só aparece com WebGL disponível.
+
+---
 
 ## Recuperação de senha, login social e termos
 

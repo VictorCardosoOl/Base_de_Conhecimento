@@ -1,17 +1,20 @@
-# Arquitetura
+# 🏛️ Arquitetura
 
 Como a Base de Conhecimento (SST FAQ) está organizada, por que está assim e onde mexer para
 cada tipo de mudança. Descreve o código como ele é hoje. Para rodar o projeto, veja
 [RODANDO_LOCALMENTE.md](./RODANDO_LOCALMENTE.md); para os detalhes de login e permissões, veja
-[INTEGRACAO_AUTH.md](./INTEGRACAO_AUTH.md).
+[docs/AUTENTICACAO.md](../../docs/AUTENTICACAO.md).
+
+---
 
 ## Visão geral
 
 - **Next.js 16 (App Router) + React 19 + TypeScript**, estilizado com Tailwind CSS 4.
 - **Conteúdo estático:** os artigos são arquivos Markdown versionados em
   `src/content/artigos/`. Não há banco de artigos nem API de conteúdo.
-- **Autenticação externa:** contas, sessões e papéis ficam no **AuthService** (outro
-  repositório). O Next repassa `/auth/*` para ele e confere a sessão no servidor.
+- **Autenticação externa:** contas, sessões, papéis e interações dos artigos ficam no **AuthService**
+  (pasta `AuthService/` do monorepo). O Next repassa `/auth/*` e `/content/*` para ele e confere a sessão
+  no servidor.
 - **Estado do leitor no navegador:** lista de leitura, metas, tipografia, destaques e
   métricas locais ficam no `localStorage` do próprio usuário.
 
@@ -20,8 +23,10 @@ Navegador ──► Next (src/app)
                 │  páginas e Server Actions
                 ├──► src/features/*  (lógica por domínio)
                 ├──► src/data/*      (catálogo gerado a partir de src/content/artigos)
-                └──► /auth/* (proxy) ──► AuthService ──► PostgreSQL
+                └──► /auth/* e /content/* (rewrite) ──► AuthService ──► PostgreSQL
 ```
+
+---
 
 ## Organização dos diretórios
 
@@ -33,16 +38,17 @@ src/
     reading/      Lista de leitura, metas, tipografia, destaques e trilhas
     search/       Índice de busca (MiniSearch), paleta de comandos e barra de busca
     analytics/    Métricas locais de uso e telemetria de erros (Sentry)
-    consent/      Consentimento LGPD: armazenamento, contexto, banner e modal legal
+    consent/      Consentimento LGPD: armazenamento, contexto, banner e preferências de cookie
     auth/         Sessão, cliente de autenticação, Server Actions e telas de conta
+    content/      Interações dos artigos (avaliação, sugestão de correção e comentários)
+    legal/        Documentos institucionais (Termos, Privacidade, Cookies) e seus componentes
     navigation/   Navegação: cabeçalho (AppHeader), menu lateral (NavDrawer) e rodapé
     shell/        Estrutura da aplicação: ClientLayout, tema, posição do menu e atalhos
-    sobre/        Seções da página "Sobre" (hero, capítulos, equipe, sumário)
-    not-found/    Página 404 com texto animado
-  components/ui/  Componentes genéricos, sem domínio (rolagem suave, efeitos visuais
-                  DitherVeil e FuzzyText)
-  hooks/          Hooks genéricos (snapshot do navegador, foco, mobile, rolagem)
-  lib/            Infraestrutura genérica (animações, navegação, headers de segurança)
+    sobre/        Conteúdo e componentes da página "Sobre" (pessoas e link de conta)
+  components/ui/  Componentes genéricos, sem domínio (botões, campos, diálogos, avisos,
+                  abas, toasts, estados, LazyMount, marca e o efeito visual DitherVeil)
+  hooks/          Hooks genéricos (snapshot do navegador, debounce, foco, mobile, compartilhar)
+  lib/            Infraestrutura genérica (animações, navegação, versão, headers de segurança)
   content/        Artigos em Markdown (fonte do conteúdo)
   data/           Gerado por scripts/generate-catalog.js (não editar à mão)
   assets/styles/  CSS global e tokens de tema (Tailwind)
@@ -66,6 +72,8 @@ docs/             Documentação
   `user-actions.ts`, `users.ts`, `session-summary.ts`). O build falha se um componente de
   cliente importar um desses módulos.
 
+---
+
 ## Responsabilidades dos módulos
 
 | Módulo                                     | Responsabilidade                                                                                                                       |
@@ -86,6 +94,8 @@ docs/             Documentação
 | `app/@modal/(.)artigo/[id]`                | Rota interceptada: na navegação pelo site, o artigo abre em modal sobre a lista; acesso direto abre `/artigo/[id]` inteira.            |
 | `app/**`                                   | Uma pasta por rota; componentes usados só por uma rota ficam junto dela (ex.: `app/admin/usuarios/UsersManager.tsx`).                  |
 
+---
+
 ## Fluxos principais
 
 **Conteúdo de artigos**
@@ -103,12 +113,14 @@ docs/             Documentação
 5. A página `/artigo/[id]` é gerada no build a partir de `article-files.ts`, que lê os `.md`
    direto do disco, e sanitiza no servidor.
 
-**Autenticação.** Está detalhada em [INTEGRACAO_AUTH.md](./INTEGRACAO_AUTH.md). Em resumo:
+**Autenticação.** Está detalhada em [docs/AUTENTICACAO.md](../../docs/AUTENTICACAO.md). Em resumo:
 
 - `proxy.ts` manda para o login quem acessa `/admin` ou `/conta` sem o cookie de sessão.
 - As páginas decidem o acesso no servidor (`requireSession` e `requireRole`), sempre
   consultando o papel atual em `/auth/me`.
 - As Server Actions repetem a autorização antes de agir.
+- Sem configuração `AUTH_*` válida, as rotas protegidas falham fechadas (`loadSessionDeps`): nada concede
+  acesso, e o build não depende dessas variáveis.
 - O navegador nunca lê os tokens: os cookies são HttpOnly e o JavaScript não tem acesso a
   eles.
 
@@ -131,6 +143,8 @@ docs/             Documentação
 "piscar". `use-theme-preference.ts` mantém e grava a preferência. Os dois usam a mesma chave
 (`THEME_STORAGE_KEY`, em `features/shell/theme-storage.ts`, um módulo sem `'use client'` para poder ser lido pelo layout do servidor).
 
+---
+
 ## Decisões arquiteturais
 
 - **Organização por domínio (`features/`).**
@@ -152,6 +166,8 @@ docs/             Documentação
   - Por isso `src/data` é versionado e gerado de forma determinística.
   - Esses arquivos ficam fora do Prettier (`.prettierignore`).
 
+---
+
 ## Convenções
 
 - **Imports:** `@/…` para outras pastas; `./…` só para arquivos da mesma pasta. Nada de
@@ -170,15 +186,17 @@ docs/             Documentação
   `src/assets/styles/global.css`. As classes vêm da detecção automática do Tailwind v4,
   sem `@source`.
 
+---
+
 ## Configurações e dependências críticas
 
-| Arquivo                | Para que serve                                                                                                          |
-| ---------------------- | ----------------------------------------------------------------------------------------------------------------------- |
-| `next.config.ts`       | Headers de segurança (CSP etc., `lib/security-headers.ts`), rewrite `/auth/*` → AuthService e flags (`authInterrupts`). |
-| `.env.local`           | Variáveis `AUTH_*` (só servidor). Exemplo em `.env.example`.                                                            |
-| `vitest.config.ts`     | Ambiente jsdom, alias `@/`, alias de `server-only` nos testes, limites de cobertura.                                    |
-| `playwright.config.ts` | Projetos desktop e mobile; sobe `npm run dev` se não houver servidor na porta 3000.                                     |
-| `eslint.config.mjs`    | Regras do Next; ignora `src/data/mapping.ts` (gerado).                                                                  |
+| Arquivo                | Para que serve                                                                                                                          |
+| ---------------------- | --------------------------------------------------------------------------------------------------------------------------------------- |
+| `next.config.ts`       | Headers de segurança (CSP etc., `lib/security-headers.ts`), rewrites `/auth/*` e `/content/*` → AuthService e flags (`authInterrupts`). |
+| `.env.local`           | Variáveis `AUTH_*` (só servidor). Exemplo em `.env.example`.                                                                            |
+| `vitest.config.ts`     | Ambiente jsdom, alias `@/`, alias de `server-only` nos testes, limites de cobertura.                                                    |
+| `playwright.config.ts` | Projetos desktop e mobile; sobe `npm run dev` se não houver servidor na porta 3000.                                                     |
+| `eslint.config.mjs`    | Regras do Next; ignora `src/data/mapping.ts` (gerado).                                                                                  |
 
 Dependências críticas:
 
@@ -190,6 +208,8 @@ Dependências críticas:
 - `minisearch`: busca.
 - `@sentry/react`: telemetria, só com consentimento.
 
+---
+
 ## Manutenção
 
 - **Novo artigo:** veja [INSERCAO_ARTIGOS.md](./INSERCAO_ARTIGOS.md).
@@ -199,6 +219,8 @@ Dependências críticas:
 - **Antes de enviar:** rode `npm run check` (lint, tipos e testes) e `npm run build`. Os
   testes ponta a ponta precisam do AuthService (`npm run auth:up`) e das contas em
   `.env.e2e.local`.
+
+---
 
 ## Problemas conhecidos
 
@@ -251,6 +273,8 @@ resolvidos ficam na lista para manter a numeração.
     diferente no servidor e no navegador. **Resolvido em 2026-10-15:** começa sempre pelo espaço
     reservado.
 
+---
+
 ## Identidade visual: Liquid Glass
 
 Tokens e materiais em `src/assets/styles/glass.css` (fonte única); os tokens do projeto
@@ -297,6 +321,8 @@ isolar o custo de um efeito.
 **Busca:** fica no cabeçalho (`HeaderSearch`): a lupa expande um campo com resultados
 imediatos (combobox WAI-ARIA); "Busca completa" abre a paleta (Ctrl+K).
 
+---
+
 ## Design system
 
 Tokens em `src/assets/styles/glass.css` (paleta, materiais, raios, sombras, movimento) e, desde a refatoração de UX, também:
@@ -318,6 +344,8 @@ Componentes de interface: classes em `src/assets/styles/ui.css` (`ui-btn`, `ui-i
 - `LazyMount` — monta seções pesadas no primeiro momento ocioso ou quando se aproximam da tela.
 
 Efeitos visuais: automático, completo ou reduzido (`src/features/shell/glass-preference.ts`), escolhidos em Minha conta (Preferências); a escolha manual vence a detecção automática do modo lite.
+
+---
 
 ## Interações com os artigos
 

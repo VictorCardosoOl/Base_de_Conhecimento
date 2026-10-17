@@ -1,13 +1,16 @@
-# ADR-0007 — Adaptação do frontend de demonstração ao fluxo por cookies
+# ADR-0007: Adaptação do frontend de demonstração ao fluxo por cookies
 
 - Status: aceito
 - Data: 2026-09-27
 
 ## Contexto
+
 O frontend embutido gravava **a senha em texto puro e o JWT** no `sessionStorage`, exibia os dois na tela e usava `/register` e `/token`. Isso é incompatível com os ADRs 0001, 0002 e 0005.
 
 ## Decisão
+
 Manter o frontend (ele faz parte da demonstração do projeto), adaptado:
+
 - login via `POST /auth/login`;
 - sessão lida de `/auth/me`;
 - renovação automática em `SESSION_EXPIRED`, com uma única tentativa;

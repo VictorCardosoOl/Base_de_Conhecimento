@@ -1,25 +1,29 @@
-# Páginas institucionais (Termos, Privacidade, Cookies)
+# ⚖️ Páginas institucionais (Termos, Privacidade, Cookies)
 
 Rotas: `/termos`, `/privacidade` e `/cookies`, nesta ordem fixa (`LEGAL_PAGES` em `src/features/legal/institutional.ts`). O item "LGPD e privacidade" do menu abre `/termos`, a entrada dos documentos. Cada página termina com a navegação contextual (`LegalPager`), em coluna centralizada: Página anterior, HOME (em destaque) e Próxima página; nas pontas da sequência, a opção sem destino não aparece.
 
 > **Situação jurídica:** os textos foram revisados para corresponder ao funcionamento do código e citam a legislação oficial, mas **não passaram por revisão jurídica profissional**. Não os trate como validados antes dessa revisão.
 
+---
+
 ## Onde fica cada coisa
 
 | Item | Arquivo |
-|---|---|
+| --- | --- |
 | Textos dos Termos e da Política (versão e data de revisão) | `src/features/legal/documents.ts` |
 | Contato, controladora, encarregado e fontes oficiais | `src/features/legal/institutional.ts` |
 | Inventário de cookies e dados no navegador | `src/features/consent/storage-inventory.ts` |
 | Controles de preferência | `src/features/consent/components/CookiePreferences.tsx` |
 | Layout comum e navegação contextual | `src/features/legal/components/LegalPageLayout.tsx`, `LegalPager.tsx` |
 
-**Versão dos documentos:** `TERMS_VERSION` e `PRIVACY_VERSION` (Base) precisam ser iguais a `TERMS_VERSION` e `PRIVACY_POLICY_VERSION` do AuthService; o cadastro só aceita a versão vigente. Nesta revisão, ambas passaram para `2026-10-10` nos dois repositórios.
+**Versão dos documentos:** `TERMS_VERSION` e `PRIVACY_VERSION` (Base) precisam ser iguais a `TERMS_VERSION` e `PRIVACY_POLICY_VERSION` do AuthService; o cadastro só aceita a versão vigente. Nesta revisão, ambas passaram para `2026-10-10` nos dois serviços.
+
+---
 
 ## Origem das afirmações
 
 | Afirmação | Verificado em |
-|---|---|
+| --- | --- |
 | Senhas com Argon2id | AuthService `backend/core/passwords.py` |
 | Sessões guardam IP, navegador e datas | `backend/models/session.py` |
 | Contadores de tentativas guardados como hash | `backend/core/rate_limit.py` (`rate_limit_key`, SHA-256) |
@@ -34,11 +38,15 @@ Rotas: `/termos`, `/privacidade` e `/cookies`, nesta ordem fixa (`LEGAL_PAGES` e
 | Chave `sentryReplaySession` | `@sentry/replay` (`REPLAY_SESSION_KEY`) |
 | Chaves do armazenamento local | conferidas por teste (`src/tests/legal/institutionalPages.test.tsx`) |
 
+---
+
 ## Fontes oficiais consultadas (10/10/2026)
 
 - [Lei nº 13.709/2018 (LGPD), texto compilado — Planalto](https://www.planalto.gov.br/ccivil_03/_ato2015-2018/2018/lei/l13709compilado.htm): arts. 7º (bases legais), 8º, § 5º (revogação), 9º (informações ao titular), 16 (eliminação), 18 (direitos; § 1º, petição à ANPD), 41 (encarregado), 46 (segurança) e 48 (incidentes).
 - [Guia orientativo “Cookies e proteção de dados pessoais” — ANPD](https://www.gov.br/anpd/pt-br/centrais-de-conteudo/materiais-educativos-e-publicacoes/guia_orientativo_cookies_e_protecao_de_dados_pessoais): categorias (necessários e não necessários), banner com opção de rejeitar.
 - Resolução CD/ANPD nº 18/2024 (atuação do encarregado) e Resolução CD/ANPD nº 2/2022 (agentes de pequeno porte), citadas apenas como referência para a pendência do encarregado.
+
+---
 
 ## Mudanças de funcionamento feitas junto
 
@@ -47,6 +55,8 @@ Rotas: `/termos`, `/privacidade` e `/cookies`, nesta ordem fixa (`LEGAL_PAGES` e
 - **Registro local de buscas removido:** gravado com consentimento, mas sem nenhum uso desde a refatoração do painel. A chave antiga é apagada ao carregar o site.
 - **Aviso de cookies reescrito** sem "telemetria anônima" nem selo "Protegido"; botões "Permitir monitoramento" e "Recusar".
 - **"Apagar dados locais"** na página de cookies remove os dados de recursos deste aparelho.
+
+---
 
 ## Pendências antes da publicação definitiva
 

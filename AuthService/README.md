@@ -1,19 +1,15 @@
-<img width=100% src="https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6&height=120&section=header"/>
-
-<h1 align="center">🔐 AuthService</h1>
-
-<p align="center">
-  Provedor de identidade com tema <strong>Dark Industrial Terminal</strong> —<br/>
-  FastAPI, PostgreSQL, JWT EdDSA e sessões com refresh token rotativo.
-</p>
-
 <div align="center">
 
-  [![API Docs](https://img.shields.io/badge/🌐%20API%20Docs-009688?style=for-the-badge)](https://authservice-mbul.onrender.com/docs)
-  [![Licença](https://img.shields.io/badge/Licença-MIT-4ade80?style=for-the-badge)](./read-model/LICENSE)
-  [![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](./Dockerfile)
-  [![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
-  [![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
+![](https://capsule-render.vercel.app/api?type=waving&color=gradient&customColorList=6&height=120&section=header)
+
+# 🔐 AuthService
+
+**Provedor de identidade e de interações da Base de Conhecimento SST: FastAPI, PostgreSQL, JWT EdDSA e sessões com refresh token rotativo.**
+
+[![Licença](https://img.shields.io/badge/Licença-MIT-4ade80?style=for-the-badge)](./read-model/LICENSE)
+[![Docker](https://img.shields.io/badge/Docker-Ready-2496ED?style=for-the-badge&logo=docker&logoColor=white)](./Dockerfile)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.141-009688?style=for-the-badge&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com)
+[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=for-the-badge&logo=python&logoColor=white)](https://python.org)
 
 </div>
 
@@ -49,6 +45,7 @@ O **AuthService** é o provedor de identidade da Base de Conhecimento: autentica
 - **Refresh token opaco e rotativo**; reapresentar um token já usado revoga a sessão inteira.
 - Tokens entregues **somente em cookies HttpOnly**, nunca no corpo das respostas nem acessíveis ao JavaScript.
 - **Cadastro público opcional** (`PUBLIC_REGISTRATION_ENABLED`, desligado por padrão): a conta nasce sempre `user`; promoção a editor só por admin/editor, a partir de um pedido do usuário (ADR-0010).
+- **Interações dos artigos** (rotas `/content/*`): avaliações, sugestões de correção e comentários, no mesmo banco (ADR-0015).
 
 Neste repositório, o AuthService fica na pasta `AuthService/`, ao lado da Base de Conhecimento (`BaseCore/`). Visão do conjunto: [README da raiz](../README.md). Como a autenticação funciona de ponta a ponta: [`docs/AUTENTICACAO.md`](../docs/AUTENTICACAO.md).
 
@@ -59,9 +56,10 @@ As decisões de arquitetura estão registradas em [`docs/adr/`](./docs/adr) (ín
 ## ✨ Funcionalidades
 
 - Login com **Argon2id**, mensagem única para email inexistente e senha incorreta, e tempo de resposta equivalente nos dois casos
-- **Rate limiting** de login por IP e por IP + email, compartilhado entre instâncias (PostgreSQL)
+- **Rate limiting** de login por IP, por IP + email e por conta, compartilhado entre instâncias (PostgreSQL); só as tentativas que falham contam (ADR-0016)
 - **Refresh rotativo com detecção de reuso** (com janela de 10 s para abas concorrentes), logout idempotente e encerramento de todas as sessões
-- Papéis `admin` e `user`, com a autorização verificada **no servidor**, a partir do banco
+- Papéis `admin`, `editor` e `user`, com a autorização verificada **no servidor**, a partir do banco; troca de senha temporária imposta no servidor (`403 PASSWORD_CHANGE_REQUIRED`)
+- Recuperação de senha e confirmação de email por links de uso único; login social com Google e GitHub (OAuth 2.0 com PKCE)
 - **JWKS** (`/.well-known/jwks.json`) com suporte a rotação de chaves sem downtime
 - Defesa **CSRF** por `Origin`/`Referer`, além de `SameSite=Lax`; CORS desligado por padrão
 - Headers de segurança, erros padronizados (`{"error": {"code", "message"}}`) e logs sem segredos
@@ -102,7 +100,7 @@ As decisões de arquitetura estão registradas em [`docs/adr/`](./docs/adr) (ín
 
 ### 🔑 Login (`index.html`)
 
-Formulário com **toggle animado em CSS puro**. O painel alternativo explica o **acesso por convite**, já que não há cadastro público. O login chama `POST /auth/login`, e o servidor responde com cookies HttpOnly: a página não lê nem guarda tokens ou senhas.
+Formulário com **toggle animado em CSS puro**. O painel alternativo explica o **acesso por convite**: a interface de demonstração não oferece cadastro, mesmo quando o cadastro público da API está ligado. O login chama `POST /auth/login`, e o servidor responde com cookies HttpOnly: a página não lê nem guarda tokens ou senhas.
 
 ### 🏠 Dashboard (`home.html`)
 
@@ -203,14 +201,16 @@ Documentação interativa em **`/docs`** (desligável com `OPENAPI_ENABLED=false
 | `POST` | `/admin/users/{id}/password` | papel `admin` | Redefine a senha (temporária) e revoga as sessões do usuário |
 | `GET` | `/admin/role-requests` | `admin` ou `editor` | Pedidos pendentes de acesso de editor |
 | `POST` | `/admin/role-requests/{id}/approve` · `/reject` | `admin` ou `editor` | Aprova (vira editor; sessões revogadas) ou recusa |
+| `GET` | `/.well-known/jwks.json` | — | Chaves públicas para validar access tokens |
+| `GET` | `/health` | — | Status do serviço e do banco (`503` quando o banco não responde) |
+
+As rotas de interações dos artigos (`/content/*`) estão no contrato OpenAPI e no [ADR-0015](./docs/adr/0015-avaliacoes-correcoes-e-comentarios.md).
 
 Papéis: `admin` (gerencia usuários e conteúdo), `editor` (conteúdo; aprova pedidos de acesso de editor) e `user` (consulta). Regras em [ADR-0009](./docs/adr/0009-gestao-de-usuarios-e-papel-editor.md) e [ADR-0010](./docs/adr/0010-cadastro-publico-e-pedidos-de-editor.md). Usuário (único) e nome de exibição: [ADR-0011](./docs/adr/0011-usuario-e-nome-de-exibicao.md). Recuperação de senha, confirmação de email e nomes reservados: [ADR-0012](./docs/adr/0012-recuperacao-de-senha-e-confirmacao-de-email.md). Login social: [ADR-0013](./docs/adr/0013-login-social-oauth.md). Termos e perfil opcional: [ADR-0014](./docs/adr/0014-termos-de-uso-e-perfil-opcional.md).
 
 **Usuários de teste (só desenvolvimento):** com `SEED_DEV_USERS=true` no `.env`, o `docker compose up` cria um admin, um editor e um user, com os usuários `admin`, `editor` e `leitor` (credenciais `SEED_*` do `.env.example`). Em produção a configuração é rejeitada.
-| `GET` | `/.well-known/jwks.json` | — | Chaves públicas para validar access tokens |
-| `GET` | `/health` | — | Status do serviço e do banco |
 
-"Sessão" = cookie de access token **ou** `Authorization: Bearer` (clientes não-navegador). Erros sempre seguem o formato `{"error": {"code": "...", "message": "..."}}`, com os códigos `VALIDATION_ERROR`, `INVALID_TOKEN`, `INVALID_CREDENTIALS`, `UNAUTHORIZED`, `SESSION_EXPIRED`, `FORBIDDEN`, `CONFLICT`, `RATE_LIMITED` e `INTERNAL_ERROR`.
+"Sessão" = cookie de access token **ou** `Authorization: Bearer` (clientes não-navegador). Erros sempre seguem o formato `{"error": {"code": "...", "message": "..."}}`, com os códigos `VALIDATION_ERROR`, `INVALID_TOKEN`, `INVALID_CREDENTIALS`, `UNAUTHORIZED`, `SESSION_EXPIRED`, `FORBIDDEN`, `NOT_FOUND`, `METHOD_NOT_ALLOWED`, `CONFLICT`, `RATE_LIMITED`, `PASSWORD_CHANGE_REQUIRED`, `SERVICE_UNAVAILABLE` e `INTERNAL_ERROR` (`backend/core/errors.py`).
 
 ### Cookies
 
@@ -303,7 +303,7 @@ Como subir o banco de teste e o que cada suíte cobre: [`docs/TESTES.md`](../doc
 
 ### Manutenção
 
-`python -m backend.cli purge-expired` remove sessões expiradas, contadores de rate limit vencidos e os links/estados temporários (redefinição de senha, confirmação de email, login social) vencidos. Agende a execução diária: `docker compose --profile ops up -d purge` ou o agendador da hospedagem ([`docs/IMPLANTACAO.md`](./docs/IMPLANTACAO.md)).
+`python -m backend.cli purge-expired` remove sessões expiradas, contadores de rate limit vencidos e os links/estados temporários (redefinição de senha, confirmação de email, login social) vencidos. Agende a execução diária: `docker compose --profile ops up -d purge` ou o agendador da hospedagem ([`docs/IMPLANTACAO.md`](./docs/IMPLANTACAO.md)). No plano gratuito da Render não há agendador: a execução é manual ([`docs/DEPLOY.md`](../docs/DEPLOY.md#8-operação-sem-shell)).
 
 `python -m backend.cli delete-e2e-users` (só desenvolvimento, `SEED_DEV_USERS=true`) apaga as contas que os testes E2E da Base de Conhecimento criam (`cadastro-<n>@exemplo.com.br` e `e2e-<n>@exemplo.com.br`); o Playwright chama ao terminar.
 

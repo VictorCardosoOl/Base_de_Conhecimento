@@ -1,4 +1,4 @@
-# Rodando o projeto localmente
+# 💻 Rodando o projeto localmente
 
 Passo a passo para subir a Base de Conhecimento com login, cadastro e painel administrativo
 na sua máquina. Leva uns 15 minutos na primeira vez; depois, **um comando só**:
@@ -26,11 +26,13 @@ repositório (seção 2). As seções abaixo explicam a configuração da primei
 cada etapa faz por baixo.
 
 > Prefere tudo em containers, sem Node na máquina? Configure o `AuthService/.env` (seção 3) e use o
-> `docker compose up -d --build` na raiz do repositório ([README da raiz](../../README.md#tudo-junto-em-containers)).
+> `docker compose up -d --build` na raiz do repositório ([README da raiz](../../README.md#-tudo-junto-em-containers)).
+
+---
 
 ## Visão geral
 
-São três peças. O navegador só fala com o Next; o Next repassa `/auth/*` para o AuthService.
+São quatro peças. O navegador só fala com o Next; o Next repassa `/auth/*` e `/content/*` para o AuthService.
 
 | Peça                               | Onde roda       | Endereço              |
 | ---------------------------------- | --------------- | --------------------- |
@@ -41,6 +43,8 @@ São três peças. O navegador só fala com o Next; o Next repassa `/auth/*` par
 
 > Sem o AuthService, o site abre normalmente para leitura; só login, cadastro, "Minha conta"
 > e o painel `/admin` ficam indisponíveis.
+
+---
 
 ## 1. Pré-requisitos
 
@@ -60,6 +64,8 @@ docker --version
 python --version
 ```
 
+---
+
 ## 2. Baixar o repositório
 
 O AuthService e a Base de Conhecimento ficam no mesmo repositório, nas pastas `AuthService/` e
@@ -68,6 +74,8 @@ O AuthService e a Base de Conhecimento ficam no mesmo repositório, nas pastas `
 ```bash
 git clone https://github.com/VictorCardosoOl/Base_de_Conhecimento.git
 ```
+
+---
 
 ## 3. Configurar e subir o AuthService
 
@@ -133,6 +141,8 @@ A resposta esperada é `{"status":"ok","database":"up"}`; `"degraded"` / `"down"
 docker compose logs migrate auth-service
 ```
 
+---
+
 ## 4. Configurar e subir a Base de Conhecimento
 
 Dentro da pasta `BaseCore`:
@@ -181,6 +191,8 @@ npm run start
 
 Os dois modos usam a porta 3000; rode um de cada vez.
 
+---
+
 ## 5. Conferir se está tudo certo
 
 1. http://localhost:3000 abre o acervo de artigos.
@@ -189,6 +201,8 @@ Os dois modos usam a porta 3000; rode um de cada vez.
 4. Com a conta de administrador, `/admin/usuarios` lista e busca usuários; o botão
    **Cadastrar** abre o cadastro em duas etapas.
 5. Em `/cadastro`, crie uma conta nova. Ela começa como **Leitor**.
+
+---
 
 ## 6. Contas de teste
 
@@ -204,6 +218,8 @@ As senhas estão em `SEED_*_PASSWORD`, no `.env.example` do AuthService. São s�
 desenvolvimento: nunca reutilize. A criação só acontece se a conta ainda não existir; contas
 que já existem não são alteradas.
 
+---
+
 ## 7. Rotina do dia a dia
 
 Na pasta `BaseCore`:
@@ -215,6 +231,8 @@ Na pasta `BaseCore`:
 
 Sem os atalhos, o equivalente manual é: abrir o Docker Desktop, rodar `docker compose up -d
 --build` na pasta `AuthService` e `npm run dev` na pasta `BaseCore`.
+
+---
 
 ## 8. Testes
 
@@ -241,6 +259,8 @@ simulam as respostas do AuthService.
 No AuthService, os testes (`pytest`) usam um PostgreSQL descartável, indicado em
 `TEST_DATABASE_URL`; veja o README dele.
 
+---
+
 ## 8.1 Emails, login social e termos
 
 **Emails (recuperação de senha, confirmação).** Em desenvolvimento, o `docker compose` sobe o
@@ -252,7 +272,8 @@ cadastre uma conta com um email comum (ex.: `voce@exemplo.com.br`).
 Em produção, configure no `.env` do AuthService o SMTP de um provedor (Amazon SES,
 SendGrid, Resend, Mailgun...): `EMAIL_BACKEND=smtp`, `EMAIL_FROM`, `SMTP_HOST`,
 `SMTP_PORT=587`, `SMTP_SECURITY=starttls`, `SMTP_USERNAME`, `SMTP_PASSWORD`, e
-`PUBLIC_APP_URL` com o endereço público do site (base dos links).
+`PUBLIC_APP_URL` com o endereço público do site (base dos links). No plano gratuito da Render, as portas
+de SMTP são bloqueadas: veja [docs/DEPLOY.md](../../docs/DEPLOY.md#10-email).
 
 **Login social (Google, GitHub).** Desligado até haver credenciais. Para ligar:
 
@@ -268,25 +289,27 @@ SendGrid, Resend, Mailgun...): `EMAIL_BACKEND=smtp`, `EMAIL_FROM`, `SMTP_HOST`,
 3. `npm run auth:up`. Os botões aparecem sozinhos no login e no cadastro.
 
 **Termos.** As versões em `src/features/legal/documents.ts` precisam ser iguais a
-`TERMS_VERSION` e `PRIVACY_POLICY_VERSION` do AuthService (padrão `2026-10-08`).
+`TERMS_VERSION` e `PRIVACY_POLICY_VERSION` do AuthService (padrão `2026-10-10`).
+
+---
 
 ## 9. Problemas comuns
 
-| Sintoma                                                        | Causa provável                                             | O que fazer                                                                                      |
-| -------------------------------------------------------------- | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
-| `docker compose` falha com erro de conexão                     | Docker Desktop fechado                                     | abra o Docker Desktop e repita                                                                   |
-| `/health` responde `"database":"down"`                         | o container do banco parou (ex.: depois de reiniciar o PC) | `docker compose up -d` na pasta do AuthService                                                   |
-| Login ou cadastro dizem "Serviço de autenticação indisponível" | AuthService parado ou em outra porta                       | `curl http://localhost:8010/health`; confira `AUTH_PORT=8010`                                    |
-| Login funciona, mas a página continua como "não logado"        | nome do cookie ou emissor diferentes entre os dois `.env`  | `AUTH_ACCESS_COOKIE_NAME` = `ACCESS_COOKIE_NAME`; `AUTH_ISSUER` = `JWT_ISSUER`. Reinicie os dois |
-| Login recusado com erro de origem (403)                        | `TRUSTED_ORIGINS` sem `http://localhost:3000`              | ajuste o `.env` e rode `docker compose up -d`                                                    |
-| `/cadastro` diz que o cadastro está desativado                 | `PUBLIC_REGISTRATION_ENABLED` não está `true`              | ajuste o `.env` e rode `docker compose up -d`                                                    |
-| Áreas logadas dão erro logo depois de atualizar o código       | AuthService sem as migrations novas                        | `docker compose up -d --build` no AuthService                                                    |
-| "Muitas tentativas"                                            | limite de 5 logins por minuto por email                    | espere um minuto                                                                                 |
-| Email de redefinição não chega                                 | em desenvolvimento, ele fica no Mailpit                    | abra http://localhost:8025                                                                       |
-| Botões do Google/GitHub não aparecem                           | provedor sem credenciais no `.env` do AuthService          | defina `OAUTH_*_CLIENT_ID` e `_SECRET` e rode `npm run auth:up`                                  |
-| Cadastro diz que os termos foram atualizados                   | versões diferentes entre o site e o AuthService            | iguale `documents.ts` e `TERMS_VERSION`/`PRIVACY_POLICY_VERSION`                                 |
-| `npm ci` falha com `EPERM` no Windows                          | um `next dev` ou `next start` ainda está aberto            | feche-o e repita                                                                                 |
-| Porta 3000 ou 8010 ocupada                                     | outro processo usando a porta                              | feche o processo, ou troque `AUTH_PORT` (e as URLs no `.env.local`)                              |
+| Sintoma                                                        | Causa provável                                                   | O que fazer                                                                                      |
+| -------------------------------------------------------------- | ---------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| `docker compose` falha com erro de conexão                     | Docker Desktop fechado                                           | abra o Docker Desktop e repita                                                                   |
+| `/health` responde `"database":"down"`                         | o container do banco parou (ex.: depois de reiniciar o PC)       | `docker compose up -d` na pasta do AuthService                                                   |
+| Login ou cadastro dizem "Serviço de autenticação indisponível" | AuthService parado ou em outra porta                             | `curl http://localhost:8010/health`; confira `AUTH_PORT=8010`                                    |
+| Login funciona, mas a página continua como "não logado"        | nome do cookie ou emissor diferentes entre os dois `.env`        | `AUTH_ACCESS_COOKIE_NAME` = `ACCESS_COOKIE_NAME`; `AUTH_ISSUER` = `JWT_ISSUER`. Reinicie os dois |
+| Login recusado com erro de origem (403)                        | `TRUSTED_ORIGINS` sem `http://localhost:3000`                    | ajuste o `.env` e rode `docker compose up -d`                                                    |
+| `/cadastro` diz que o cadastro está desativado                 | `PUBLIC_REGISTRATION_ENABLED` não está `true`                    | ajuste o `.env` e rode `docker compose up -d`                                                    |
+| Áreas logadas dão erro logo depois de atualizar o código       | AuthService sem as migrations novas                              | `docker compose up -d --build` no AuthService                                                    |
+| "Muitas tentativas"                                            | limite de tentativas erradas (por IP, por IP e email, por conta) | espere o tempo mostrado na tela                                                                  |
+| Email de redefinição não chega                                 | em desenvolvimento, ele fica no Mailpit                          | abra http://localhost:8025                                                                       |
+| Botões do Google/GitHub não aparecem                           | provedor sem credenciais no `.env` do AuthService                | defina `OAUTH_*_CLIENT_ID` e `_SECRET` e rode `npm run auth:up`                                  |
+| Cadastro diz que os termos foram atualizados                   | versões diferentes entre o site e o AuthService                  | iguale `documents.ts` e `TERMS_VERSION`/`PRIVACY_POLICY_VERSION`                                 |
+| `npm ci` falha com `EPERM` no Windows                          | um `next dev` ou `next start` ainda está aberto                  | feche-o e repita                                                                                 |
+| Porta 3000 ou 8010 ocupada                                     | outro processo usando a porta                                    | feche o processo, ou troque `AUTH_PORT` (e as URLs no `.env.local`)                              |
 
 ### Recomeçar o banco do zero
 
@@ -297,8 +320,11 @@ docker compose down -v
 docker compose up -d --build
 ```
 
+---
+
 ## Para saber mais
 
-- [INTEGRACAO_AUTH.md](./INTEGRACAO_AUTH.md): como a Base de Conhecimento usa o AuthService
-  (sessão, cookies, papéis, rotas protegidas).
+- [docs/AUTENTICACAO.md](../../docs/AUTENTICACAO.md): como a Base de Conhecimento usa o AuthService
+  (sessão, cookies, papéis, rotas protegidas). O histórico da integração está em
+  [INTEGRACAO_AUTH.md](./INTEGRACAO_AUTH.md).
 - README do AuthService: endpoints, decisões de arquitetura (ADRs) e execução sem Docker.
