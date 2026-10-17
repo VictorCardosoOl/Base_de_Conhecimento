@@ -1,0 +1,16 @@
+# Defesa extra para o repositório inteiro; cada serviço tem o próprio .gitignore.
+# Segredos e configuração local
+.env
+.env.*
+!.env.example
+**/keys/
+*.pem
+*.key
+# Dependências, caches e artefatos locais
+node_modules/
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+.DS_Store
+Thumbs.db

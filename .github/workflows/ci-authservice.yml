@@ -1,0 +1,107 @@
+name: CI AuthService
+
+on:
+  push:
+    branches: [main, master]
+    paths:
+      - "AuthService/**"
+      - ".github/workflows/ci-authservice.yml"
+  pull_request:
+    branches: [main, master]
+    paths:
+      - "AuthService/**"
+      - ".github/workflows/ci-authservice.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+# Monorepo: tudo roda na pasta do serviço (AuthService/).
+defaults:
+  run:
+    working-directory: AuthService
+
+jobs:
+  quality:
+    name: Lint, formatação e tipos
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: AuthService/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check backend migrations tests
+      - run: ruff format --check backend migrations tests
+      - run: mypy
+
+  tests:
+    name: Testes (PostgreSQL real)
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:18
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: authservice_test
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s --health-timeout 5s --health-retries 10
+    env:
+      TEST_DATABASE_URL: postgresql+psycopg://postgres:postgres@localhost:5432/authservice_test
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+          cache-dependency-path: AuthService/requirements-dev.txt
+      - run: pip install -r requirements-dev.txt
+
+      - name: Migrations (upgrade → downgrade → upgrade + checagem de divergência)
+        env:
+          DATABASE_URL: ${{ env.TEST_DATABASE_URL }}
+          JWT_ISSUER: https://auth.ci
+          JWT_AUDIENCE: knowledge-api
+          COOKIE_SECURE: "false"
+          ACCESS_COOKIE_NAME: kb_at
+          REFRESH_COOKIE_NAME: kb_rt
+        run: |
+          python -m backend.scripts.generate_keys --out /tmp/keys
+          export JWT_PRIVATE_KEY_FILE=/tmp/keys/jwt_private.pem
+          alembic upgrade head
+          alembic downgrade base
+          alembic upgrade head
+          alembic check
+
+      - name: Testes com cobertura
+        run: pytest --cov --cov-report=term-missing
+
+  docker:
+    name: Build da imagem
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker build --tag authservice:ci .
+
+  secrets:
+    name: Varredura de segredos
+    # Em push e pull_request, a gitleaks-action varre só os commits do evento. Na execução manual
+    # (workflow_dispatch) ela varreria o histórico inteiro do repositório; por isso não roda.
+    if: github.event_name != 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
