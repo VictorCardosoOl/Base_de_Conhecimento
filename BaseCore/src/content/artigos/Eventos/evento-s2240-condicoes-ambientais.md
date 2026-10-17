@@ -49,7 +49,7 @@ O evento S-2240 realiza o cruzamento de dados exigido pela legislação trabalhi
 
 Além de garantir a segurança probatória do trabalhador sobre a preservação do seu direito à **aposentadoria com tempo reduzido (15, 20 ou 25 anos)**, o S-2240 atinge a esfera tributária da organização:
 
-- Ao informar a existência de fatores de risco geradores de aposentadoria especial de forma ineficaz (ex: sem EPI adequado), o sistema ativa o recolhimento da alíquota **GIIL-RAT** (antigo SAT Especial) no fechamento da folha.
+- Ao informar a existência de fatores de risco geradores de aposentadoria especial de forma ineficaz (ex.: sem EPI adequado), o sistema ativa o recolhimento da alíquota **GIIL-RAT** (antigo SAT Especial) no fechamento da folha.
 - Esta alíquota adicional sobre a folha de pagamento do trabalhador exposto financia os cofres da Previdência Social e evidencia a extrema responsabilidade no preenchimento técnico correto do evento.
 
 ---

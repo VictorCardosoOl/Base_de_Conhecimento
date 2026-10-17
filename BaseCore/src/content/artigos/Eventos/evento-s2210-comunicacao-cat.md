@@ -38,7 +38,7 @@ O prazo de transmissão do evento S-2210 depende da natureza e gravidade da ocor
 
 A inobservância dos prazos de envio (atraso) ou a omissão na comunicação sujeitam a empresa a sanções. Com a automatização da fiscalização, o próprio eSocial detecta a discrepância entre a data do acidente e a data do envio.
 
-- As penalidades são baseadas no Art. 286 e 336 do Decreto nº 3.048/1999 e foram endurecidas.
+- As penalidades são baseadas nos Arts. 286 e 336 do Decreto nº 3.048/1999 e foram endurecidas.
 - A multa varia entre o limite mínimo e o limite máximo do **salário de contribuição** por trabalhador afetado.
 - Em caso de reincidência, a legislação prevê a majoração da penalidade.
 - É fundamental observar que o pagamento de multas não isenta a empresa da obrigação de envio da informação correta.
@@ -60,12 +60,12 @@ A emissão e transmissão correta da CAT pelo evento S-2210 é o ato jurídico q
 
 O sucesso na transmissão do evento S-2210 exige o preenchimento acurado de variáveis técnicas balizadas por tabelas padronizadas do próprio sistema do eSocial. A inconsistência nesses campos resulta em rejeição do evento. As principais tabelas são:
 
-- **Tabela 01 (Categoria de Trabalhadores):** Identifica a modalidade do vínculo (Ex: Empregado geral, Trabalhador Temporário).
+- **Tabela 01 (Categoria de Trabalhadores):** Identifica a modalidade do vínculo (Ex.: Empregado geral, Trabalhador Temporário).
 - **Tabela 05 (Tipos de Inscrição):** Especifica a natureza do local onde o acidente ocorreu (CNPJ, CNO, CAEPF).
-- **Tabela 13 (Parte do Corpo Atingida):** Detalha com precisão a área corporal lesada (ex: membro superior, tronco, membros inferiores).
+- **Tabela 13 (Parte do Corpo Atingida):** Detalha com precisão a área corporal lesada (ex.: membro superior, tronco, membros inferiores).
 - **Tabela 14 (Agente Causador):** Determina o objeto, substância ou máquina diretamente responsável pela lesão.
-- **Tabela 15 (Situação Geradora):** Qualifica as circunstâncias operacionais no momento do evento adverso (ex: queda em mesmo nível, exposição à carga elétrica).
-- **Tabela 17 (Natureza da Lesão):** Classifica clinicamente o dano sofrido (ex: fratura, queimadura, luxação).
+- **Tabela 15 (Situação Geradora):** Qualifica as circunstâncias operacionais no momento do evento adverso (ex.: queda em mesmo nível, exposição à carga elétrica).
+- **Tabela 17 (Natureza da Lesão):** Classifica clinicamente o dano sofrido (ex.: fratura, queimadura, luxação).
 - **Tabela 20 (Tipos de Logradouro):** Fornece o código correto para estruturar o endereço da ocorrência caso ela não tenha sido no interior do estabelecimento principal.
 
 ---

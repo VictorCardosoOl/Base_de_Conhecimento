@@ -9,7 +9,7 @@ answer: 'Requisitos e novas regras para aposentadoria especial em 2026.'
 
 # Aposentadoria Especial
 
-A **Aposentadoria Especial** é um benefício previdenciário destinado a trabalhadores que exercem atividades expostos a agentes nocivos à saúde (químicos, físicos ou biológicos) de forma contínua e ininterrupta, em níveis acima dos limites de tolerância.
+A **Aposentadoria Especial** é um benefício previdenciário destinado a trabalhadores que exercem atividades com exposição a agentes nocivos à saúde (químicos, físicos ou biológicos) de forma contínua e ininterrupta, em níveis acima dos limites de tolerância.
 
 ## Cenário Atual (2026) e Pós-Reforma (EC 103/2019)
 
@@ -44,4 +44,4 @@ Desde a Reforma (13/11/2019), **não é mais permitida** a conversão de tempo e
 
 ## Comprovação
 
-A única forma de comprovar o direito é através do **PPP (Perfil Profissiográfico Previdenciário)**, que deve estar embasado em um **LTCAT** tecnicamente correto. O INSS exige prova de que os EPIs não foram eficazes para neutralizar a nocividade (exceto para Ruído e Agentes Cancerígenos, onde o EPI não descaracteriza o direito segundo o STF).
+A única forma de comprovar o direito é através do **PPP (Perfil Profissiográfico Previdenciário)**, que deve estar embasado em um **LTCAT** tecnicamente correto. O INSS exige prova de que os EPIs não foram eficazes para neutralizar a nocividade (exceto para Ruído e Agentes Cancerígenos, casos em que, segundo o STF, o EPI não descaracteriza o direito).

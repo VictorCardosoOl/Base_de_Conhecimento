@@ -27,7 +27,7 @@ Embora a estrutura (Inventário de Riscos + Plano de Ação) seja similar, o PGR
 
 ## Periodicidade
 
-O ciclo de gestão é similar ao PGR: deve ser revisado continuamente e, no mínimo, a cada **3 anos**, ou quando houverem mudanças significativas nas plantações, equipamentos ou processos produtivos.
+O ciclo de gestão é similar ao PGR: deve ser revisado continuamente e, no mínimo, a cada **3 anos**, ou quando houver mudanças significativas nas plantações, equipamentos ou processos produtivos.
 
 ## Integração
 

@@ -16,16 +16,15 @@ Renomeada pela Reforma da Previdência de 2019, a Aposentadoria por Incapacidade
 1.  **Incapacidade Total e Permanente:** Comprovada por perícia médica do INSS. Deve inviabilizar o sustento do indivíduo por meio do trabalho.
 2.  **Qualidade de Segurado:** Estar contribuindo para o INSS ou estar no "período de graça" no momento do início da incapacidade.
 3.  **Carência:**
-
-- Regra Geral: **12 contribuições mensais**.
-- **Isenção de Carência:** Em casos de acidentes (de qualquer natureza), acidentes de trabalho, doenças profissionais ou **doenças graves** listadas em lei (Ex: Câncer, Tuberculose Ativa, Hanseníase, Alienação Mental, Cegueira, Esclerose Múltipla, etc.).
+    - Regra Geral: **12 contribuições mensais**.
+    - **Isenção de Carência:** Em casos de acidentes (de qualquer natureza), acidentes de trabalho, doenças profissionais ou **doenças graves** listadas em lei (Ex.: Câncer, Tuberculose Ativa, Hanseníase, Alienação Mental, Cegueira, Esclerose Múltipla, etc.).
 
 ## Cálculo do Benefício (Pós-Reforma)
 
 O valor não é mais integral (100%) na maioria dos casos; sofreu redução drástica.
 
 - **Regra Geral (Doença Comum):** 60% da média salarial + 2% para cada ano que exceder 20 anos de contribuição (homens) ou 15 anos (mulheres).
-- **Exceção (Acidente de Trabalho/Doença Ocupacional):** Se a invalidez for decorrente do trabalho, o valor é **100% da média salarial**, independente do tempo de contribuição.
+- **Exceção (Acidente de Trabalho/Doença Ocupacional):** Se a invalidez for decorrente do trabalho, o valor é **100% da média salarial**, independentemente do tempo de contribuição.
   _Nota: Este ponto torna crucial a emissão da CAT e o reconhecimento do nexo causal._
 
 ## Adicional de 25% (Grande Invalidez)

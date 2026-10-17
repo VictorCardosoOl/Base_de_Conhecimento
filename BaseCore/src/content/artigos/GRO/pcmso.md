@@ -7,43 +7,34 @@ tags: ['Importado']
 answer: 'Artigo importado automaticamente.'
 ---
 
-- O **PCMSO** é um programa obrigatório, previsto na Norma Regulamentadora NR‑7, estabelecido pela Consolidação das Leis do Trabalho (CLT). Sua finalidade é proteger e preservar a saúde dos trabalhadores, por meio de ações médicas preventivas e diagnósticos precoces dos agravos relacionados ao trabalho. No eSocial, o **PCMSO** se materializa principalmente nos eventos S-2220 (condições de saúde do trabalhador)
+O **PCMSO** é um programa obrigatório, previsto na Norma Regulamentadora NR‑7, estabelecido pela Consolidação das Leis do Trabalho (CLT). Sua finalidade é proteger e preservar a saúde dos trabalhadores, por meio de ações médicas preventivas e diagnósticos precoces dos agravos relacionados ao trabalho. No eSocial, o **PCMSO** se materializa principalmente nos eventos S-2220 (condições de saúde do trabalhador).
 
-  Ele se integra às demais ações de saúde e segurança ocupacional e deve estar alinhado com o **PGR (Programa de Gerenciamento de Riscos)
+Ele se integra às demais ações de saúde e segurança ocupacional e deve estar alinhado com o **PGR (Programa de Gerenciamento de Riscos)**.
 
-  Exames e eventos contemplados**
+**Exames e eventos contemplados**
 
 O PCMSO deve incluir os seguintes exames ocupacionais, obrigatórios por lei:
 
-• Admissional – antes do início das atividades;
+- Admissional – antes do início das atividades;
+- Periódico – em intervalos regulares definidos conforme risco;
+- Retorno ao trabalho – após afastamento por doença ou acidente;
+- Mudança de função – ao alterar atividades do trabalhador;
+- Demissional – no desligamento da empresa.
 
-• Periódico – em intervalos regulares definidos conforme risco;
+Além disso, podem ser exigidos **exames complementares**, de acordo com os riscos ocupacionais identificados (por exemplo: audiometria, radiologia, espirometria, exames específicos conforme agentes químicos ou físicos).
 
-• Retorno ao trabalho – após afastamento por doença ou acidente;
-
-• Mudança de função – ao alterar atividades do trabalhador;
-
-• Demissional – no desligamento da empresa
-
-Além disso, podem ser exigidos **exames complementares**, de acordo com os riscos ocupacionais identificados (por exemplo: audiometria, radiologia, espirometria, exames específicos conforme agentes químicos ou físicos)
-
-A inclusão desses exames tem como objetivo a **vigilância ativa da saúde**, sendo fundamentais para detecção precoce de doenças ocupacionais e controle da aptidão do trabalhador
+A inclusão desses exames tem como objetivo a **vigilância ativa da saúde**, sendo fundamentais para detecção precoce de doenças ocupacionais e controle da aptidão do trabalhador.
 
 **Importância para a Saúde Ocupacional**
 
 O PCMSO desempenha diversas funções essenciais, conforme a NR‑7:
 
-• Detectar precocemente agravos à saúde;
-
-• Avaliar exposições excessivas a agentes nocivos;
-
-• Definir a aptidão do trabalhador para suas atividades;
-
-• Subsidiar ações preventivas e de reabilitação profissional;
-
-• Apoiar análises epidemiológicas e decisões sobre afastamentos ou readaptações;
-
-• Monitorar imunizações ocupacionais, quando recomendadas pelo Ministério da Saúde
+- Detectar precocemente agravos à saúde;
+- Avaliar exposições excessivas a agentes nocivos;
+- Definir a aptidão do trabalhador para suas atividades;
+- Subsidiar ações preventivas e de reabilitação profissional;
+- Apoiar análises epidemiológicas e decisões sobre afastamentos ou readaptações;
+- Monitorar imunizações ocupacionais, quando recomendadas pelo Ministério da Saúde.
 
 Um exemplo é:
 
@@ -72,40 +63,21 @@ O relatório analítico não é apenas uma formalidade burocrática, mas uma fer
 
 **Responsabilidade do empregador:**
 
-Elaborar e implantar o programa;
+- Elaborar e implantar o programa;
+- Custear todos os procedimentos sem ônus para o empregado;
+- Indicar um **médico do trabalho** responsável pelo PCMSO.
 
-Custear todos os procedimentos sem ônus para o empregado;
-
-Indicar um **médico do trabalho** responsável pelo PCMSO
-
-Empresas com grau de risco 1 ou 2, e até 25 empregados, podem estar dispensadas da obrigatoriedade de indicar médico coordenador, conforme NR‑4
+Empresas com grau de risco 1 ou 2, e até 25 empregados, podem estar dispensadas da obrigatoriedade de indicar médico coordenador, conforme NR‑4.
 
 **Relevância para a empresa**
 
-**Legalidade:** cumprir o PCMSO protege a empresa de autuações, multas e ações judiciais decorrentes de doenças ocupacionais
+- **Legalidade:** cumprir o PCMSO protege a empresa de autuações, multas e ações judiciais decorrentes de doenças ocupacionais.
+- **Saúde e produtividade:** promove ambiente de trabalho mais seguro, reduz absenteísmo, melhora o clima organizacional e potencialmente eleva a produtividade.
 
-**Saúde e produtividade:** promove ambiente de trabalho mais seguro, reduz absenteísmo, melhora o clima organizacional e potencialmente eleva a produtividade
-
-**Aspecto**
-
-**Detalhes principais**
-
-**O que é**
-
-Programa médico ocupacional previsto na NR‑7 para proteger a saúde do trabalhador
-
-**Eventos/exames**
-
-Admissional, Periódico, Retorno, Mudança de função, Demissional, além de complementares conforme riscos
-
-**Importância**
-
-Diagnóstico precoce, aptidão, prevenção, suporte a ações epidemiológicas
-
-**Obrigatoriedade**
-
-Todas as empresas com empregados CLT, com responsabilidade do empregador e coordenação médica
-
-**Benefícios**
-
-Conformidade legal, segurança ao trabalhador, redução de custos e problemas legais
+| Aspecto | Detalhes principais |
+| --- | --- |
+| **O que é** | Programa médico ocupacional previsto na NR‑7 para proteger a saúde do trabalhador |
+| **Eventos/exames** | Admissional, Periódico, Retorno, Mudança de função, Demissional, além de complementares conforme riscos |
+| **Importância** | Diagnóstico precoce, aptidão, prevenção, suporte a ações epidemiológicas |
+| **Obrigatoriedade** | Todas as empresas com empregados CLT, com responsabilidade do empregador e coordenação médica |
+| **Benefícios** | Conformidade legal, segurança ao trabalhador, redução de custos e problemas legais |

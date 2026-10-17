@@ -33,13 +33,13 @@ Para a caracterização do direito ao adicional, os agentes são divididos e ava
     - **Calor Extremo:** Avaliado por meio do índice IBUTG em conjunto com as taxas metabólicas por tipo de atividade.
     - **Radiações Ionizantes:** Regido pelos limites e controles da Norma CNEN-NN-3.01.
     - **Radiações Não-Ionizantes:** Micro-ondas, ultravioletas e laser (excetuando-se luz negra).
-    - **Vibrações, Frio e Umidade:** Caracterizados por inspeção qualitativa no local de trabalho (ex: atuação em câmaras frigoríficas ou ambientes alagados).
+    - **Vibrações, Frio e Umidade:** Caracterizados por inspeção qualitativa no local de trabalho (ex.: atuação em câmaras frigoríficas ou ambientes alagados).
 2.  **Agentes Químicos:** Avaliados por limite de tolerância na atmosfera de trabalho (Anexo 11), poeiras minerais como sílica livre e asbesto (Anexo 12), ou por meio de inspeção de atividades envolvendo manipulação de metais pesados (arsênico, chumbo, cromo, mercúrio), carvão e hidrocarbonetos (Anexo 13).
 3.  **Agentes Biológicos:** Avaliação estritamente qualitativa de atividades que envolvam contato permanente com pacientes em isolamento por doenças infectocontagiosas, lixo urbano (coleta e industrialização), esgotos e materiais contaminados (Anexo 14).
 
 ## 2. O que é o Laudo de Periculosidade (LP - NR-16)?
 
-O **Laudo de Periculosidade (LP)** é o documento técnico encarregado de identificar e avaliar a existência de condições de trabalho que, por sua própria natureza ou métodos de execução, impliquem em exposição do trabalhador a **risco iminente de morte ou acidentes graves**. Enquanto a insalubridade foca nos danos à saúde e no adoecimento ao longo do tempo, a periculosidade foca na perda iminente da vida.
+O **Laudo de Periculosidade (LP)** é o documento técnico encarregado de identificar e avaliar a existência de condições de trabalho que, por sua própria natureza ou métodos de execução, impliquem exposição do trabalhador a **risco iminente de morte ou acidentes graves**. Enquanto a insalubridade foca nos danos à saúde e no adoecimento ao longo do tempo, a periculosidade foca na perda iminente da vida.
 
 - **Profissionais Habilitados:** Exige-se obrigatoriamente a elaboração por parte de um **Engenheiro de Segurança do Trabalho** ou **Médico do Trabalho**.
 - **Base Legal:** Regulamentado pela **Norma Regulamentadora nº 16 (NR-16)** e pelo **Artigo 193 da CLT**.
@@ -73,7 +73,7 @@ Para facilitar a consulta corporativa e a correta aplicação contábil, os crit
 
 ### A Regra da Não-Cumulatividade (Direito de Opção)
 
-Se o empregado atuar em um posto de trabalho onde fique exposto simultaneamente a agentes insalubres (como ruído acima de 85 dB) e a fatores perigosos (como eletricidade de alta tensão), **os adicionais não podem ser somados/acumulados na folha de pagamento**. A legislação trabalhista garante expressamente ao trabalhador o **direito de optar** por receber o adicional que lhe for financeiramente mais vantajoso.
+Se o empregado atuar em um posto de trabalho em que fique exposto simultaneamente a agentes insalubres (como ruído acima de 85 dB) e a fatores perigosos (como eletricidade de alta tensão), **os adicionais não podem ser somados/acumulados na folha de pagamento**. A legislação trabalhista garante expressamente ao trabalhador o **direito de optar** por receber o adicional que lhe for financeiramente mais vantajoso.
 
 ## 4. Quando as Empresas Devem Solicitar os Laudos?
 

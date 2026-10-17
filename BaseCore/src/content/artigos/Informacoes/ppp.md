@@ -28,13 +28,11 @@ O preenchimento do PPP deve ser feito com base no **LTCAT**. Seus campos princip
 
 1.  **Dados Administrativos**: CNPJ, setor, cargo/função (CBO), datas de admissão/demissão.
 2.  **Registros Ambientais**:
-
-- Períodos de exposição.
-- Fatores de risco (Tipo e intensidade/concentração).
-- Identificação do responsável técnico (Médico ou Engenheiro) pelo laudo no período.
-- Uso de EPI/EPC (se foi eficaz na neutralização do agente).
-
-3.  **Resultados de Monitoração Biológica**: (Opcional (vedado em alguns casos) no PPP físico, mas as informações de saúde são monitoradas via S-2220 no eSocial).
+    - Períodos de exposição.
+    - Fatores de risco (Tipo e intensidade/concentração).
+    - Identificação do responsável técnico (Médico ou Engenheiro) pelo laudo no período.
+    - Uso de EPI/EPC (se foi eficaz na neutralização do agente).
+3.  **Resultados de Monitoração Biológica**: opcional no PPP físico (vedado em alguns casos); as informações de saúde são monitoradas via S-2220 no eSocial.
 
 ## Responsabilidade da Empresa
 

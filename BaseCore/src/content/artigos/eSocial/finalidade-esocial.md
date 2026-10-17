@@ -30,43 +30,18 @@ Este faseamento foi organizado por grupos de empresas e por tipo de evento. As f
 
 ##### Cronograma Específico para Eventos de SST
 
-A obrigatoriedade para os eventos de SST foi estabelecida posteriormente, através da
+A obrigatoriedade para os eventos de SST foi estabelecida posteriormente, através da **Portaria Conjunta SEPRT/RFB/ME nº 71, de 29 de junho de 2021**. Esta portaria definiu os seguintes prazos para o início da transmissão dos dados de Saúde e Segurança do Trabalho:
 
-**Portaria Conjunta SEPRT/RFB/ME nº 71, de 29 de junho de 2021**. Esta portaria definiu os seguintes prazos para o início da transmissão dos dados de Saúde e Segurança do Trabalho:
-
-Grupo
-
-Declarações obrigatórias ao eSocial
-
-Prazo\*
-
-1
-
-Empresas com faturamento anual superior a R$78 milhões
-
-13/10/2021
-
-2
-
-Entidades empresariais com faturamento no ano de 2016 de até R$78 milhões, e que não sejam optantes pelo Simples Nacional
-
-10/01/2022
-
-3
-
-Empregadores optantes pelo Simples Nacional, empregadores pessoa física (exceto doméstico), produtor rural PF e entidades sem fins lucrativos
-
-10/01/2022
-
-4
-
-Órgãos públicos e organizações internacionais
-
-11/07/2022
+| Grupo | Declarações obrigatórias ao eSocial | Prazo\* |
+| --- | --- | --- |
+| 1 | Empresas com faturamento anual superior a R$78 milhões | 13/10/2021 |
+| 2 | Entidades empresariais com faturamento no ano de 2016 de até R$78 milhões, e que não sejam optantes pelo Simples Nacional | 10/01/2022 |
+| 3 | Empregadores optantes pelo Simples Nacional, empregadores pessoa física (exceto doméstico), produtor rural PF e entidades sem fins lucrativos | 10/01/2022 |
+| 4 | Órgãos públicos e organizações internacionais | 11/07/2022 |
 
 _\* Prazos para transmissão dos eventos de SST_
 
-_Atualmente essa estrutura de faseamento não é mais utilizada porque a obrigatoriedade é para todas empresas exceto alguns órgãos públicos que tiveram um método de transmissão diferente._
+_Atualmente essa estrutura de faseamento não é mais utilizada porque a obrigatoriedade é para todas as empresas, exceto alguns órgãos públicos que tiveram um método de transmissão diferente._
 
 #### 3\. Alterações Relevantes e o eSocial Simplificado
 
@@ -93,7 +68,7 @@ O eSocial coleta uma vasta gama de informações sobre o cidadão, incluindo:
 
 O tratamento desses dados é de responsabilidade do Governo Federal. Com a vigência da **Lei Geral de Proteção de Dados (LGPD)**, a gestão dessas informações deve seguir rigorosos princípios de segurança, finalidade e transparência, garantindo que os dados sejam usados apenas para os fins previstos em lei e protegidos contra acessos não autorizados e vazamentos.
 
-Vale ressaltar que dentro do software Sigo Web, realizaremos apenas a transmissão de alguns eventos pertinente ao SST ao eSocial, que são:
+Vale ressaltar que dentro do software Sigo Web, realizaremos apenas a transmissão de alguns eventos pertinentes à SST ao eSocial, que são:
 
 - **Evento:** S-2210 – Comunicação de Acidente de Trabalho
 - **Evento:** S-2220 – Monitoramento da Saúde do Trabalhador

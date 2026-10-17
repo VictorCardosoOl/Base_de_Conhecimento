@@ -27,20 +27,27 @@ O XML funciona como um formato de troca de dados em Web Services, facilitando a 
 
 **Requisições e Respostas:** Os Web Services geralmente usam XML para enviar e receber dados. Quando uma aplicação deseja interagir com um web service, ela faz uma solicitação (request) que pode ser formatada em XML, e o serviço responde com um documento XML.
 
-**Exemplo de Comunicação**  
-Requisição: Um cliente envia uma requisição XML para um web service, solicitando a obtenção de informações sobre um usuário.  
-xml  
-<request>  
-<usuarioID>123</usuarioID>  
-</request>  
-Resposta: O servidor processa a requisição e retorna uma resposta em XML, contendo as informações do usuário.  
-xml  
-<response>  
-<usuario>  
-<id>123</id>  
-<nome>Diego Silva</nome>  
-<email>[diego.silva@example.com</email](mailto:diego.silva@example.com%3c/email)  
-</usuario>
+**Exemplo de Comunicação**
+
+Requisição: Um cliente envia uma requisição XML para um web service, solicitando a obtenção de informações sobre um usuário.
+
+```xml
+<request>
+  <usuarioID>123</usuarioID>
+</request>
+```
+
+Resposta: O servidor processa a requisição e retorna uma resposta em XML, contendo as informações do usuário.
+
+```xml
+<response>
+  <usuario>
+    <id>123</id>
+    <nome>Diego Silva</nome>
+    <email>diego.silva@example.com</email>
+  </usuario>
+</response>
+```
 
 **O que o XML faz no contexto do eSocial**
 

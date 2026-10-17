@@ -24,42 +24,15 @@ Criado pelo governo federal para centralizar em uma única plataforma os dados q
 Cronograma de Implantação dos eventos de SST
 ============================================
 
-No inicio do esocial com o objetivo de garantir segurança e eficiência para a entrada em operação do eSocial foi definido que o início de envio de obrigações para cada grupo de obrigados deve ser feito em etapas, ou seja, definiu- se a implementação progressiva do eSocial (faseamento).
+No início do eSocial, com o objetivo de garantir segurança e eficiência para a entrada em operação do sistema, foi definido que o início de envio de obrigações para cada grupo de obrigados deve ser feito em etapas, ou seja, definiu-se a implementação progressiva do eSocial (faseamento).
 
 Este faseamento é dividido por grupos de obrigados e, dentro de cada grupo, por tipo de evento: na primeira fase devem ser enviados os eventos de tabela, na segunda os não periódicos, na terceira os eventos periódicos e na quarta fase os eventos de Segurança e Saúde no Trabalho.
 
 Confira abaixo os grupos, declarantes e os prazos para transmissão dos eventos de SST:
 
-**Grupo**
-
-**Declarantes obrigados ao eSocial**
-
-**Prazo\***
-
-1
-
-Empresas com faturamento anual superior a R$78 milhões
-
-13/10/2021
-
-2
-
-Entidades empresariais com faturamento no ano de 2016 de até R$78
-
-milhões, e que não sejam optantes pelo Simples Nacional
-
-10/01/2022
-
-3
-
-Empregadores optantes pelo Simples Nacional, empregadores pessoa física
-
-(exceto doméstico), produtor rural PF e entidades sem fins lucrativos
-
-10/01/2022
-
-4
-
-Órgãos públicos e organizações internacionais
-
-11/07/2022
+| Grupo | Declarantes obrigados ao eSocial | Prazo\* |
+| --- | --- | --- |
+| 1 | Empresas com faturamento anual superior a R$78 milhões | 13/10/2021 |
+| 2 | Entidades empresariais com faturamento no ano de 2016 de até R$78 milhões, e que não sejam optantes pelo Simples Nacional | 10/01/2022 |
+| 3 | Empregadores optantes pelo Simples Nacional, empregadores pessoa física (exceto doméstico), produtor rural PF e entidades sem fins lucrativos | 10/01/2022 |
+| 4 | Órgãos públicos e organizações internacionais | 11/07/2022 |

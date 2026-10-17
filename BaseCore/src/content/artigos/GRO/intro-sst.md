@@ -27,7 +27,7 @@ Avalia se o trabalho está causando doenças ou se o trabalhador tem condições
 
 - **Profissionais:** Médicos do Trabalho, Enfermeiros e Auxiliares de Enfermagem do Trabalho, Fonoaudiólogos (para audiometrias), etc.
 - **Instrumentos principais:** PCMSO, Exames Clínicos (Admissional, Periódico, etc.), Exames Complementares (Raio-X, Sangue, Audiometria), ASO.
-- **Objetivo:** Monitorar a saúde e detectar doenças precocemente. "Proteger a saúde biologica".
+- **Objetivo:** Monitorar a saúde e detectar doenças precocemente. "Proteger a saúde biológica".
 
 ## A Integração (GRO - Gerenciamento de Riscos Ocupacionais)
 

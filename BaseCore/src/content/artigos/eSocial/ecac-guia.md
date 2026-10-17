@@ -23,7 +23,7 @@ O acesso é restrito para garantir segurança. Pode ser feito via:
 
 - **Situação Fiscal:** Verificar se a empresa tem pendências na Receita ou PGFN (Dívida Ativa) que impeçam a emissão de CND (Certidão Negativa de Débitos).
 - **Consulta de Declarações (DCTFWeb):** Conferir os débitos previdenciários declarados via eSocial. É aqui que se emite a guia de pagamento (DARF Previdenciário).
-- **Caixa Postal:** Receber intimações e avisos oficiais da Receita (Ex: notificações sobre divergências no eSocial ou multas por atraso na entrega de obrigações acessórias).
+- **Caixa Postal:** Receber intimações e avisos oficiais da Receita (Ex.: notificações sobre divergências no eSocial ou multas por atraso na entrega de obrigações acessórias).
 - **Procurações:** Gerenciar procurações eletrônicas, permitindo que contadores ou empresas de SST enviem eventos do eSocial em nome da empresa.
 
 ## Importância para o eSocial

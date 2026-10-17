@@ -19,7 +19,7 @@ A **CAT** é o documento utilizado para comunicar ao INSS a ocorrência de acide
 ## Tipos de CAT
 
 1.  **CAT Inicial:** Refere-se à primeira comunicação do acidente ou doença. É emitida mesmo em casos de morte imediata (neste caso, é uma CAT Inicial com informação de óbito).
-2.  **CAT de Reabertura:** Deve ser emitida quando há agravamento de lesão de acidente ou doença já comunicada anteriormente (Ex: trabalhador retorna, mas precisa se afastar novamente pelo mesmo problema).
+2.  **CAT de Reabertura:** Deve ser emitida quando há agravamento de lesão de acidente ou doença já comunicada anteriormente (Ex.: trabalhador retorna, mas precisa se afastar novamente pelo mesmo problema).
 3.  **CAT de Óbito:** Emitida exclusivamente quando o trabalhador falece em decorrência de acidente ou doença já comunicada em uma CAT Inicial anterior. (Se o trabalhador morre na hora do acidente, usa-se a CAT Inicial).
 
 ## Quem deve emitir?
@@ -38,6 +38,6 @@ Caso a empresa se recuse ou não emita no prazo, podem emitir a CAT (sem prazo d
 Atualmente, as empresas enviam a CAT através do evento **S-2210** do eSocial. O preenchimento exige informações detalhadas, incluindo:
 
 - Parte do corpo atingida (Tabela 13).
-- Agente causador (Tabela 14 e 15).
+- Agente causador (Tabelas 14 e 15).
 - Descrição da situação geradora.
 - Atestado médico com CID (Código Internacional de Doenças).

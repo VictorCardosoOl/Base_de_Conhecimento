@@ -12,9 +12,9 @@ Funcionário
 
 No eSocial os **funcionários têm como identificador obrigatório o CPF. Um CPF pode ter mais de um vínculo com um mesmo declarante,** sendo cada vínculo identificado pelo número da matrícula.
 
-**A informação da matrícula é obrigatória para o envio dos eventos de SST.** Exceto para o caso de trabalhador Sem Vínculo de Emprego/Estatutário - TSVE, que não foi informado pelo declarante a matrícula do trabalhador no evento S-2300.
+**A informação da matrícula é obrigatória para o envio dos eventos de SST.** Exceto para o caso de trabalhador Sem Vínculo de Emprego/Estatutário (TSVE) cuja matrícula não foi informada pelo declarante no evento S-2300.
 
-Apenas para essa situação, onde foi identificado que a matrícula do trabalhador não foi informada no evento S-2300, portanto, ela não existe no eSocial, torna-se obrigatório preencher no Sigo®, conforme orientação abaixo, o código da categoria do trabalhador, devendo ser um código válido e existente na Tabela 01 - Categorias de Trabalhadores, do eSocial.
+Apenas para essa situação, em que se identificou que a matrícula do trabalhador não foi informada no evento S-2300, portanto, ela não existe no eSocial, torna-se obrigatório preencher no Sigo®, conforme orientação abaixo, o código da categoria do trabalhador, devendo ser um código válido e existente na Tabela 01 - Categorias de Trabalhadores, do eSocial.
 
 **Em Funcionários » Aba Dados Pessoais (Habilitar a opção “TSVE sem Matrícula” e selecionar o código da Categoria do Trabalhador).**
 
@@ -26,7 +26,7 @@ Se o trabalhador tiver mais de um vínculo com o mesmo declarante, observadas as
 
 Havendo readmissão de empregado é considerado um novo vínculo e recebe uma nova matrícula.
 
-No Sigo®, a matrícula do trabalhador é informada em Funcionários » Aba Registros de Admissões, que corresponde a criação do vínculo do trabalhador na empresa. Portanto, para situações de admissão/ingresso ou readmissão do trabalhador, faz-se necessário primeiramente a criação do registro de admissão do trabalhador no Sigo®, inclusive com o preenchimento do seu número de matrícula.
+No Sigo®, a matrícula do trabalhador é informada em Funcionários » Aba Registros de Admissões, que corresponde à criação do vínculo do trabalhador na empresa. Portanto, para situações de admissão/ingresso ou readmissão do trabalhador, faz-se necessário primeiramente a criação do registro de admissão do trabalhador no Sigo®, inclusive com o preenchimento do seu número de matrícula.
 
 **Declarantes**
 
@@ -42,8 +42,8 @@ Para as obras de construção civil, o declarante deve utilizar o CNO como estab
 
 **Atenção!**
 
-Caso a natureza jurídica do cliente do Prestador de SST for de Administração Pública Federal, deve ser realizado a seguinte parametrização no Sigo®, antes da geração de qualquer evento de SST:
+Caso a natureza jurídica do cliente do Prestador de SST seja de Administração Pública Federal, deve ser realizada a seguinte parametrização no Sigo®, antes da geração de qualquer evento de SST:
 
 Em Clientes - Empresas » Aba Geral
 
-Natureza Jurídica de Adm Pública (Habilitar essa opção para que o Sigo® preencha a chave {nrInsc} do Arquivo XML com o CNPJ completo com 14 posições, conforme regras do Leiaute do eSocial.
+Natureza Jurídica de Adm Pública (Habilitar essa opção para que o Sigo® preencha a chave {nrInsc} do Arquivo XML com o CNPJ completo com 14 posições, conforme regras do Leiaute do eSocial).

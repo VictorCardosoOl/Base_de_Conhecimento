@@ -11,18 +11,18 @@ answer: 'Artigo importado automaticamente.'
 
 A Segurança e Saúde no Trabalho (SST) é uma área essencial para garantir um ambiente laboral seguro, saudável e em conformidade com as leis. Seu principal objetivo é prevenir acidentes, doenças ocupacionais e promover o bem-estar dos colaboradores, além de reduzir custos associados a afastamentos e multas.
 
-Benefícios da SST para as Empresas
+**Benefícios da SST para as Empresas**
 
 - Redução de acidentes e afastamentos
 - Cumprimento das normas legais, evitando penalidades
 - Melhoria da produtividade e clima organizacional
 - Proteção da imagem da empresa perante clientes e mercado
 
-Normas Regulamentadoras (NRs)
+**Normas Regulamentadoras (NRs)**
 
 As Normas Regulamentadoras (NRs) são regras estabelecidas pelo Ministério do Trabalho e Emprego (MTE) que determinam obrigações em SST.
 
-Principais NRs e Suas Aplicações
+**Principais NRs e Suas Aplicações**
 
 **NR-1** – Disposições Gerais e Gerenciamento de Riscos Ocupacionais  
 **Objetivo:** Estabelecer as diretrizes gerais das NRs e definir o PGR (Programa de Gerenciamento de Riscos). **Documentos Relacionados:** PGR (Programa de Gerenciamento de Riscos).
@@ -36,10 +36,10 @@ Principais NRs e Suas Aplicações
 **Documentos Relacionados:** PCMSO (Programa de Controle Médico de Saúde Ocupacional), ASO (Atestado de Saúde Ocupacional).
 
 **NR-15 –** Atividades e Operações Insalubres  
-**Objetivo:** Regular o adicional de insalubridade devido a exposição a agentes nocivos (ruído, calor, produtos químicos, etc.).  
+**Objetivo:** Regular o adicional de insalubridade devido à exposição a agentes nocivos (ruído, calor, produtos químicos, etc.).  
 **Documentos Relacionados**: Laudo de Insalubridade (LI).
 
-**NR-16** – Atividades e Operações Perigosa  
+**NR-16** – Atividades e Operações Perigosas  
 **Objetivo:** Definir o adicional de periculosidade para atividades de alto risco (eletricidade, explosivos, inflamáveis). **Documentos Relacionados:** Laudo de Periculosidade (LP).
 
 **NR-17 -** Ergonomia  
@@ -59,9 +59,9 @@ Principais NRs e Suas Aplicações
 
 **PGR (Programa de Gerenciamento de Riscos) NR-1**
 
-**O que é?** Um documento que mapeia e controla riscos ocupacionais.**  
-Quem elabora?** Engenheiro de Segurança ou Técnico de SST.**  
-Etapas do PGR:** Identificação de perigos | Avaliação de riscos | Definição de medidas de controle | Monitoramento contínuo
+**O que é?** Um documento que mapeia e controla riscos ocupacionais.  
+**Quem elabora?** Engenheiro de Segurança ou Técnico de SST.  
+**Etapas do PGR:** Identificação de perigos | Avaliação de riscos | Definição de medidas de controle | Monitoramento contínuo
 
 **PCMSO (Programa de Controle Médico de Saúde Ocupacional) NR-7**
 
@@ -70,11 +70,15 @@ Etapas do PGR:** Identificação de perigos | Avaliação de riscos | Definiçã
 
 **Laudo de Insalubridade (NR-15)**
 
-**Finalidade:** Avaliar a exposição do trabalhador a agentes nocivos à saúde (químicos, físicos ou biológicos). Garantir o pagamento do adicional de insalubridade (10%, 20% ou 40% do salário mínimo vigente).**Agentes Considerados:** Ruído excessivo, Calor ou frio intenso, Poeiras, vapores ou gases tóxicos e Radiações ionizantes e não ionizantes.**Quem Elabora?** O Engenheiro de Segurança do Trabalho ou Médico do Trabalho.
+**Finalidade:** Avaliar a exposição do trabalhador a agentes nocivos à saúde (químicos, físicos ou biológicos). Garantir o pagamento do adicional de insalubridade (10%, 20% ou 40% do salário mínimo vigente).  
+**Agentes Considerados:** Ruído excessivo, Calor ou frio intenso, Poeiras, vapores ou gases tóxicos e Radiações ionizantes e não ionizantes.  
+**Quem Elabora?** O Engenheiro de Segurança do Trabalho ou Médico do Trabalho.
 
 **Laudo de Periculosidade (NR-16)**
 
-**Finalidade:** Identificar atividades com risco de morte ou acidentes graves (explosões, choques elétricos, inflamáveis). Assegurar o adicional de periculosidade (30% sobre o salário base do trabalhador).**Atividades Envolvidas:** Eletricidade (alta tensão). Explosivos e substâncias inflamáveis. Roubos ou violência (em algumas profissões, como segurança patrimonial).**Quem Elabora?** O Engenheiro de Segurança do Trabalho ou Médico do Trabalho.
+**Finalidade:** Identificar atividades com risco de morte ou acidentes graves (explosões, choques elétricos, inflamáveis). Assegurar o adicional de periculosidade (30% sobre o salário base do trabalhador).  
+**Atividades Envolvidas:** Eletricidade (alta tensão). Explosivos e substâncias inflamáveis. Roubos ou violência (em algumas profissões, como segurança patrimonial).  
+**Quem Elabora?** O Engenheiro de Segurança do Trabalho ou Médico do Trabalho.
 
 **Eventos de SST no eSocial**
 

@@ -11,9 +11,9 @@ answer: 'Artigo importado automaticamente.'
 
 **O que são as NRs?**
 
-As **Normas Regulamentadoras (NR)** são regras que definem o que pessoas jurídicas e físicas devem fazer para manter o bem estar social. Entretanto, o documento terá como foco a área de Segurança e Saúde no Trabalho (SST).
+As **Normas Regulamentadoras (NR)** são regras que definem o que pessoas jurídicas e físicas devem fazer para manter o bem-estar social. Entretanto, o documento terá como foco a área de Segurança e Saúde no Trabalho (SST).
 
-Cada NR fala sobre um assunto específico, contudo nos restringiremos as que englobam a área de Segurança e Saúde no Trabalho.
+Cada NR fala sobre um assunto específico, contudo nos restringiremos às que englobam a área de Segurança e Saúde no Trabalho.
 
 - Algumas tratam de regras gerais, como o uso de **Equipamentos de Proteção Individual (EPIs)**.
 - Outras falam de situações mais específicas, como segurança no uso de máquinas, cuidados com ergonomia ou proteção da saúde do trabalhador.
@@ -115,6 +115,6 @@ Para saber mais informações, acesse: [NR 15](https://www.gov.br/trabalho-e-emp
 
 A NR 16 tem uma parte geral que explica o que é periculosidade e como deve ser feito o pagamento do adicional para quem trabalha em atividades perigosas. Além disso, ela tem anexos, que trazem exemplos e detalhes sobre quais são essas atividades perigosas.
 
-É responsabilidade do empregador a caracterização ou a descaracterização da periculosidade, mediante laudo técnico elaborado por Médico do Trabalho ou Engenheiro de Segurança do Trabalho,
+É responsabilidade do empregador a caracterização ou a descaracterização da periculosidade, mediante laudo técnico elaborado por Médico do Trabalho ou Engenheiro de Segurança do Trabalho.
 
 Para saber mais informações, acesse: [NR 16](https://www.gov.br/trabalho-e-emprego/pt-br/acesso-a-informacao/participacao-social/conselhos-e-orgaos-colegiados/comissao-tripartite-partitaria-permanente/normas-regulamentadora/normas-regulamentadoras-vigentes/NR16atualizada2024.pdf)

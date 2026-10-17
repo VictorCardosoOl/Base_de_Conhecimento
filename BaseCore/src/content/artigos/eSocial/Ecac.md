@@ -21,7 +21,7 @@ Primeiramente, acesse o portal e realize o login utilizando um certificado digit
 
 Nessa mesma tela, você pode gerenciar suas procurações: consulte as que já existem ou cancele as antigas. É uma boa ideia cancelar procurações de empresas com as quais você não tem mais parceria para evitar problemas.
 
-Para criar a nova procuração para o exame toxicologo, apenas clique em **“Cadastrar Procuração”**. Uma nova tela vai aparecer para você preencher os dados.
+Para criar a nova procuração para o exame toxicológico, apenas clique em **“Cadastrar Procuração”**. Uma nova tela vai aparecer para você preencher os dados.
 
 **Terceiro Passo:** A empresa informa o CNPJ ou CPF do procurador (a clínica de SST, o contador, etc.).
 
