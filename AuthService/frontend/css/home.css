@@ -1,0 +1,226 @@
+/* ============================================================
+   home.css — Estilos exclusivos da página Home / Dashboard
+   Perfil, cards de dados, token JWT, sessão
+   AuthService · Dark Industrial Terminal
+   ============================================================ */
+
+/* ── Hero do perfil ──────────────────────────────────────────── */
+.profile-hero {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  transition: border-color var(--transition);
+}
+
+/* Avatar com dot de status */
+.avatar-ring {
+  position: relative;
+  flex-shrink: 0;
+}
+
+.profile-img {
+  width: 64px;
+  height: 64px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+  border: 1px solid var(--color-border-accent);
+  box-shadow: var(--shadow-glow);
+  display: block;
+}
+
+.online-dot {
+  position: absolute;
+  bottom: -3px;
+  right: -3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  border: 2px solid var(--color-surface);
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.online-dot.on {
+  background: var(--color-success);
+  box-shadow: 0 0 8px var(--color-accent-glow);
+  animation: pulse-dot 2s infinite;
+}
+
+/* Informações do hero */
+.hero-info { flex: 1; min-width: 0; }
+
+.hero-badge {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 2px;
+  background: var(--color-danger-soft);
+  color: var(--color-danger);
+  border: 1px solid var(--color-danger-border);
+  margin-bottom: 7px;
+  transition: background var(--transition), color var(--transition), border-color var(--transition), box-shadow var(--transition);
+}
+
+.hero-badge.on {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border-color: var(--color-success-border);
+  box-shadow: 0 0 8px var(--color-accent-glow);
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  letter-spacing: .01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.hero-email {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Grid de cards ───────────────────────────────────────────── */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.card-wide { grid-column: 1 / -1; }
+
+/* Sessão em row */
+.card-body-row {
+  flex-direction: row;
+  flex-wrap: wrap;
+  padding: 12px 16px;
+  gap: 0;
+}
+
+.card-body-row .data-row {
+  flex: 1 1 48%;
+  min-width: 200px;
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--color-border-subtle);
+  border-right: none;
+}
+
+/* Senha inline */
+.pass-mask {
+  letter-spacing: 4px;
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  line-height: 1;
+}
+
+.pass-real {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--color-accent);
+}
+
+.eye-inline {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  font-size: 11px;
+  padding: 2px;
+  line-height: 1;
+  transition: color var(--transition);
+  flex-shrink: 0;
+}
+
+.eye-inline:hover { color: var(--color-accent); }
+
+/* ── Token JWT ───────────────────────────────────────────────── */
+.token-box {
+  background: var(--color-bg-primary);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 12px;
+  min-height: 72px;
+  max-height: 110px;
+  overflow-y: auto;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-accent);
+  word-break: break-all;
+  line-height: 1.8;
+  letter-spacing: .02em;
+  margin: 12px 0 4px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.token-empty {
+  color: var(--color-text-muted);
+  font-style: italic;
+  font-size: 11px;
+}
+
+.token-tag {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  letter-spacing: .06em;
+  margin-left: auto;
+}
+
+/* ── Estado sem sessão ───────────────────────────────────────── */
+.no-session {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 14px;
+  padding: 52px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  animation: fade-in 240ms ease;
+}
+
+.no-session.show { display: flex; }
+
+.no-sess-ico {
+  font-size: 42px;
+  color: var(--color-border);
+}
+
+.no-session h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text-secondary);
+}
+
+.no-session p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  max-width: 320px;
+}
+
+.no-session .btn-main {
+  width: auto;
+  margin-top: 4px;
+}

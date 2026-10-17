@@ -1,0 +1,387 @@
+/* ============================================================
+   status.css — Estilos exclusivos da página Status da API
+   Hero, endpoints, log terminal, roadmap
+   AuthService · Dark Industrial Terminal
+   ============================================================ */
+
+/* ── Hero de status ──────────────────────────────────────────── */
+.status-hero {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 20px 24px;
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+}
+
+.sh-title {
+  font-family: var(--font-display);
+  font-size: 24px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.sh-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 5px;
+}
+
+/* Badge de status global */
+.sh-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 18px;
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  flex-shrink: 0;
+}
+
+.sh-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  flex-shrink: 0;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.sh-dot.on {
+  background: var(--color-success);
+  box-shadow: 0 0 10px var(--color-accent-glow);
+  animation: pulse-dot 2s infinite;
+}
+
+.sh-dot.off {
+  background: var(--color-danger);
+  box-shadow: 0 0 10px rgba(248,113,113,.3);
+}
+
+.sh-label {
+  font-family: var(--font-display);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: .08em;
+  color: var(--color-text-primary);
+  text-transform: uppercase;
+}
+
+.sh-sub2 {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-top: 2px;
+}
+
+/* ── Grid de endpoints ───────────────────────────────────────── */
+.ep-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* Card de endpoint */
+.ep-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.ep-card:hover {
+  border-color: var(--color-border-accent);
+  box-shadow: var(--shadow-glow);
+}
+
+/* Cabeçalho do endpoint */
+.ep-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ep-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .12em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.ep-badge.get  {
+  background: var(--color-success-soft);
+  color: var(--color-success);
+  border: 1px solid var(--color-success-border);
+}
+
+.ep-badge.post {
+  background: var(--color-info-soft);
+  color: var(--color-info);
+  border: 1px solid var(--color-info-border);
+}
+
+.ep-path {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  flex: 1;
+}
+
+/* Dot de status do endpoint */
+.ep-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--color-text-muted);
+  transition: background var(--transition), box-shadow var(--transition);
+  flex-shrink: 0;
+}
+
+.ep-dot.ok  {
+  background: var(--color-success);
+  box-shadow: 0 0 6px var(--color-accent-glow);
+}
+
+.ep-dot.err {
+  background: var(--color-danger);
+  box-shadow: 0 0 6px rgba(248,113,113,.4);
+}
+
+.ep-dot-info { background: var(--color-info); }
+
+.ep-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+/* Métricas do endpoint */
+.ep-metrics {
+  background: var(--color-surface-raised);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.ep-metric {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-size: 10px;
+}
+
+.emk { color: var(--color-text-muted); font-weight: 500; }
+.emv { color: var(--color-text-primary); font-weight: 600; }
+
+/* Schema (body / form) */
+.ep-schema {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.schema-lbl {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+/* ── Painel de log (terminal) ────────────────────────────────── */
+.log-panel {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+
+.log-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  border-bottom: 1px solid var(--color-border);
+  background: var(--color-surface-raised);
+  gap: 12px;
+}
+
+.log-head-title {
+  font-family: var(--font-display);
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--color-text-secondary);
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.log-actions {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.log-body {
+  padding: 10px 16px;
+  max-height: 180px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: var(--color-bg-primary);
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-border) transparent;
+}
+
+.log-line {
+  display: flex;
+  gap: 14px;
+  font-family: var(--font-mono);
+  font-size: 10px;
+  line-height: 1.6;
+}
+
+.log-ts  { color: var(--color-text-muted); white-space: nowrap; min-width: 72px; flex-shrink: 0; }
+.log-msg { color: var(--color-text-secondary); }
+
+.log-success .log-msg { color: var(--color-success); }
+.log-error   .log-msg { color: var(--color-danger); }
+.log-info    .log-msg { color: var(--color-info); }
+
+/* ── Roadmap de melhorias ────────────────────────────────────── */
+.docs-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.docs-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.docs-ico {
+  font-size: 20px;
+  color: var(--color-accent);
+  margin-top: 4px;
+  flex-shrink: 0;
+}
+
+.docs-title {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+}
+
+.docs-sub {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  margin-top: 4px;
+}
+
+/* Grid dos cards de melhoria */
+.docs-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.doc-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-top: 2px solid transparent;
+  border-radius: var(--radius);
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.doc-card:hover { box-shadow: var(--shadow-glow); }
+
+.prio-high       { border-top-color: var(--color-danger); }
+.prio-high:hover { border-color: var(--color-danger-border); }
+.prio-med        { border-top-color: var(--color-warning); }
+.prio-med:hover  { border-color: var(--color-warning-border); }
+.prio-low        { border-top-color: var(--color-success); }
+.prio-low:hover  { border-color: var(--color-success-border); }
+
+.doc-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.prio-badge {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  padding: 2px 7px;
+  border-radius: 2px;
+  text-transform: uppercase;
+}
+
+.prio-badge.high { background: var(--color-danger-soft);  color: var(--color-danger);  border: 1px solid var(--color-danger-border); }
+.prio-badge.med  { background: var(--color-warning-soft); color: var(--color-warning); border: 1px solid var(--color-warning-border); }
+.prio-badge.low  { background: var(--color-success-soft); color: var(--color-success); border: 1px solid var(--color-success-border); }
+
+.doc-area {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: .12em;
+}
+
+.doc-name {
+  font-family: var(--font-display);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary);
+}
+
+.doc-desc {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+}
+
+.doc-desc code {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+  border: 1px solid var(--color-border-accent);
+  padding: 1px 5px;
+  border-radius: 2px;
+}

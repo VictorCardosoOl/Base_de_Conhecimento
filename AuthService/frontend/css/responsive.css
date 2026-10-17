@@ -1,0 +1,194 @@
+/* ============================================================
+   responsive.css — Breakpoints e Responsividade Global
+   Desktop → Tablet → Mobile
+   AuthService · Dark Industrial Terminal
+   ============================================================ */
+
+/* ══════════════════════════════════════════════════════════════
+   TABLET — ≤ 1024px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 1024px) {
+
+  /* Status — endpoints em coluna única */
+  .ep-grid { grid-template-columns: 1fr 1fr; }
+
+  /* Docs grid compacto */
+  .docs-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   TABLET MÉDIO — ≤ 768px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+
+  /* ── Nav ───────────────────────────────────────────────────── */
+  .nav-links   { display: none; }
+  .burger      { display: flex; }
+  .nav         { gap: 10px; }
+  .theme-toggle { margin-left: 0; }
+
+  /* ── Padding global reduzido ───────────────────────────────── */
+  :root {
+    --content-pad: 16px;
+  }
+
+  .main-inner {
+    padding: 20px var(--content-pad) 40px;
+    gap: 14px;
+  }
+
+  /* ── Auth page ─────────────────────────────────────────────── */
+  .main-auth {
+    padding: 20px var(--content-pad);
+    align-items: flex-start;
+  }
+
+  .auth-container {
+    width: 95vw;
+    min-height: auto;
+    border-radius: var(--radius);
+  }
+
+  /* Oculta painel de toggle, mostra formulários em sequência */
+  .toggle-container { display: none; }
+
+  .form-container   { position: relative; width: 100%; }
+
+  .sign-in {
+    width: 100%;
+    transform: translateX(0%);
+  }
+
+  .auth-container.active .sign-in {
+    transform: translateX(-100%);
+    position: absolute;
+  }
+
+  .sign-up {
+    width: 100%;
+    transform: translateX(-100%);
+    opacity: 0;
+    position: absolute;
+    top: 0;
+  }
+
+  .auth-container.active .sign-up {
+    transform: translateX(0%);
+    opacity: 1;
+    position: relative;
+    z-index: 5;
+    animation: none;
+    transition: .6s;
+  }
+
+  .mob-switch { display: block; }
+
+  .auth-form { padding: 24px 20px; }
+  .auth-form h1 { font-size: 18px; }
+
+  /* ── Home page ─────────────────────────────────────────────── */
+  .profile-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .hero-name  { font-size: 18px; }
+
+  .btn-logout { width: 100%; justify-content: center; }
+
+  .cards-grid { grid-template-columns: 1fr; }
+  .card-wide  { grid-column: 1; }
+
+  .card-body-row {
+    flex-direction: column;
+    padding: 8px 16px;
+  }
+
+  .card-body-row .data-row {
+    flex: 1 1 100%;
+    min-width: 0;
+  }
+
+  /* ── Status page ───────────────────────────────────────────── */
+  .status-hero {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 16px;
+    gap: 12px;
+  }
+
+  .sh-badge { width: 100%; }
+
+  .ep-grid { grid-template-columns: 1fr; }
+
+  .log-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .log-actions { align-self: flex-end; }
+
+  /* ── Docs ──────────────────────────────────────────────────── */
+  .docs-grid { grid-template-columns: 1fr; }
+
+  /* ── Footer ────────────────────────────────────────────────── */
+  .footer {
+    flex-direction: column;
+    gap: 6px;
+    text-align: center;
+    padding: 12px var(--content-pad);
+  }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE — ≤ 480px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 480px) {
+
+  :root {
+    --content-pad: 14px;
+  }
+
+  .auth-container { width: 98vw; }
+
+  .auth-form { padding: 20px 16px; }
+  .auth-form h1 { font-size: 17px; }
+
+  .profile-img { width: 52px; height: 52px; }
+  .hero-name   { font-size: 17px; }
+
+  .nav { padding: 0 14px; }
+  .nav-brand { font-size: 13px; }
+
+  /* Cards menores no mobile */
+  .card-head  { padding: 10px 14px; }
+  .card-body  { padding: 2px 14px 10px; }
+  .card-foot  { padding: 8px 14px; }
+
+  .ep-card { padding: 14px; }
+
+  /* Log menor */
+  .log-body { max-height: 140px; }
+
+  /* Token box menor */
+  .token-box { min-height: 56px; max-height: 88px; }
+
+  /* Docs sem minWidth */
+  .docs-grid { grid-template-columns: 1fr; }
+}
+
+/* ══════════════════════════════════════════════════════════════
+   MOBILE PEQUENO — ≤ 360px
+══════════════════════════════════════════════════════════════ */
+@media (max-width: 360px) {
+  .nav-brand::before { display: none; }
+  .nav-brand { font-size: 12px; }
+
+  .sh-badge { flex-direction: column; align-items: flex-start; gap: 6px; }
+
+  .social-icons { gap: 6px; }
+  .social-icon  { width: 32px; height: 32px; font-size: 11px; }
+}

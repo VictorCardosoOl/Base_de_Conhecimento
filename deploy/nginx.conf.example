@@ -1,0 +1,29 @@
+# Proxy de borda à frente da Base de Conhecimento (Next), alternativa ao Caddyfile.example.
+# Exemplo: troque o domínio e os caminhos do certificado.
+#
+# Topologia: navegador → Nginx (:443) → Next (127.0.0.1:3000) → AuthService (rede interna)
+# Com este arquivo, o AuthService usa TRUSTED_PROXY_COUNT=1 (docs/IMPLANTACAO.md).
+
+server {
+    listen 443 ssl;
+    server_name kb.empresa.com;
+
+    ssl_certificate     /etc/ssl/kb/fullchain.pem;
+    ssl_certificate_key /etc/ssl/kb/privkey.pem;
+
+    location / {
+        proxy_pass http://127.0.0.1:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        # Substitui o X-Forwarded-For pelo IP da conexão. Não use
+        # $proxy_add_x_forwarded_for: ele acrescenta ao valor do cliente, que pode ser forjado.
+        proxy_set_header X-Forwarded-For $remote_addr;
+    }
+}
+
+server {
+    listen 80;
+    server_name kb.empresa.com;
+    return 301 https://$host$request_uri;
+}
