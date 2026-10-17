@@ -26,3 +26,4 @@ consequências), use o próximo número e acrescente-o a esta tabela.
 | [0015](../../AuthService/docs/adr/0015-avaliacoes-correcoes-e-comentarios.md) | Avaliações, sugestões de correção e comentários dos artigos | aceito |
 | [0016](../../AuthService/docs/adr/0016-auditoria-de-autenticacao.md) | Correções da auditoria de autenticação: limite por conta, IP validado, troca de senha no servidor e só falhas contam | aceito |
 | [0017](./0017-monorepo.md) | Monorepo: BaseCore e AuthService no mesmo repositório, como serviços separados | aceito |
+| [0018](./0018-render.md) | Hospedagem na Render, um serviço por pasta, no plano gratuito | proposto |

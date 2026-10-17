@@ -19,7 +19,7 @@
 | [Arquitetura da BaseCore](../BaseCore/docs/ARQUITETURA.md) | Organização do código, fluxos, convenções, design system e problemas conhecidos |
 | [README do AuthService](../AuthService/README.md) | Responsabilidades, variáveis de ambiente, comandos e endpoints |
 | [README da BaseCore](../BaseCore/README.md) | O projeto, rotas, variáveis de ambiente e comandos |
-| [Decisões de arquitetura](./adr/README.md) | Índice dos ADRs 0001 a 0017 |
+| [Decisões de arquitetura](./adr/README.md) | Índice dos ADRs 0001 a 0018 |
 
 ## Desenvolvimento
 
@@ -34,6 +34,7 @@
 
 | Documento | Para quê |
 | --- | --- |
+| [Deploy na Render](./DEPLOY.md) | Passo a passo no plano gratuito, variáveis, segredos, limites, reversão e merge futuro |
 | [Implantação](../AuthService/docs/IMPLANTACAO.md) | Checklist de produção, proxy de borda, limpeza periódica e roteiro do primeiro deploy |
 | [Exemplos de proxy](../deploy) | Caddy e Nginx |
 | [CHANGELOG](../CHANGELOG.md) | Mudanças por versão, riscos conhecidos e pendências |
