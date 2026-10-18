@@ -1,0 +1,18 @@
+# Proxy de borda à frente da Base de Conhecimento (Next), para hospedagem própria (VPS).
+# Exemplo: troque o domínio. O Caddy obtém e renova o certificado TLS sozinho.
+#
+# Topologia: navegador → Caddy (:443) → Next (127.0.0.1:3000) → AuthService (rede interna)
+# Com este arquivo, o AuthService usa TRUSTED_PROXY_COUNT=1 (docs/IMPLANTACAO.md).
+#
+# Requisitos para que o IP não possa ser forjado:
+# - o Next e o AuthService não aceitam conexões de fora (só pelo Caddy);
+# - o X-Forwarded-For enviado ao Next é sempre substituído pelo IP da conexão.
+
+kb.empresa.com {
+	reverse_proxy 127.0.0.1:3000 {
+		# Substitui (não acrescenta) o X-Forwarded-For pelo IP de quem conectou ao Caddy.
+		# Se houver uma CDN à frente, não use isto: configure trusted_proxies com as faixas
+		# da CDN e meça de novo o número de saltos.
+		header_up X-Forwarded-For {remote_host}
+	}
+}

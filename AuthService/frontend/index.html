@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="AuthService — Plataforma de autenticação com JWT"
+        />
+
+        <!-- Favicon -->
+        <link rel="icon" href="./public/icon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="icon.svg" />
+
+        <!-- Fontes -->
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <!-- Ícones -->
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        />
+
+        <!-- CSS: Design System → Componentes → Página → Responsivo -->
+        <link rel="stylesheet" href="css/tokens.css" />
+        <link rel="stylesheet" href="css/components.css" />
+        <link rel="stylesheet" href="css/auth.css" />
+        <link rel="stylesheet" href="css/responsive.css" />
+
+        <title>AuthService</title>
+
+        <!-- Aplica tema antes do render para evitar FOUC -->
+        <script>
+            (function () {
+                var t = localStorage.getItem("auth_theme") || "dark";
+                document.documentElement.setAttribute("data-theme", t);
+            })();
+        </script>
+    </head>
+    <body>
+        <!-- ════════════════════ HEADER ════════════════════ -->
+        <header class="header" role="banner">
+            <nav class="nav" role="navigation" aria-label="Navegação principal">
+                <a
+                    href="index.html"
+                    class="nav-logo"
+                    aria-label="AuthService — Início"
+                >
+                    <img
+                        src="./public/icon.svg"
+                        alt=""
+                        class="nav-avatar"
+                        aria-hidden="true"
+                    />
+                    <span class="nav-brand">AuthService</span>
+                </a>
+
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li>
+                        <a
+                            href="index.html"
+                            class="nav-link active"
+                            aria-current="page"
+                            ><i
+                                class="fa-solid fa-terminal"
+                                aria-hidden="true"
+                            ></i>
+                            Acesso</a
+                        >
+                    </li>
+                    <li>
+                        <a href="home.html" class="nav-link"
+                            ><i
+                                class="fa-solid fa-house"
+                                aria-hidden="true"
+                            ></i>
+                            Home</a
+                        >
+                    </li>
+                    <li>
+                        <a href="status.html" class="nav-link"
+                            ><i
+                                class="fa-solid fa-server"
+                                aria-hidden="true"
+                            ></i>
+                            Status</a
+                        >
+                    </li>
+                </ul>
+
+                <button
+                    class="theme-toggle"
+                    id="theme-toggle-btn"
+                    onclick="toggleTheme()"
+                    aria-label="Alternar tema"
+                >
+                    <i class="fa-regular fa-sun" aria-hidden="true"></i>
+                </button>
+
+                <button
+                    class="burger"
+                    id="burger"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                    aria-label="Abrir menu"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </button>
+            </nav>
+
+            <div
+                class="mobile-menu"
+                id="mobile-menu"
+                role="navigation"
+                aria-label="Menu mobile"
+            >
+                <a href="index.html" class="mob-link active" aria-current="page"
+                    ><i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                    Acesso</a
+                >
+                <a href="home.html" class="mob-link"
+                    ><i class="fa-solid fa-house" aria-hidden="true"></i>
+                    Home</a
+                >
+                <a href="status.html" class="mob-link"
+                    ><i class="fa-solid fa-server" aria-hidden="true"></i>
+                    Status</a
+                >
+            </div>
+        </header>
+
+        <!-- ════════════════════ MAIN ════════════════════ -->
+        <main class="main-auth" role="main">
+            <div class="auth-container" id="auth-container">
+                <!-- ── Acesso por convite (sem cadastro público) ── -->
+                <div
+                    class="form-container sign-up"
+                    role="region"
+                    aria-label="Informações de acesso"
+                >
+                    <div class="auth-form">
+                        <h1>Acesso por convite</h1>
+                        <p class="form-sub">
+                            // não há cadastro público
+                        </p>
+                        <p class="form-sub">
+                            Contas são criadas por um administrador. Solicite
+                            seu acesso ao responsável pelo sistema.
+                        </p>
+                        <p class="mob-switch">
+                            Já tem conta?
+                            <a href="#" class="text-link" id="btnL-mob"
+                                >Entrar</a
+                            >
+                        </p>
+                    </div>
+                </div>
+
+                <!-- ── Formulário de Login ── -->
+                <div
+                    class="form-container sign-in"
+                    role="region"
+                    aria-label="Formulário de login"
+                >
+                    <form class="auth-form" onsubmit="return false;" novalidate>
+                        <h1>Autenticar</h1>
+                        <p class="form-sub">// insira suas credenciais</p>
+
+                        <div
+                            class="social-icons"
+                            aria-label="Entrar com redes sociais"
+                        >
+                            <a href="#" class="social-icon" aria-label="Google"
+                                ><i
+                                    class="fa-brands fa-google-plus-g"
+                                    aria-hidden="true"
+                                ></i
+                            ></a>
+                            <a href="#" class="social-icon" aria-label="GitHub"
+                                ><i
+                                    class="fa-brands fa-github"
+                                    aria-hidden="true"
+                                ></i
+                            ></a>
+                            <a href="#" class="social-icon" aria-label="GitLab"
+                                ><i
+                                    class="fa-brands fa-gitlab"
+                                    aria-hidden="true"
+                                ></i
+                            ></a>
+                            <a
+                                href="#"
+                                class="social-icon"
+                                aria-label="LinkedIn"
+                                ><i
+                                    class="fa-brands fa-linkedin-in"
+                                    aria-hidden="true"
+                                ></i
+                            ></a>
+                        </div>
+
+                        <div class="or-divider" aria-hidden="true">
+                            ou via credenciais
+                        </div>
+
+                        <div class="input-box">
+                            <i
+                                class="fa-regular fa-envelope ib-icon"
+                                aria-hidden="true"
+                            ></i>
+                            <input
+                                type="email"
+                                id="log-email"
+                                placeholder="e-mail"
+                                autocomplete="email"
+                                aria-label="E-mail"
+                            />
+                        </div>
+
+                        <div class="input-box">
+                            <i
+                                class="fa-solid fa-lock ib-icon"
+                                aria-hidden="true"
+                            ></i>
+                            <input
+                                type="password"
+                                id="log-pass"
+                                placeholder="senha"
+                                autocomplete="current-password"
+                                aria-label="Senha"
+                            />
+                            <button
+                                type="button"
+                                class="eye-btn"
+                                onclick="toggleEye('log-pass', this)"
+                                aria-label="Mostrar/ocultar senha"
+                            >
+                                <i
+                                    class="fa-regular fa-eye"
+                                    aria-hidden="true"
+                                ></i>
+                            </button>
+                        </div>
+
+                        <a href="#" class="forgot-link">esqueci a senha</a>
+
+                        <div
+                            class="alert"
+                            id="log-alert"
+                            role="alert"
+                            aria-live="polite"
+                        ></div>
+
+                        <button
+                            type="button"
+                            class="btn-main"
+                            id="btn-log"
+                            onclick="loginUser()"
+                        >
+                            Entrar
+                        </button>
+
+                        <p class="mob-switch">
+                            Sem conta?
+                            <a href="#" class="text-link" id="btnR-mob"
+                                >Como obter acesso</a
+                            >
+                        </p>
+                    </form>
+                </div>
+
+                <!-- ── Painel de Toggle (desktop) ── -->
+                <div class="toggle-container" aria-hidden="true">
+                    <div class="toggle-panel-wrap">
+                        <div class="toggle-panel toggle-left">
+                            <h2>Já tem acesso?</h2>
+                            <p>
+                                Use suas credenciais para autenticar e acessar o
+                                painel do sistema.
+                            </p>
+                            <button class="btn-toggle" id="btn-show-login">
+                                Entrar
+                            </button>
+                        </div>
+
+                        <div class="toggle-panel toggle-right">
+                            <h2>Novo no sistema?</h2>
+                            <p>
+                                O acesso é concedido por um administrador.
+                            </p>
+                            <button class="btn-toggle" id="btn-show-register">
+                                Como obter acesso
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- /auth-container -->
+        </main>
+
+        <!-- ════════════════════ FOOTER ════════════════════ -->
+        <footer class="footer" role="contentinfo">
+            <p class="footer-copyright">
+                <span data-i18n="footer.copyright">&copy;</span>
+                <span id="current-year"></span>
+                <span data-i18n="footer.author"
+                    >Guilherme Cruz. Todos os direitos reservados.</span
+                >
+            </p>
+            <nav class="footer-links" aria-label="Links do rodapé">
+                <a href="status.html">Status da API</a>
+                <span aria-hidden="true">·</span>
+                <a href="#">Documentação</a>
+            </nav>
+        </footer>
+
+        <!-- Script ano atual -->
+        <script>
+            document.getElementById("current-year").textContent =
+                new Date().getFullYear();
+        </script>
+
+        <!-- ════════════════════ SCRIPTS ════════════════════ -->
+        <!-- Ordem: theme → utils → nav → página -->
+        <script src="js/theme.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/nav.js"></script>
+        <script src="js/auth.js"></script>
+    </body>
+</html>

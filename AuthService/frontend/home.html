@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="AuthService — Painel do usuário autenticado"
+        />
+
+        <link rel="icon" href="./public/icon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="icon.svg" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        />
+
+        <!-- CSS: Design System → Componentes → Página → Responsivo -->
+        <link rel="stylesheet" href="css/tokens.css" />
+        <link rel="stylesheet" href="css/components.css" />
+        <link rel="stylesheet" href="css/home.css" />
+        <link rel="stylesheet" href="css/responsive.css" />
+
+        <title>AuthService</title>
+
+        <script>
+            (function () {
+                var t = localStorage.getItem("auth_theme") || "dark";
+                document.documentElement.setAttribute("data-theme", t);
+            })();
+        </script>
+    </head>
+    <body>
+        <!-- ════════════════════ HEADER ════════════════════ -->
+        <header class="header" role="banner">
+            <nav class="nav" role="navigation" aria-label="Navegação principal">
+                <a
+                    href="index.html"
+                    class="nav-logo"
+                    aria-label="AuthService — Início"
+                >
+                    <img
+                        src="./public/icon.svg"
+                        alt=""
+                        class="nav-avatar"
+                        aria-hidden="true"
+                    />
+                    <span class="nav-brand">AuthService</span>
+                </a>
+
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li>
+                        <a href="index.html" class="nav-link"
+                            ><i
+                                class="fa-solid fa-terminal"
+                                aria-hidden="true"
+                            ></i>
+                            Acesso</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="home.html"
+                            class="nav-link active"
+                            aria-current="page"
+                            ><i
+                                class="fa-solid fa-house"
+                                aria-hidden="true"
+                            ></i>
+                            Home</a
+                        >
+                    </li>
+                    <li>
+                        <a href="status.html" class="nav-link"
+                            ><i
+                                class="fa-solid fa-server"
+                                aria-hidden="true"
+                            ></i>
+                            Status</a
+                        >
+                    </li>
+                </ul>
+
+                <button
+                    class="theme-toggle"
+                    id="theme-toggle-btn"
+                    onclick="toggleTheme()"
+                    aria-label="Alternar tema"
+                >
+                    <i class="fa-regular fa-sun" aria-hidden="true"></i>
+                </button>
+
+                <button
+                    class="burger"
+                    id="burger"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                    aria-label="Abrir menu"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </button>
+            </nav>
+
+            <div
+                class="mobile-menu"
+                id="mobile-menu"
+                role="navigation"
+                aria-label="Menu mobile"
+            >
+                <a href="index.html" class="mob-link"
+                    ><i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                    Acesso</a
+                >
+                <a href="home.html" class="mob-link active" aria-current="page"
+                    ><i class="fa-solid fa-house" aria-hidden="true"></i>
+                    Home</a
+                >
+                <a href="status.html" class="mob-link"
+                    ><i class="fa-solid fa-server" aria-hidden="true"></i>
+                    Status</a
+                >
+            </div>
+        </header>
+
+        <!-- ════════════════════ MAIN ════════════════════ -->
+        <main class="main-inner" role="main">
+            <!-- ── Hero do perfil ── -->
+            <section class="profile-hero" aria-label="Perfil do usuário">
+                <div class="avatar-ring" id="avatar-ring">
+                    <img
+                        src="./public/avatar.png"
+                        alt="Avatar do usuário"
+                        class="profile-img"
+                    />
+                    <div
+                        class="online-dot"
+                        id="online-dot"
+                        aria-hidden="true"
+                    ></div>
+                </div>
+
+                <div class="hero-info">
+                    <span class="hero-badge" id="hero-badge" aria-live="polite"
+                        >SEM SESSÃO</span
+                    >
+                    <h1 class="hero-name" id="hero-name">—</h1>
+                    <p class="hero-email" id="hero-email">
+                        faça login para ver seus dados
+                    </p>
+                </div>
+
+                <button
+                    class="btn-logout"
+                    id="btn-logout"
+                    onclick="logout()"
+                    aria-label="Encerrar sessão"
+                >
+                    <i
+                        class="fa-solid fa-right-from-bracket"
+                        aria-hidden="true"
+                    ></i>
+                    Encerrar sessão
+                </button>
+            </section>
+
+            <!-- ── Grid de cards ── -->
+            <div class="cards-grid">
+                <!-- Dados Pessoais -->
+                <article class="card" aria-label="Dados pessoais">
+                    <div class="card-head">
+                        <i
+                            class="fa-solid fa-id-card card-ico"
+                            aria-hidden="true"
+                        ></i>
+                        <h2 class="card-title">Dados Pessoais</h2>
+                        <span class="card-tag" aria-label="Endpoint"
+                            >GET /auth/me</span
+                        >
+                    </div>
+                    <div class="card-body">
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-solid fa-hashtag"
+                                    aria-hidden="true"
+                                ></i>
+                                ID</span
+                            >
+                            <span class="dv" id="d-id">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-regular fa-user"
+                                    aria-hidden="true"
+                                ></i>
+                                Nome</span
+                            >
+                            <span class="dv" id="d-name">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-regular fa-envelope"
+                                    aria-hidden="true"
+                                ></i>
+                                E-mail</span
+                            >
+                            <span class="dv" id="d-email">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-solid fa-user-shield"
+                                    aria-hidden="true"
+                                ></i>
+                                Papel</span
+                            >
+                            <span class="dv" id="d-role">—</span>
+                        </div>
+                    </div>
+                    <div class="card-foot">
+                        <button class="btn-sec" id="btn-me" onclick="loadMe()">
+                            <i
+                                class="fa-solid fa-rotate"
+                                aria-hidden="true"
+                            ></i>
+                            Atualizar
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Credenciais da sessão -->
+                <article class="card" aria-label="Credenciais da sessão">
+                    <div class="card-head">
+                        <i
+                            class="fa-solid fa-key card-ico"
+                            aria-hidden="true"
+                        ></i>
+                        <h2 class="card-title">Credenciais</h2>
+                        <span class="card-tag">HttpOnly</span>
+                    </div>
+                    <div class="card-body">
+                        <p class="token-empty">
+                            // access token (curto) e refresh token (rotativo)
+                            ficam em cookies HttpOnly: o JavaScript da página
+                            não consegue lê-los, por isso não são exibidos.
+                        </p>
+                    </div>
+                    <div class="card-foot">
+                        <button class="btn-sec" onclick="logoutAll()">
+                            <i
+                                class="fa-solid fa-right-from-bracket"
+                                aria-hidden="true"
+                            ></i>
+                            Encerrar todas as sessões
+                        </button>
+                    </div>
+                </article>
+
+                <!-- Informações de Sessão -->
+                <article
+                    class="card card-wide"
+                    aria-label="Informações de sessão"
+                >
+                    <div class="card-head">
+                        <i
+                            class="fa-solid fa-shield-halved card-ico"
+                            aria-hidden="true"
+                        ></i>
+                        <h2 class="card-title">Informações de Sessão</h2>
+                        <span class="card-tag">servidor</span>
+                    </div>
+                    <div class="card-body card-body-row">
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-solid fa-circle-check"
+                                    aria-hidden="true"
+                                ></i>
+                                Status</span
+                            >
+                            <span class="dv" id="sess-status">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-regular fa-clock"
+                                    aria-hidden="true"
+                                ></i>
+                                Expira em</span
+                            >
+                            <span class="dv" id="sess-expire">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-solid fa-server"
+                                    aria-hidden="true"
+                                ></i>
+                                Origem</span
+                            >
+                            <span class="dv" id="sess-origin">—</span>
+                        </div>
+                        <div class="data-row">
+                            <span class="dk"
+                                ><i
+                                    class="fa-solid fa-code"
+                                    aria-hidden="true"
+                                ></i>
+                                Algoritmo</span
+                            >
+                            <span class="dv">EdDSA · JWT</span>
+                        </div>
+                    </div>
+                </article>
+            </div>
+            <!-- /cards-grid -->
+
+            <!-- Alerta de página -->
+            <div
+                class="alert page-alert"
+                id="home-alert"
+                role="alert"
+                aria-live="polite"
+            ></div>
+
+            <!-- Estado sem sessão -->
+            <section
+                class="no-session"
+                id="no-session"
+                aria-label="Sem sessão ativa"
+            >
+                <i class="fa-solid fa-lock no-sess-ico" aria-hidden="true"></i>
+                <h2>Sessão não encontrada</h2>
+                <p>// nenhuma sessão ativa — faça login para continuar</p>
+                <a href="index.html" class="btn-main">
+                    Ir para o login
+                    <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </a>
+            </section>
+        </main>
+
+        <!-- ════════════════════ FOOTER ════════════════════ -->
+        <footer class="footer" role="contentinfo">
+            <p class="footer-copyright">
+                <span data-i18n="footer.copyright">&copy;</span>
+                <span id="current-year"></span>
+                <span data-i18n="footer.author"
+                    >Guilherme Cruz. Todos os direitos reservados.</span
+                >
+            </p>
+            <nav class="footer-links" aria-label="Links do rodapé">
+                <a href="status.html">Status da API</a>
+                <span aria-hidden="true">·</span>
+                <a href="#">Documentação</a>
+            </nav>
+        </footer>
+
+        <!-- Script ano atual -->
+        <script>
+            document.getElementById("current-year").textContent =
+                new Date().getFullYear();
+        </script>
+
+        <!-- ════════════════════ SCRIPTS ════════════════════ -->
+        <script src="js/theme.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/nav.js"></script>
+        <script src="js/home.js"></script>
+    </body>
+</html>

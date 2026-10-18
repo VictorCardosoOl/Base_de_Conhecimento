@@ -1,0 +1,38 @@
+# Base SST: AuthService (PostgreSQL, migrations, Mailpit) + BaseCore (Next.js).
+#
+# Primeira vez, na pasta AuthService/: cp .env.example .env (defina POSTGRES_PASSWORD) e
+# python -m backend.scripts.generate_keys. Depois, na raiz:
+#   docker compose up -d --build
+# Base: http://localhost:3000 | AuthService: http://localhost:8010 | Mailpit: http://localhost:8025
+#
+# O AuthService continua com o próprio compose (AuthService/docker-compose.yml), usado
+# também por `npm run dev:all` na BaseCore para rodar o Next fora do Docker.
+
+include:
+  - path: AuthService/docker-compose.yml
+    env_file: AuthService/.env
+
+services:
+  basecore:
+    build:
+      context: BaseCore
+      # Os rewrites do Next são fixados no build: o endereço interno do AuthService entra aqui.
+      args:
+        AUTH_INTERNAL_URL: http://auth-service:8000
+        AUTH_ISSUER: ${AUTH_ISSUER:-http://localhost:8010}
+        AUTH_AUDIENCE: ${AUTH_AUDIENCE:-knowledge-api}
+        AUTH_ACCESS_COOKIE_NAME: ${AUTH_ACCESS_COOKIE_NAME:-kb_at}
+    environment:
+      # AUTH_ISSUER e AUTH_AUDIENCE iguais a JWT_ISSUER e JWT_AUDIENCE do AuthService/.env;
+      # AUTH_ACCESS_COOKIE_NAME igual a ACCESS_COOKIE_NAME (docs/adr/0017-monorepo.md).
+      AUTH_INTERNAL_URL: http://auth-service:8000
+      AUTH_ISSUER: ${AUTH_ISSUER:-http://localhost:8010}
+      AUTH_AUDIENCE: ${AUTH_AUDIENCE:-knowledge-api}
+      AUTH_ACCESS_COOKIE_NAME: ${AUTH_ACCESS_COOKIE_NAME:-kb_at}
+    ports:
+      # Só na máquina local, como o AuthService.
+      - "127.0.0.1:${BASECORE_PORT:-3000}:3000"
+    depends_on:
+      auth-service:
+        condition: service_healthy
+    restart: unless-stopped

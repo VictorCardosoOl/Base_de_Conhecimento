@@ -1,0 +1,42 @@
+[project]
+name = "authservice"
+version = "2.0.0"
+description = "Serviço de autenticação: sessões persistentes, JWT EdDSA e refresh token rotativo."
+requires-python = ">=3.11"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+extend-exclude = ["frontend", "read-model"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "B", "UP", "S", "SIM", "RUF"]
+ignore = [
+  "B008",  # Depends(...) em parâmetros é o padrão do FastAPI
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S101", "S105", "S106"]  # assert e senhas de teste são esperados nos testes
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+plugins = ["pydantic.mypy"]
+packages = ["backend"]
+
+[[tool.mypy.overrides]]
+module = ["alembic.*"]
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra --strict-markers"
+filterwarnings = ["error::DeprecationWarning:backend.*"]
+
+[tool.coverage.run]
+source = ["backend"]
+omit = ["backend/cli.py", "backend/scripts/*"]
+
+[tool.coverage.report]
+fail_under = 85
+show_missing = true

@@ -1,0 +1,484 @@
+<!doctype html>
+<html lang="pt-BR" data-theme="dark">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+            name="description"
+            content="AuthService — Monitoramento em tempo real da API"
+        />
+
+        <link rel="icon" href="./public/icon.svg" type="image/svg+xml" />
+        <link rel="shortcut icon" href="icon.svg" />
+
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap"
+            rel="stylesheet"
+        />
+
+        <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css"
+        />
+
+        <!-- CSS: Design System → Componentes → Página → Responsivo -->
+        <link rel="stylesheet" href="css/tokens.css" />
+        <link rel="stylesheet" href="css/components.css" />
+        <link rel="stylesheet" href="css/status.css" />
+        <link rel="stylesheet" href="css/responsive.css" />
+
+        <title>AuthService</title>
+
+        <script>
+            (function () {
+                var t = localStorage.getItem("auth_theme") || "dark";
+                document.documentElement.setAttribute("data-theme", t);
+            })();
+        </script>
+    </head>
+    <body>
+        <!-- ════════════════════ HEADER ════════════════════ -->
+        <header class="header" role="banner">
+            <nav class="nav" role="navigation" aria-label="Navegação principal">
+                <a
+                    href="index.html"
+                    class="nav-logo"
+                    aria-label="AuthService — Início"
+                >
+                    <img
+                        src="./public/icon.svg"
+                        alt=""
+                        class="nav-avatar"
+                        aria-hidden="true"
+                    />
+                    <span class="nav-brand">AuthService</span>
+                </a>
+
+                <ul class="nav-links" id="nav-links" role="list">
+                    <li>
+                        <a href="index.html" class="nav-link"
+                            ><i
+                                class="fa-solid fa-terminal"
+                                aria-hidden="true"
+                            ></i>
+                            Acesso</a
+                        >
+                    </li>
+                    <li>
+                        <a href="home.html" class="nav-link"
+                            ><i
+                                class="fa-solid fa-house"
+                                aria-hidden="true"
+                            ></i>
+                            Home</a
+                        >
+                    </li>
+                    <li>
+                        <a
+                            href="status.html"
+                            class="nav-link active"
+                            aria-current="page"
+                            ><i
+                                class="fa-solid fa-server"
+                                aria-hidden="true"
+                            ></i>
+                            Status</a
+                        >
+                    </li>
+                </ul>
+
+                <button
+                    class="theme-toggle"
+                    id="theme-toggle-btn"
+                    onclick="toggleTheme()"
+                    aria-label="Alternar tema"
+                >
+                    <i class="fa-regular fa-sun" aria-hidden="true"></i>
+                </button>
+
+                <button
+                    class="burger"
+                    id="burger"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                    aria-label="Abrir menu"
+                >
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                    <span aria-hidden="true"></span>
+                </button>
+            </nav>
+
+            <div
+                class="mobile-menu"
+                id="mobile-menu"
+                role="navigation"
+                aria-label="Menu mobile"
+            >
+                <a href="index.html" class="mob-link"
+                    ><i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                    Acesso</a
+                >
+                <a href="home.html" class="mob-link"
+                    ><i class="fa-solid fa-house" aria-hidden="true"></i>
+                    Home</a
+                >
+                <a
+                    href="status.html"
+                    class="mob-link active"
+                    aria-current="page"
+                    ><i class="fa-solid fa-server" aria-hidden="true"></i>
+                    Status</a
+                >
+            </div>
+        </header>
+
+        <!-- ════════════════════ MAIN ════════════════════ -->
+        <main class="main-inner" role="main">
+            <!-- ── Hero de status ── -->
+            <section class="status-hero" aria-label="Status geral da API">
+                <div class="sh-left">
+                    <h1 class="sh-title">Status da API</h1>
+                    <p class="sh-sub">
+                        // monitoramento em tempo real do serviço de
+                        autenticação
+                    </p>
+                </div>
+                <div class="sh-badge" role="status" aria-live="polite">
+                    <div class="sh-dot" id="sh-dot" aria-hidden="true"></div>
+                    <div>
+                        <div class="sh-label" id="sh-label">VERIFICANDO...</div>
+                        <div class="sh-sub2" id="sh-sub2">aguarde</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Grid de endpoints ── -->
+            <section aria-label="Endpoints da API">
+                <div class="ep-grid">
+                    <!-- GET /health -->
+                    <article class="ep-card" aria-label="Endpoint health">
+                        <div class="ep-head">
+                            <span class="ep-badge get" aria-label="Método GET"
+                                >GET</span
+                            >
+                            <span class="ep-path">/health</span>
+                            <div
+                                class="ep-dot"
+                                id="ep-dot-health"
+                                role="status"
+                                aria-label="Status do endpoint"
+                                aria-live="polite"
+                            ></div>
+                        </div>
+                        <p class="ep-desc">
+                            // verifica disponibilidade geral do serviço
+                        </p>
+                        <div class="ep-metrics" aria-label="Métricas">
+                            <div class="ep-metric">
+                                <span class="emk">latência</span>
+                                <span class="emv" id="ep-lat-health">—</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">status</span>
+                                <span class="emv" id="ep-st-health">—</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">última verificação</span
+                                ><span class="emv" id="ep-time-health">—</span>
+                            </div>
+                        </div>
+                        <button class="btn-sec" onclick="pingHealth()">
+                            <i
+                                class="fa-solid fa-rotate"
+                                aria-hidden="true"
+                            ></i>
+                            Verificar
+                        </button>
+                    </article>
+
+                    <!-- POST /auth/refresh -->
+                    <article class="ep-card" aria-label="Endpoint refresh">
+                        <div class="ep-head">
+                            <span class="ep-badge post" aria-label="Método POST"
+                                >POST</span
+                            >
+                            <span class="ep-path">/auth/refresh</span>
+                            <div
+                                class="ep-dot ep-dot-info"
+                                aria-hidden="true"
+                            ></div>
+                        </div>
+                        <p class="ep-desc">
+                            // rotaciona o refresh token; reuso revoga a sessão
+                        </p>
+                        <div class="ep-metrics">
+                            <div class="ep-metric">
+                                <span class="emk">método</span>
+                                <span class="emv">POST</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">auth</span>
+                                <span class="emv">cookie HttpOnly</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">resposta</span>
+                                <span class="emv">200 · novos cookies</span>
+                            </div>
+                        </div>
+                    </article>
+
+                    <!-- POST /auth/login -->
+                    <article class="ep-card" aria-label="Endpoint login">
+                        <div class="ep-head">
+                            <span class="ep-badge post" aria-label="Método POST"
+                                >POST</span
+                            >
+                            <span class="ep-path">/auth/login</span>
+                            <div
+                                class="ep-dot ep-dot-info"
+                                aria-hidden="true"
+                            ></div>
+                        </div>
+                        <p class="ep-desc">
+                            // autentica e define cookies HttpOnly (sem token no corpo)
+                        </p>
+                        <div class="ep-metrics">
+                            <div class="ep-metric">
+                                <span class="emk">método</span>
+                                <span class="emv">POST · JSON</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">auth</span>
+                                <span class="emv">não requer</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">resposta</span>
+                                <span class="emv">200 · usuário</span>
+                            </div>
+                        </div>
+                        <div class="ep-schema">
+                            <span class="schema-lbl">body</span>
+                            <code class="schema-code"
+                                >{ "email": "str", "password": "str" }</code
+                            >
+                        </div>
+                    </article>
+
+                    <!-- GET /auth/me -->
+                    <article class="ep-card" aria-label="Endpoint me">
+                        <div class="ep-head">
+                            <span class="ep-badge get" aria-label="Método GET"
+                                >GET</span
+                            >
+                            <span class="ep-path">/auth/me</span>
+                            <div
+                                class="ep-dot"
+                                id="ep-dot-me"
+                                role="status"
+                                aria-label="Status do endpoint"
+                                aria-live="polite"
+                            ></div>
+                        </div>
+                        <p class="ep-desc">
+                            // retorna dados mínimos do usuário autenticado
+                        </p>
+                        <div class="ep-metrics">
+                            <div class="ep-metric">
+                                <span class="emk">latência</span
+                                ><span class="emv" id="ep-lat-me">—</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">auth</span>
+                                <span class="emv">cookie HttpOnly</span>
+                            </div>
+                            <div class="ep-metric">
+                                <span class="emk">última verificação</span
+                                ><span class="emv" id="ep-time-me">—</span>
+                            </div>
+                        </div>
+                        <button class="btn-sec" onclick="pingMe()">
+                            <i
+                                class="fa-solid fa-rotate"
+                                aria-hidden="true"
+                            ></i>
+                            Testar
+                        </button>
+                    </article>
+                </div>
+            </section>
+
+            <!-- ── Log de requisições ── -->
+            <section class="log-panel" aria-label="Log de requisições">
+                <div class="log-head">
+                    <span class="log-head-title">
+                        <i class="fa-solid fa-terminal" aria-hidden="true"></i>
+                        Log de Requisições
+                    </span>
+                    <div class="log-actions">
+                        <button class="btn-sec" onclick="runAllChecks()">
+                            <i class="fa-solid fa-play" aria-hidden="true"></i>
+                            Verificar todos
+                        </button>
+                        <button class="btn-sec" onclick="clearStatusLog()">
+                            <i
+                                class="fa-regular fa-trash-can"
+                                aria-hidden="true"
+                            ></i>
+                            Limpar
+                        </button>
+                    </div>
+                </div>
+                <div
+                    class="log-body"
+                    id="status-log"
+                    role="log"
+                    aria-live="polite"
+                    aria-label="Logs do sistema"
+                >
+                    <div class="log-line">
+                        <span class="log-ts" id="boot-ts"></span>
+                        <span class="log-msg">monitoramento iniciado.</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ── Roadmap de melhorias ── 
+            <section class="docs-wrap" aria-label="Roadmap de melhorias">
+                <div class="docs-header">
+                    <i
+                        class="fa-solid fa-book-open docs-ico"
+                        aria-hidden="true"
+                    ></i>
+                    <div>
+                        <h2 class="docs-title">Roadmap de Melhorias</h2>
+                        <p class="docs-sub">
+                            // funcionalidades planejadas para evolução do
+                            serviço de autenticação
+                        </p>
+                    </div>
+                </div>
+
+                <div class="docs-grid">
+                    <article class="doc-card prio-high">
+                        <div class="doc-top">
+                            <span class="prio-badge high">alta prioridade</span>
+                            <span class="doc-area">Segurança</span>
+                        </div>
+                        <h3 class="doc-name">Campo Nome no Modelo</h3>
+                        <p class="doc-desc">
+                            Adicionar campo <code>name: str</code> ao modelo
+                            <code>User</code> e ao schema
+                            <code>UserCreate</code> para armazenar o nome
+                            completo junto com id, email e senha.
+                        </p>
+                        <code class="doc-code"
+                            >User { id, name, email, hashed_password }</code
+                        >
+                    </article>
+
+
+
+
+                    <article class="doc-card prio-med">
+                        <div class="doc-top">
+                            <span class="prio-badge med">média prioridade</span>
+                            <span class="doc-area">Autenticação</span>
+                        </div>
+                        <h3 class="doc-name">MFA / TOTP</h3>
+                        <p class="doc-desc">
+                            Autenticação de dois fatores via TOTP (Google
+                            Authenticator). Gera QR Code no cadastro e valida
+                            código de 6 dígitos no login.
+                        </p>
+                        <code class="doc-code"
+                            >POST /mfa/enable · POST /mfa/verify</code
+                        >
+                    </article>
+
+
+                    <article class="doc-card prio-low">
+                        <div class="doc-top">
+                            <span class="prio-badge low">baixa prioridade</span>
+                            <span class="doc-area">UX</span>
+                        </div>
+                        <h3 class="doc-name">Recuperação de Senha</h3>
+                        <p class="doc-desc">
+                            Fluxo completo de reset via e-mail com token
+                            temporário de 15 min, link único e invalidação após
+                            uso. Requer integração SMTP.
+                        </p>
+                        <code class="doc-code"
+                            >POST /password/reset-request · POST
+                            /password/reset</code
+                        >
+                    </article>
+
+                    <article class="doc-card prio-low">
+                        <div class="doc-top">
+                            <span class="prio-badge low">baixa prioridade</span>
+                            <span class="doc-area">Ops</span>
+                        </div>
+                        <h3 class="doc-name">Logs Estruturados</h3>
+                        <p class="doc-desc">
+                            Substituir <code>print</code> e logging básico por
+                            logs estruturados em JSON com níveis, timestamps,
+                            correlation IDs e integração com Datadog/Loki.
+                        </p>
+                        <code class="doc-code"
+                            >{ "level": "INFO", "trace_id": "...", "event":
+                            "login" }</code
+                        >
+                    </article>
+
+                    <article class="doc-card prio-low">
+                        <div class="doc-top">
+                            <span class="prio-badge low">baixa prioridade</span>
+                            <span class="doc-area">Infra</span>
+                        </div>
+                        <h3 class="doc-name">Chave privada JWT em cofre</h3>
+                        <p class="doc-desc">
+                            Carregar a chave privada Ed25519 de um gerenciador
+                            de segredos (HashiCorp Vault, AWS SSM ou Docker
+                            Secrets) em vez de arquivo local.
+                        </p>
+                        <code class="doc-code"
+                            >JWT_PRIVATE_KEY_FILE=/run/secrets/jwt_private.pem</code
+                        >
+                    </article>
+                </div>
+            </section>
+            -->
+        </main>
+
+        <!-- ════════════════════ FOOTER ════════════════════ -->
+        <footer class="footer" role="contentinfo">
+            <p class="footer-copyright">
+                <span data-i18n="footer.copyright">&copy;</span>
+                <span id="current-year"></span>
+                <span data-i18n="footer.author"
+                    >Guilherme Cruz. Todos os direitos reservados.</span
+                >
+            </p>
+            <nav class="footer-links" aria-label="Links do rodapé">
+                <a href="status.html">Status da API</a>
+                <span aria-hidden="true">·</span>
+                <a href="#">Documentação</a>
+            </nav>
+        </footer>
+
+        <!-- Script ano atual -->
+        <script>
+            document.getElementById("current-year").textContent =
+                new Date().getFullYear();
+        </script>
+
+        <!-- ════════════════════ SCRIPTS ════════════════════ -->
+        <script src="js/theme.js"></script>
+        <script src="js/utils.js"></script>
+        <script src="js/nav.js"></script>
+        <script src="js/status.js"></script>
+    </body>
+</html>

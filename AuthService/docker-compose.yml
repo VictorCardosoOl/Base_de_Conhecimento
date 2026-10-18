@@ -1,0 +1,85 @@
+# Ambiente local: PostgreSQL + migrations + AuthService.
+#   1. cp .env.example .env   (e defina POSTGRES_PASSWORD)
+#   2. python -m backend.scripts.generate_keys
+#   3. docker compose up --build
+services:
+  db:
+    image: postgres:18
+    environment:
+      POSTGRES_DB: authservice
+      POSTGRES_USER: authservice
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?defina POSTGRES_PASSWORD no .env}
+    volumes:
+      - pgdata:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U authservice -d authservice"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  migrate:
+    build: .
+    # Migrations e, só com SEED_DEV_USERS=true (desenvolvimento), os usuários de teste.
+    command: ["sh", "-c", "alembic upgrade head && python -m backend.cli seed-dev-users"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://authservice:${POSTGRES_PASSWORD}@db:5432/authservice
+      JWT_PRIVATE_KEY_FILE: /run/keys/jwt_private.pem
+    volumes:
+      - ./keys:/run/keys:ro
+    depends_on:
+      db:
+        condition: service_healthy
+
+  auth-service:
+    build: .
+    ports:
+      # Só na máquina local: a Base acessa por localhost; a rede não precisa da API direta.
+      - "127.0.0.1:${AUTH_PORT:-8000}:8000"
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://authservice:${POSTGRES_PASSWORD}@db:5432/authservice
+      JWT_PRIVATE_KEY_FILE: /run/keys/jwt_private.pem
+      # Emails de desenvolvimento vão para o Mailpit (abaixo). Em produção, configure o
+      # SMTP do provedor no .env (EMAIL_BACKEND, SMTP_*): os valores do .env têm prioridade.
+      EMAIL_BACKEND: ${EMAIL_BACKEND:-smtp}
+      SMTP_HOST: ${SMTP_HOST:-mailpit}
+      SMTP_PORT: ${SMTP_PORT:-1025}
+      SMTP_SECURITY: ${SMTP_SECURITY:-none}
+    volumes:
+      - ./keys:/run/keys:ro
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # Limpeza diária de sessões, contadores e links vencidos (python -m backend.cli
+  # purge-expired). Fora do `up` padrão: `docker compose --profile ops up -d purge`.
+  # Em hospedagem gerenciada, use o agendador dela (docs/IMPLANTACAO.md).
+  purge:
+    build: .
+    profiles: ["ops"]
+    command: ["sh", "-c", "while true; do python -m backend.cli purge-expired; sleep 86400; done"]
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql+psycopg://authservice:${POSTGRES_PASSWORD}@db:5432/authservice
+      JWT_PRIVATE_KEY_FILE: /run/keys/jwt_private.pem
+    volumes:
+      - ./keys:/run/keys:ro
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+    restart: unless-stopped
+
+  # Caixa de email de desenvolvimento: captura tudo o que o AuthService envia (links de
+  # redefinição de senha e de confirmação). Nada sai para a internet.
+  # Interface: http://localhost:8025 (só nesta máquina).
+  mailpit:
+    image: axllent/mailpit:v1.29.5
+    ports:
+      - "127.0.0.1:${MAILPIT_UI_PORT:-8025}:8025"
+    restart: unless-stopped
+
+volumes:
+  pgdata:

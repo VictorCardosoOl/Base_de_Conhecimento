@@ -1,0 +1,178 @@
+/* ============================================================
+   tokens.css — Design System Tokens
+   Variáveis globais, reset, base e animações
+   AuthService · Dark Industrial Terminal
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Syne:wght@400;600;700;800&display=swap');
+
+/* ── Tokens Estruturais ──────────────────────────────────────── */
+:root {
+  --transition:  160ms ease;
+  --radius:      6px;
+  --radius-sm:   4px;
+  --radius-lg:   10px;
+  --font-mono:   'JetBrains Mono', monospace;
+  --font-display:'Syne', sans-serif;
+  --nav-height:  56px;
+  --content-max: 1200px;
+  --content-pad: 24px;
+}
+
+/* ══ Tema Escuro (padrão) ══════════════════════════════════════ */
+[data-theme="dark"] {
+  /* Fundos */
+  --color-bg-primary:      #0d0e11;
+  --color-bg-secondary:    #111318;
+  --color-surface:         #181b21;
+  --color-surface-raised:  #1e2129;
+  --color-surface-overlay: #242830;
+
+  /* Bordas */
+  --color-border:          #2a2e38;
+  --color-border-subtle:   #1e2129;
+  --color-border-accent:   rgba(74, 222, 128, 0.35);
+
+  /* Textos */
+  --color-text-primary:    #e2e8f0;
+  --color-text-secondary:  #8892a4;
+  --color-text-muted:      #4a5568;
+  --color-text-inverse:    #0d0e11;
+
+  /* Accent (verde neon) */
+  --color-accent:          #4ade80;
+  --color-accent-hover:    #22c55e;
+  --color-accent-soft:     rgba(74, 222, 128, 0.08);
+  --color-accent-glow:     rgba(74, 222, 128, 0.25);
+
+  /* Semânticas */
+  --color-danger:          #f87171;
+  --color-danger-soft:     rgba(248, 113, 113, 0.10);
+  --color-danger-border:   rgba(248, 113, 113, 0.30);
+
+  --color-warning:         #fbbf24;
+  --color-warning-soft:    rgba(251, 191, 36, 0.10);
+  --color-warning-border:  rgba(251, 191, 36, 0.30);
+
+  --color-success:         #4ade80;
+  --color-success-soft:    rgba(74, 222, 128, 0.10);
+  --color-success-border:  rgba(74, 222, 128, 0.30);
+
+  --color-info:            #60a5fa;
+  --color-info-soft:       rgba(96, 165, 250, 0.10);
+  --color-info-border:     rgba(96, 165, 250, 0.30);
+
+  /* Sombras */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.4);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.5);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,.6);
+  --shadow-glow: 0 0 20px rgba(74,222,128,.12);
+
+  /* Grid de fundo */
+  --grid-color:  rgba(255,255,255,0.025);
+}
+
+/* ══ Tema Claro ════════════════════════════════════════════════ */
+[data-theme="light"] {
+  /* Fundos */
+  --color-bg-primary:      #f0f1f3;
+  --color-bg-secondary:    #e8eaed;
+  --color-surface:         #ffffff;
+  --color-surface-raised:  #fafbfc;
+  --color-surface-overlay: #f3f4f6;
+
+  /* Bordas */
+  --color-border:          #d1d5db;
+  --color-border-subtle:   #e5e7eb;
+  --color-border-accent:   rgba(22, 101, 52, 0.30);
+
+  /* Textos */
+  --color-text-primary:    #111827;
+  --color-text-secondary:  #4b5563;
+  --color-text-muted:      #9ca3af;
+  --color-text-inverse:    #ffffff;
+
+  /* Accent (verde escuro) */
+  --color-accent:          #166534;
+  --color-accent-hover:    #15803d;
+  --color-accent-soft:     rgba(22, 101, 52, 0.07);
+  --color-accent-glow:     rgba(22, 101, 52, 0.15);
+
+  /* Semânticas */
+  --color-danger:          #dc2626;
+  --color-danger-soft:     rgba(220, 38, 38, 0.07);
+  --color-danger-border:   rgba(220, 38, 38, 0.25);
+
+  --color-warning:         #d97706;
+  --color-warning-soft:    rgba(217, 119, 6, 0.07);
+  --color-warning-border:  rgba(217, 119, 6, 0.25);
+
+  --color-success:         #16a34a;
+  --color-success-soft:    rgba(22, 163, 74, 0.07);
+  --color-success-border:  rgba(22, 163, 74, 0.25);
+
+  --color-info:            #2563eb;
+  --color-info-soft:       rgba(37, 99, 235, 0.08);
+  --color-info-border:     rgba(37, 99, 235, 0.25);
+
+  /* Sombras */
+  --shadow-sm:   0 1px 3px rgba(0,0,0,.08);
+  --shadow-md:   0 4px 16px rgba(0,0,0,.10);
+  --shadow-lg:   0 8px 32px rgba(0,0,0,.14);
+  --shadow-glow: 0 0 20px rgba(22,101,52,.08);
+
+  /* Grid de fundo */
+  --grid-color:  rgba(0,0,0,0.035);
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ── Base ────────────────────────────────────────────────────── */
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--font-mono);
+  background-color: var(--color-bg-primary);
+  color: var(--color-text-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  line-height: 1.5;
+  transition: background-color 300ms ease, color 300ms ease;
+  /* Grid terminal de fundo */
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+/* ── Seleção de texto ────────────────────────────────────────── */
+::selection {
+  background: var(--color-accent-soft);
+  color: var(--color-accent);
+}
+
+/* ── Scrollbar customizada ───────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
+
+/* ── Animações globais ───────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: .45; }
+}
+
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}

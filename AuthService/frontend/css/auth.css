@@ -1,0 +1,307 @@
+/* ============================================================
+   auth.css — Estilos exclusivos da página de Acesso
+   Formulário login/cadastro com toggle animado
+   AuthService · Dark Industrial Terminal
+   ============================================================ */
+
+/* ── Layout da página ────────────────────────────────────────── */
+.main-auth {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+}
+
+/* ── Container principal (card duplo) ────────────────────────── */
+.auth-container {
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  position: relative;
+  overflow: hidden;
+  width: 840px;
+  max-width: 100%;
+  min-height: 530px;
+}
+
+/* ── Formulários posicionados ────────────────────────────────── */
+.form-container {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  transition: all .6s ease-in-out;
+  display: flex;
+  align-items: center;
+}
+
+.sign-in {
+  left: 0;
+  width: 50%;
+  z-index: 2;
+}
+
+.auth-container.active .sign-in {
+  transform: translateX(100%);
+}
+
+.sign-up {
+  left: 0;
+  width: 50%;
+  opacity: 0;
+  z-index: 1;
+}
+
+.auth-container.active .sign-up {
+  transform: translateX(100%);
+  opacity: 1;
+  z-index: 5;
+  animation: slide-reveal .6s;
+}
+
+@keyframes slide-reveal {
+  0%, 49.99% { opacity: 0; z-index: 1; }
+  50%, 100%  { opacity: 1; z-index: 5; }
+}
+
+/* ── Form interno ────────────────────────────────────────────── */
+.auth-form {
+  background: var(--color-surface);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 32px 36px;
+  height: 100%;
+  width: 100%;
+  gap: 0;
+}
+
+.auth-form h1 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-text-primary);
+  margin-bottom: 3px;
+  text-align: center;
+  letter-spacing: .02em;
+}
+
+.form-sub {
+  font-family: var(--font-mono);
+  font-size: 10px;
+  color: var(--color-text-muted);
+  margin-bottom: 18px;
+  text-align: center;
+  letter-spacing: .06em;
+}
+
+/* ── Ícones sociais ──────────────────────────────────────────── */
+.social-icons {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.social-icon {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 36px;
+  height: 36px;
+  color: var(--color-text-secondary);
+  text-decoration: none;
+  font-size: 13px;
+  background: var(--color-surface-raised);
+  transition: color var(--transition), border-color var(--transition), background var(--transition);
+}
+
+.social-icon:hover {
+  color: var(--color-accent);
+  border-color: var(--color-border-accent);
+  background: var(--color-accent-soft);
+}
+
+/* ── Divisor "ou" ────────────────────────────────────────────── */
+.or-divider {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  color: var(--color-text-muted);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+}
+
+.or-divider::before,
+.or-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+
+/* ── Link de senha esquecida e links de texto ────────────────── */
+.forgot-link {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  text-decoration: none;
+  align-self: flex-end;
+  margin-bottom: 10px;
+  transition: color var(--transition);
+}
+
+.forgot-link:hover { color: var(--color-accent); }
+
+.text-link {
+  color: var(--color-accent);
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity var(--transition);
+}
+
+.text-link:hover { opacity: .75; text-decoration: underline; }
+
+/* Parágrafo de troca mobile */
+.mob-switch {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-muted);
+  margin-top: 12px;
+  text-align: center;
+}
+
+/* ── Medidor de força de senha ───────────────────────────────── */
+.strength-wrap {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.strength-bar {
+  flex: 1;
+  height: 2px;
+  background: var(--color-border);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.strength-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: 1px;
+  transition: width .3s ease, background .3s ease;
+}
+
+.strength-label {
+  font-family: var(--font-mono);
+  font-size: 9px;
+  font-weight: 700;
+  min-width: 64px;
+  text-align: right;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+
+/* ── Painel de toggle (desktop) ──────────────────────────────── */
+.toggle-container {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
+  transition: all .6s ease-in-out;
+  z-index: 1000;
+}
+
+.auth-container.active .toggle-container {
+  transform: translateX(-100%);
+}
+
+.toggle-panel-wrap {
+  position: relative;
+  left: -100%;
+  height: 100%;
+  width: 200%;
+  transform: translateX(0);
+  transition: all .6s ease-in-out;
+  border-left: 1px solid var(--color-border);
+  background-color: var(--color-bg-primary);
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 32px 32px;
+}
+
+.auth-container.active .toggle-panel-wrap {
+  transform: translateX(50%);
+}
+
+.toggle-panel {
+  position: absolute;
+  width: 50%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 32px;
+  text-align: center;
+  top: 0;
+  transition: all .6s ease-in-out;
+}
+
+.toggle-panel h2 {
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--color-accent);
+  margin-bottom: 10px;
+  letter-spacing: .02em;
+}
+
+.toggle-panel p {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--color-text-secondary);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.toggle-left  { transform: translateX(-200%); }
+.auth-container.active .toggle-left { transform: translateX(0); }
+.toggle-right { right: 0; }
+.auth-container.active .toggle-right { transform: translateX(200%); }
+
+/* Botão de troca no painel toggle */
+.btn-toggle {
+  background: transparent;
+  border: 1px solid var(--color-border-accent);
+  color: var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 9px 24px;
+  border-radius: var(--radius-sm);
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+}
+
+.btn-toggle:hover {
+  background: var(--color-accent-soft);
+  box-shadow: var(--shadow-glow);
+}
