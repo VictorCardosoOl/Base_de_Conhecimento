@@ -1,0 +1,103 @@
+import { useState, useEffect } from 'react';
+import { FAQItem } from './types';
+import { reportContentError } from '@/features/analytics/telemetry';
+import { marked } from 'marked';
+import { sanitizeArticleHtml } from './sanitize-html';
+import glossaryData from '@/data/glossary.json';
+
+// Pré-computar Glossário fora do ciclo de vida do componente para economizar CPU (Performance)
+const glossaryEntries = Object.entries(glossaryData || {});
+let combinedRegex: RegExp | null = null;
+let termToDef: Record<string, string> = {};
+
+if (glossaryEntries.length > 0) {
+  const sortedTerms = glossaryEntries
+    .map(([t]) => t)
+    .sort((a, b) => b.length - a.length);
+  const escapeRegExp = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  combinedRegex = new RegExp(
+    `(?![^<]*>)\\b(${sortedTerms.map(escapeRegExp).join('|')})\\b`,
+    'gi'
+  );
+
+  const escapeHtml = (str: string) =>
+    str
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+
+  termToDef = Object.fromEntries(
+    glossaryEntries.map(([t, d]) => [t.toLowerCase(), escapeHtml(d as string)])
+  );
+}
+
+export const useArticleContent = (article: FAQItem) => {
+  const [htmlContent, setHtmlContent] = useState<string>('');
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let mounted = true;
+    setIsLoading(true);
+    setError(null);
+
+    const loadContent = async () => {
+      try {
+        let markdownContent = '';
+
+        if (typeof article.content === 'function') {
+          const loaded = await article.content();
+          markdownContent = loaded.default.content;
+        } else if (typeof article.content === 'string') {
+          markdownContent = article.content;
+        }
+
+        if (mounted) {
+          if (markdownContent) {
+            let rawHtml: string = (await marked.parse(
+              markdownContent
+            )) as string;
+
+            // Injetar Glossario
+            if (combinedRegex) {
+              rawHtml = rawHtml.replace(combinedRegex, (match) => {
+                const safeDef = termToDef[match.toLowerCase()];
+                return safeDef
+                  ? `<span class="glossary-term" data-tooltip="${safeDef}">${match}</span>`
+                  : match;
+              });
+            }
+
+            // Sanitiza na origem: nenhum consumidor recebe HTML cru do Markdown.
+            setHtmlContent(sanitizeArticleHtml(rawHtml));
+          } else {
+            // Fallback to basic answer if markdown doesn't exist
+            setHtmlContent(sanitizeArticleHtml(article.answer || ''));
+          }
+        }
+      } catch (err) {
+        reportContentError(err, {
+          articleId: article.id,
+          question: article.question,
+        });
+        if (mounted) {
+          setError(
+            err instanceof Error ? err : new Error('Failed to load content')
+          );
+          setHtmlContent(sanitizeArticleHtml(article.answer || ''));
+        }
+      } finally {
+        if (mounted) setIsLoading(false);
+      }
+    };
+
+    loadContent();
+    return () => {
+      mounted = false;
+    };
+  }, [article]);
+
+  return { htmlContent, isLoading, error };
+};

@@ -1,15 +1,15 @@
-name: CI BaseCore
+name: CI Web (Frontend)
 
 on:
   push:
     branches: [main, master]
     paths:
-      - 'BaseCore/**'
+      - 'apps/web/**'
       - '.github/workflows/ci-quality-gates.yml'
   pull_request:
     branches: [main, master]
     paths:
-      - 'BaseCore/**'
+      - 'apps/web/**'
       - '.github/workflows/ci-quality-gates.yml'
   workflow_dispatch:
     inputs:
@@ -18,10 +18,10 @@ on:
         type: boolean
         default: false
 
-# Monorepo: tudo roda na pasta da Base (BaseCore/).
+# Monorepo: tudo roda na pasta da Web (apps/web/).
 defaults:
   run:
-    working-directory: BaseCore
+    working-directory: apps/web
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -38,7 +38,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: BaseCore/package-lock.json
+          cache-dependency-path: apps/web/package-lock.json
 
       - run: npm ci
 
@@ -64,7 +64,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: BaseCore/package-lock.json
+          cache-dependency-path: apps/web/package-lock.json
 
       - run: npm ci
 
@@ -73,7 +73,7 @@ jobs:
 
       - name: Verificação básica de segredos (padrões conhecidos)
         run: |
-          if grep -rEn "(BEGIN [A-Z ]*PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{50,})" src scripts ../.github; then
+          if grep -rEn "(BEGIN [A-Z ]*PRIVATE KEY|AKIA[0-9A-Z]{16}|ghp_[a-zA-Z0-9]{36}|github_pat_[a-zA-Z0-9_]{50,})" src scripts ../../.github; then
             echo "Possível segredo versionado encontrado."
             exit 1
           fi
@@ -93,7 +93,7 @@ jobs:
         with:
           node-version: 22
           cache: npm
-          cache-dependency-path: BaseCore/package-lock.json
+          cache-dependency-path: apps/web/package-lock.json
 
       - run: npm ci
 
@@ -105,5 +105,5 @@ jobs:
         if: always()
         with:
           name: playwright-report
-          path: BaseCore/playwright-report/
+          path: apps/web/playwright-report/
           retention-days: 14

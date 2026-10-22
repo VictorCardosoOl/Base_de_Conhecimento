@@ -1,0 +1,441 @@
+/*
+ * LIQUID GLASS — sistema de materiais (fonte única de tokens e superfícies).
+ *
+ * Princípio de custo: desfoque de fundo (backdrop-filter) só onde há conteúdo passando
+ * por trás. Medido (scripts/perf-probe.mjs): fundo animado sob vidro derrubava a página
+ * ociosa para ~20 fps; vidro desfocado em superfícies grandes em movimento, para ~10 fps.
+ *
+ * Materiais, do fundo para a frente:
+ *   1. .liquid-backdrop   fundo fixo e ESTÁTICO (pintado uma vez): malha sóbria + grão.
+ *   2. Superfície         .glass, .glass-card, .glass-flat — translúcida, borda luminosa,
+ *                         realce especular e sombra; SEM desfoque (sobre um gradiente
+ *                         suave, desfocar não muda nada visível e custa caro).
+ *   3. Cromo              .glass-strong — COM desfoque: cabeçalho, menu, popovers, dock.
+ *   4. Leitura            .reading-surface — quase opaca, contraste AA para texto longo.
+ *
+ * html[data-glass='lite'] (aparelho modesto, Save-Data, transparência reduzida): o cromo
+ * vira superfície sólida, sem desfoque. Movimento só com transform/opacity e desligado
+ * por prefers-reduced-motion.
+ */
+:root {
+  /* ── Paleta Monocromática Minimalista (Preto e Branco) ────────────────────── */
+  --mesh-1: #111111; /* preto puro para acentos e ações principais */
+  --mesh-2: #444444; /* cinza escuro neutro */
+  --mesh-3: #1a1a1a; /* quase preto */
+  --mesh-4: #666666; /* cinza médio */
+  --mesh-base: #f7f7f7; /* branco gelo limpo */
+  --glass-accent-deep: #000000;
+
+  /* ── Superfície (sem desfoque) ─────────────────────────────────────────── */
+  --glass-surface: #ffffff;
+  --glass-bg: #ffffff;
+  --glass-bg-strong: #ffffff;
+  --glass-bg-hover: #f3f3f3;
+  --glass-tint: transparent;
+
+  /* ── Cromo (com desfoque) ──────────────────────────────────────────────── */
+  --glass-blur: 16px;
+  --glass-blur-strong: 20px;
+  --glass-saturate: 100%;
+
+  /* ── Luz e Bordas ──────────────────────────────────────────────────────── */
+  --glass-edge: #000000;
+  --glass-edge-width: 1px;
+  --glass-specular: none;
+  --glass-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.05), 0 4px 12px rgba(0, 0, 0, 0.03);
+  --glass-shadow-2: 0 2px 8px rgba(0, 0, 0, 0.06), 0 12px 24px -4px rgba(0, 0, 0, 0.08);
+  --glass-shadow-3: 0 4px 16px rgba(0, 0, 0, 0.08), 0 24px 48px -12px rgba(0, 0, 0, 0.12);
+  --glass-chroma: none;
+
+  /* Superfície de leitura: branco límpido com texto preto profundo */
+  --reading-surface: #ffffff;
+  --reading-text: #111111;
+
+  /* ── Estados Monocromáticos (Alto contraste B&W) ─────────────────────────── */
+  --tone-info: #111111;
+  --tone-info-bg: rgba(0, 0, 0, 0.06);
+  --tone-success: #111111;
+  --tone-success-bg: rgba(0, 0, 0, 0.06);
+  --tone-warning: #111111;
+  --tone-warning-bg: rgba(0, 0, 0, 0.06);
+  --tone-danger: #111111;
+  --tone-danger-bg: rgba(0, 0, 0, 0.08);
+
+  /* ── Tipografia e ritmo ────────────────────────────────────────────────── */
+  --measure-reading: 70ch;
+  --space-page: clamp(1rem, 0.6rem + 1.6vw, 2rem);
+  --control-h: 2.75rem;
+  --control-h-sm: 2.25rem;
+
+  /* ── Forma: Raio Uniforme Unificado em Todos os Elementos (20px) ───────── */
+  --glass-radius-unified: 20px;
+  --glass-radius-sm: 20px;
+  --glass-radius-md: 20px;
+  --glass-radius-lg: 20px;
+  --glass-radius-xl: 20px;
+  --glass-radius-pill: 20px;
+
+  /* ── Movimento: rápido para responder, suave para assentar ─────────────── */
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-elastic: cubic-bezier(0.34, 1.4, 0.64, 1);
+  --ease-in-quick: cubic-bezier(0.4, 0, 1, 1);
+  --dur-instant: 90ms;
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 420ms;
+}
+
+:root.dark,
+html.dark {
+  --mesh-1: #ffffff;
+  --mesh-2: #cccccc;
+  --mesh-3: #888888;
+  --mesh-4: #444444;
+  --mesh-base: #000000;
+  --glass-accent-deep: #ffffff;
+
+  --glass-surface: #0a0a0a;
+  --glass-bg: #0a0a0a;
+  --glass-bg-strong: #111111;
+  --glass-bg-hover: #181818;
+  --glass-tint: transparent;
+  --glass-edge: #ffffff;
+  --glass-specular: none;
+  --glass-shadow-1: 0 1px 3px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.3);
+  --glass-shadow-2: 0 2px 8px rgba(0, 0, 0, 0.6), 0 12px 24px -4px rgba(0, 0, 0, 0.4);
+  --glass-shadow-3: 0 4px 16px rgba(0, 0, 0, 0.7), 0 24px 48px -12px rgba(0, 0, 0, 0.5);
+  --glass-chroma: none;
+
+  --reading-surface: #0a0a0a;
+  --reading-text: #ffffff;
+
+  --tone-info: #ffffff;
+  --tone-info-bg: rgba(255, 255, 255, 0.1);
+  --tone-success: #ffffff;
+  --tone-success-bg: rgba(255, 255, 255, 0.1);
+  --tone-warning: #ffffff;
+  --tone-warning-bg: rgba(255, 255, 255, 0.1);
+  --tone-danger: #ffffff;
+  --tone-danger-bg: rgba(255, 255, 255, 0.12);
+}
+
+/* ── 1. Fundo: uma camada fixa, estática, isolada (contain) com aceleração por hardware ───────────────── */
+.liquid-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  contain: strict;
+  transform: translateZ(0);
+  background:
+    radial-gradient(75vmax 55vmax at -5% -10%, rgba(0, 0, 0, 0.02), transparent 70%),
+    radial-gradient(65vmax 50vmax at 105% 8%, rgba(0, 0, 0, 0.03), transparent 70%),
+    var(--mesh-base);
+}
+
+:root.dark .liquid-backdrop,
+html.dark .liquid-backdrop {
+  background:
+    radial-gradient(75vmax 55vmax at -5% -10%, rgba(255, 255, 255, 0.03), transparent 70%),
+    radial-gradient(65vmax 50vmax at 105% 8%, rgba(255, 255, 255, 0.02), transparent 70%),
+    var(--mesh-base);
+}
+
+/* ── 2–4. Materiais ───────────────────────────────────────────────────────── */
+@layer components {
+  /* Superfície: sem desfoque */
+  .glass,
+  .glass-card {
+    position: relative;
+    isolation: isolate;
+    background: var(--glass-surface);
+    box-shadow: var(--glass-specular), var(--glass-shadow-1);
+    border-radius: var(--glass-radius-md);
+  }
+
+  .glass-card {
+    border-radius: var(--glass-radius-lg);
+    box-shadow: var(--glass-specular), var(--glass-shadow-2);
+  }
+
+  /* Cromo: com desfoque, para o que fica sobre conteúdo em movimento */
+  .glass-strong {
+    position: relative;
+    isolation: isolate;
+    background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-bg-strong);
+    -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+    backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+    box-shadow: var(--glass-specular), var(--glass-shadow-2);
+    border-radius: var(--glass-radius-md);
+  }
+
+  /* Borda luminosa (anel do gradiente recortado por máscara) */
+  .glass::before,
+  .glass-strong::before,
+  .glass-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    padding: var(--glass-edge-width);
+    background: var(--glass-edge);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+    pointer-events: none;
+  }
+
+  .glass-chroma {
+    box-shadow: var(--glass-chroma), var(--glass-specular), var(--glass-shadow-2);
+  }
+
+  /* Item dentro de outra superfície: só cor e linha, nada de camadas extras */
+  .glass-flat {
+    position: relative;
+    background: color-mix(in srgb, var(--glass-bg-strong) 70%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text-main) 9%, transparent);
+    box-shadow: var(--glass-specular);
+    border-radius: var(--glass-radius-sm);
+  }
+
+  /* Interativo: sobe e acende no hover (CSS puro, sem acompanhar o ponteiro) */
+  .glass-interactive {
+    transition:
+      transform var(--dur-base) var(--ease-out-expo),
+      box-shadow var(--dur-base) var(--ease-out-expo),
+      background-color var(--dur-fast) ease;
+  }
+
+  .glass-interactive::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    background: radial-gradient(120% 70% at 50% 0%, rgba(255, 255, 255, 0.22), transparent 60%);
+    opacity: 0;
+    transition: opacity var(--dur-base) ease;
+  }
+
+  .glass-interactive:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--glass-specular), var(--glass-shadow-3);
+  }
+
+  .glass-interactive:hover::after,
+  .glass-interactive:focus-visible::after {
+    opacity: 1;
+  }
+
+  .glass-interactive:active {
+    transform: translateY(0) scale(0.985);
+    transition-duration: var(--dur-instant);
+  }
+
+  .glass-pill {
+    border-radius: var(--glass-radius-pill);
+  }
+
+  .glass-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-height: 2.5rem;
+    padding: 0.5rem 1.1rem;
+    border-radius: var(--glass-radius-pill);
+    font-weight: 500;
+    font-size: 0.875rem;
+    color: var(--text-main);
+    background: color-mix(in srgb, var(--glass-bg-strong) 80%, transparent);
+    border: 1px solid color-mix(in srgb, var(--text-main) 12%, transparent);
+    box-shadow: var(--glass-specular), var(--glass-shadow-1);
+    transition:
+      transform var(--dur-fast) var(--ease-out-expo),
+      background-color var(--dur-fast) ease,
+      box-shadow var(--dur-fast) ease;
+  }
+
+  .glass-button:hover {
+    background: var(--glass-bg-hover);
+    transform: translateY(-1px);
+    box-shadow: var(--glass-specular), var(--glass-shadow-2);
+  }
+
+  .glass-button:active {
+    transform: scale(0.96);
+    transition-duration: var(--dur-instant);
+  }
+
+  /* Ação principal: preto no modo claro com texto branco, branco no modo escuro */
+  .glass-button-primary {
+    color: #fff;
+    background: #000000;
+    border-color: #000000;
+  }
+
+  .glass-button-primary:hover {
+    background: #222222;
+    border-color: #222222;
+  }
+
+  :root.dark .glass-button-primary,
+  html.dark .glass-button-primary {
+    color: #000;
+    background: #ffffff;
+    border-color: #ffffff;
+  }
+
+  :root.dark .glass-button-primary:hover,
+  html.dark .glass-button-primary:hover {
+    background: #dddddd;
+    border-color: #dddddd;
+  }
+
+  .glass-focus:focus-visible,
+  .glass-button:focus-visible,
+  .glass-interactive:focus-visible {
+    outline: 2px solid var(--text-main);
+    outline-offset: 3px;
+  }
+
+  .glass-gradient-text {
+    color: var(--text-main);
+  }
+
+  .reading-surface {
+    background: var(--reading-surface);
+    color: var(--reading-text);
+    border-radius: var(--glass-radius-lg);
+    box-shadow: var(--glass-specular), var(--glass-shadow-2);
+    border: 1px solid color-mix(in srgb, var(--text-main) 7%, transparent);
+  }
+
+  /* Entrada ao rolar: só some o que o observador marcou como "pending" (e ele marca só o
+     que vai observar). Sem JavaScript, ou o que chegou depois, fica visível. */
+  [data-reveal] {
+    transition:
+      opacity var(--dur-slow) var(--ease-out-expo),
+      transform var(--dur-slow) var(--ease-out-expo);
+    transition-delay: calc(var(--reveal-index, 0) * 50ms);
+  }
+
+  [data-reveal='pending'] {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+
+  /* Entrada imediata (lista de artigos): animação CSS, sem JS por elemento */
+  .enter-rise {
+    animation: enter-rise var(--dur-slow) var(--ease-out-expo) both;
+    animation-delay: calc(min(var(--enter-index, 0), 12) * 28ms);
+  }
+}
+
+@keyframes enter-rise {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 12px, 0);
+  }
+}
+
+/* Cabeçalho do artigo: design limpo editorial em preto e branco */
+.article-hero {
+  background: var(--glass-surface);
+  border: 1px solid var(--border);
+  border-radius: var(--glass-radius-unified);
+  box-shadow: var(--glass-shadow-1);
+}
+
+/* Folha do artigo (modal): fundo opaco sólido monocromático com bordas limpas */
+.article-sheet {
+  background: var(--bg-island);
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.45);
+  border: 1px solid var(--border);
+  border-radius: var(--glass-radius-unified);
+}
+
+/* Seções abaixo da dobra (relacionados, avaliação, comentários): o navegador só faz
+   layout e pintura quando chegam perto da tela. Medido: rolagem do artigo de ~45 para ~55 fps. */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 520px;
+}
+
+/* Painéis grandes no fim da leitura: borda simples no lugar do anel com máscara (a
+   máscara em áreas grandes custa caro na rolagem). Medido: ~50 → ~56 fps. */
+.below-fold.glass-card,
+.below-fold .glass-card {
+  border: 1px solid color-mix(in srgb, var(--text-main) 9%, transparent);
+}
+
+.below-fold.glass-card::before,
+.below-fold .glass-card::before,
+.below-fold .glass-interactive::after {
+  display: none;
+}
+
+/* Superfície em movimento (ex.: folha do artigo entrando): o vidro dela fica sólido até
+   assentar. Desfocar algo que se move obriga a refazer o desfoque a cada quadro. */
+[data-animating] .glass-strong {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: var(--bg-island);
+}
+
+/* ── Modo lite e preferências do sistema ──────────────────────────────────── */
+html[data-glass='lite'] .glass-strong {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  background: var(--bg-island);
+}
+
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+  .glass-strong {
+    background: var(--bg-island);
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .glass-strong {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: var(--bg-island);
+  }
+
+  .glass,
+  .glass-card {
+    background: var(--bg-island);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal='pending'] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+
+  .enter-rise {
+    animation: none;
+  }
+
+  .glass-interactive:hover {
+    transform: none;
+  }
+}
+
+@media print {
+  .liquid-backdrop {
+    display: none !important;
+  }
+
+  .glass,
+  .glass-strong,
+  .glass-card,
+  .reading-surface {
+    background: #fff !important;
+    box-shadow: none !important;
+    backdrop-filter: none !important;
+  }
+}

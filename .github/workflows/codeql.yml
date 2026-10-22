@@ -4,12 +4,12 @@ on:
   push:
     branches: ["main", "master"]
     paths:
-      - "AuthService/**"
+      - "apps/api/**"
       - ".github/workflows/codeql.yml"
   pull_request:
     branches: ["main", "master"]
     paths:
-      - "AuthService/**"
+      - "apps/api/**"
       - ".github/workflows/codeql.yml"
   schedule:
     - cron: "0 6 * * 1"

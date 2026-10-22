@@ -1,0 +1,110 @@
+# Blueprint da Render: um serviço por pasta do monorepo (docs/adr/0018-render.md).
+# Passo a passo, variáveis, limites do plano gratuito e reversão: docs/DEPLOY.md.
+#
+# Regras deste arquivo:
+# - Tudo no plano gratuito, com `plan: free` explícito (sem ele, a Render cria o banco num plano pago).
+#   Não troque `plan` sem decisão registrada.
+# - Banco e serviços na mesma região (a região não muda depois da criação).
+# - Sem `repo` e sem `branch`: os dois vêm da criação (URL pública e branch escolhidas no painel).
+# - Segredos e URLs só conhecidas depois da criação usam `sync: false`: a Render pede o valor no painel,
+#   na criação, e nunca o lê deste arquivo.
+# - Um serviço novo exige só um bloco novo em `services`, com `rootDir` e `buildFilter` da pasta dele.
+
+databases:
+  # Postgres gratuito: expira 30 dias após a criação (mais 14 de carência), 1 GB, sem backup.
+  - name: authservice-sst-db
+    plan: free
+    region: oregon
+    databaseName: authservice
+    user: authservice
+    # Sem acesso externo. Para tarefas locais (docs/DEPLOY.md, seção 8), libere só o seu IP no painel,
+    # durante o uso, e remova depois.
+    ipAllowList: []
+
+envVarGroups:
+  # Valores não secretos que os dois serviços precisam ter iguais.
+  - name: base-sst-auth
+    envVars:
+      - key: JWT_AUDIENCE
+        value: knowledge-api
+      - key: AUTH_AUDIENCE
+        value: knowledge-api
+      - key: ACCESS_COOKIE_NAME
+        value: __Host-kb_at
+      - key: AUTH_ACCESS_COOKIE_NAME
+        value: __Host-kb_at
+
+services:
+  # AuthService (FastAPI). Público: o plano gratuito não tem Private Service.
+  - type: web
+    name: authservice-sst
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: apps/api
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    # O plano gratuito não tem pre-deploy: as migrations rodam antes do servidor, no mesmo comando.
+    # O restante é o CMD do Dockerfile.
+    dockerCommand: >-
+      sh -c "alembic upgrade head && exec uvicorn backend.main:create_app --factory
+      --host 0.0.0.0 --port 8000 --no-proxy-headers --timeout-keep-alive 75"
+    healthCheckPath: /health
+    autoDeployTrigger: "off"
+    buildFilter:
+      paths:
+        - apps/api/**
+    envVars:
+      - fromGroup: base-sst-auth
+      - key: ENVIRONMENT
+        value: production
+      - key: PORT
+        value: "8000"
+      # Com o AuthService público, qualquer valor acima de 0 permite forjar o IP (docs/DEPLOY.md, seção 9).
+      - key: TRUSTED_PROXY_COUNT
+        value: "0"
+      # SMTP bloqueado no plano gratuito (portas 25, 465 e 587): sem envio até haver adaptador HTTPS.
+      - key: EMAIL_BACKEND
+        value: disabled
+      # URL interna (rede privada). O formato postgresql:// da Render já usa o driver psycopg 3.
+      - key: DATABASE_URL
+        fromDatabase:
+          name: authservice-sst-db
+          property: connectionString
+      # Chave Ed25519 nova, gerada só para produção.
+      - key: JWT_PRIVATE_KEY
+        sync: false
+      # https://<authservice>.onrender.com
+      - key: JWT_ISSUER
+        sync: false
+      # https://<basecore>.onrender.com
+      - key: PUBLIC_APP_URL
+        sync: false
+      # https://<basecore>.onrender.com
+      - key: TRUSTED_ORIGINS
+        sync: false
+
+  # BaseCore (Next.js). As variáveis AUTH_* precisam existir no build (rewrites fixados no build).
+  - type: web
+    name: basecore-sst
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: apps/web
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /
+    autoDeployTrigger: "off"
+    buildFilter:
+      paths:
+        - apps/web/**
+    envVars:
+      - fromGroup: base-sst-auth
+      - key: PORT
+        value: "3000"
+      # https://<authservice>.onrender.com (público: o serviço gratuito não recebe tráfego privado)
+      - key: AUTH_INTERNAL_URL
+        sync: false
+      # Igual ao JWT_ISSUER do AuthService.
+      - key: AUTH_ISSUER
+        sync: false

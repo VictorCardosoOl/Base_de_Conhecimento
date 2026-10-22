@@ -1,0 +1,745 @@
+/*
+ * Navegação: cabeçalho (AppHeader) e menu lateral (NavDrawer) como um único sistema.
+ * Mesmo material (cromo de vidro), mesmos raios, mesmos botões e o mesmo ritmo de
+ * movimento. Tokens em src/assets/styles/glass.css.
+ *
+ * Camadas: véu 42 < menu 43 < cabeçalho 44 < modal do artigo (50/60) e diálogos.
+ *
+ * Desempenho:
+ * - movimento só com transform/opacity; nada anima largura, altura ou posição;
+ * - o cabeçalho é a única superfície desfocada sempre visível (área pequena);
+ * - o menu desfoca o fundo, mas o VIDRO NÃO SE MOVE: só aparece (opacidade); quem
+ *   desliza é o conteúdo. Vidro desfocado em movimento obriga a refazer o desfoque a
+ *   cada quadro (medido: quadros de 70–100ms ao abrir; parado, nenhum);
+ * - o véu atrás do menu é só cor (sem desfoque);
+ * - estados vêm de atributos (data-*), sem estilos inline por quadro.
+ */
+
+/* ── Cabeçalho ───────────────────────────────────────────────────────────── */
+.app-header {
+  --hdr-h: 3.5rem;
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  z-index: 44;
+  margin: 0 auto;
+  max-width: 1240px;
+  height: var(--hdr-h);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0 0.5rem 0 0.5rem;
+  border-radius: var(--glass-radius-pill);
+  color: var(--text-main);
+  isolation: isolate;
+  contain: layout style;
+  transform: translate3d(0, 0, 0);
+  transition:
+    transform var(--dur-slow) var(--ease-out-expo),
+    box-shadow var(--dur-base) ease;
+}
+
+/* Material do cabeçalho numa camada própria: a troca de densidade ao rolar é só
+   opacidade dessa camada (barata), e não uma mudança de blur. */
+.app-header::before,
+.app-header::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: -1;
+}
+
+.app-header::before {
+  background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-specular), var(--glass-shadow-1);
+  opacity: 0.82;
+  transition: opacity var(--dur-base) ease;
+}
+
+/* Borda luminosa */
+.app-header::after {
+  padding: 1px;
+  background: var(--glass-edge);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+}
+
+.app-header[data-scrolled]::before {
+  opacity: 1;
+}
+
+.app-header[data-scrolled] {
+  box-shadow: var(--glass-shadow-2);
+}
+
+/* Rolando para baixo: o cabeçalho sai de cena (só transform). */
+.app-header[data-hidden] {
+  transform: translate3d(0, calc(-100% - 20px), 0);
+}
+
+.app-header-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 2.75rem;
+  padding: 0.25rem 0.65rem 0.25rem 0.4rem;
+  border-radius: var(--glass-radius-pill);
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+  white-space: nowrap;
+  transition: background-color var(--dur-fast) ease;
+}
+
+.app-header-brand:hover {
+  background: var(--glass-bg-hover);
+}
+
+.app-header-brand-mark {
+  flex: none;
+}
+
+.app-header-brand-accent {
+  color: var(--mesh-1);
+}
+
+.app-header-brand:focus-visible {
+  outline: 2px solid var(--mesh-1);
+  outline-offset: 2px;
+}
+
+.app-header-actions {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+
+/* Botão do menu: duas barras que viram um X (só transform) */
+.nav-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  height: 2.5rem;
+  padding: 0 0.95rem 0 0.8rem;
+  border-radius: var(--glass-radius-pill);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--glass-bg-strong) 70%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
+  box-shadow: var(--glass-specular);
+  transition:
+    transform var(--dur-fast) var(--ease-out-expo),
+    background-color var(--dur-fast) ease;
+}
+
+.nav-toggle:hover {
+  background: var(--glass-bg-hover);
+}
+
+.nav-toggle:active {
+  transform: scale(0.95);
+}
+
+.nav-toggle:focus-visible {
+  outline: 2px solid var(--mesh-1);
+  outline-offset: 3px;
+}
+
+.nav-toggle-icon {
+  position: relative;
+  width: 16px;
+  height: 12px;
+}
+
+.nav-toggle-icon > span {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 1.75px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.nav-toggle-icon > span:first-child {
+  top: 2px;
+}
+
+.nav-toggle-icon > span:last-child {
+  bottom: 2px;
+}
+
+.nav-toggle[aria-expanded='true'] .nav-toggle-icon > span:first-child {
+  transform: translateY(3.1px) rotate(45deg);
+}
+
+.nav-toggle[aria-expanded='true'] .nav-toggle-icon > span:last-child {
+  transform: translateY(-3.1px) rotate(-45deg);
+}
+
+/* Botões redondos (busca, alertas, tema, lista, conta) */
+.nav-icon-button {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 9999px;
+  color: var(--text-main);
+  transition:
+    transform var(--dur-fast) var(--ease-out-expo),
+    background-color var(--dur-fast) ease;
+}
+
+.nav-icon-button:hover {
+  background: var(--glass-bg-hover);
+}
+
+.nav-icon-button:active {
+  transform: scale(0.92);
+}
+
+.nav-icon-button:focus-visible {
+  outline: 2px solid var(--mesh-1);
+  outline-offset: 2px;
+}
+
+.nav-badge {
+  position: absolute;
+  top: 0.15rem;
+  right: 0.1rem;
+  min-width: 1.1rem;
+  height: 1.1rem;
+  padding: 0 0.3rem;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  color: #fff;
+  background: var(--mesh-1);
+  box-shadow: 0 0 0 2px var(--bg-main);
+}
+
+/* Dica: aparece no hover/foco; vidro quase opaco (desfoque aninhado não funciona) */
+.nav-tooltip {
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  translate: -50% 4px;
+  opacity: 0;
+  pointer-events: none;
+  white-space: nowrap;
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 0.35rem 0.7rem;
+  border-radius: 9999px;
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--bg-island) 96%, transparent);
+  box-shadow: var(--glass-specular), var(--glass-shadow-1);
+  transition:
+    opacity var(--dur-fast) ease,
+    translate var(--dur-fast) var(--ease-out-expo);
+  z-index: 5;
+}
+
+.group:hover > .nav-tooltip,
+.group:focus-within > .nav-tooltip {
+  opacity: 1;
+  translate: -50% 0;
+  transition-delay: 250ms;
+}
+
+/* Popovers dentro do cabeçalho: o desfoque aninhado não alcança a página, então vidro
+   quase opaco (legibilidade). */
+.app-header .glass-strong {
+  background:
+    linear-gradient(var(--glass-tint), var(--glass-tint)),
+    color-mix(in srgb, var(--bg-island) 96%, transparent);
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+/* Tema: sol e lua trocam girando */
+.nav-theme-toggle {
+  overflow: hidden;
+}
+
+.nav-theme-sun,
+.nav-theme-moon {
+  position: absolute;
+  transition:
+    transform var(--dur-slow) var(--ease-out-expo),
+    opacity var(--dur-fast) ease;
+}
+
+.nav-theme-sun {
+  opacity: 0;
+  transform: rotate(-90deg) scale(0.4);
+}
+
+.nav-theme-toggle[data-dark] .nav-theme-sun {
+  opacity: 1;
+  transform: none;
+}
+
+.nav-theme-toggle[data-dark] .nav-theme-moon {
+  opacity: 0;
+  transform: rotate(90deg) scale(0.4);
+}
+
+/* ── Menu lateral ────────────────────────────────────────────────────────── */
+.nav-scrim {
+  position: fixed;
+  inset: 0;
+  z-index: 42;
+  background: rgba(9, 11, 15, 0.22);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity var(--dur-base) ease;
+}
+
+.nav-scrim[data-open] {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav-drawer {
+  position: fixed;
+  z-index: 43;
+  top: calc(12px + 3.5rem + 10px);
+  left: max(12px, calc((100vw - 1240px) / 2));
+  bottom: 12px;
+  width: min(380px, calc(100vw - 24px));
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--glass-radius-xl);
+  color: var(--text-main);
+  isolation: isolate;
+  contain: layout paint style;
+  background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-bg-strong);
+  -webkit-backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  backdrop-filter: blur(var(--glass-blur-strong)) saturate(var(--glass-saturate));
+  box-shadow: var(--glass-chroma), var(--glass-specular), var(--glass-shadow-3);
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity var(--dur-fast) ease,
+    visibility 0s linear var(--dur-fast);
+}
+
+.nav-drawer::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: inherit;
+  padding: 1px;
+  background: var(--glass-edge);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  pointer-events: none;
+}
+
+.nav-drawer[data-open] {
+  opacity: 1;
+  visibility: visible;
+  transition:
+    opacity var(--dur-fast) ease,
+    visibility 0s;
+}
+
+/* O conteúdo desliza; o vidro fica parado. */
+.nav-drawer-scroll {
+  transform: translate3d(-16px, 0, 0);
+  transition: transform var(--dur-fast) var(--ease-in-quick);
+}
+
+.nav-drawer[data-open] .nav-drawer-scroll {
+  transform: none;
+  transition: transform var(--dur-slow) var(--ease-out-expo);
+}
+
+.nav-drawer-scroll {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 1rem 0.75rem 1.25rem;
+  scrollbar-width: none;
+}
+
+.nav-section-title {
+  padding: 0.25rem 0.75rem 0.5rem;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+/* Itens entram em cascata curta ao abrir (só transform/opacity) */
+.nav-drawer [data-stagger] {
+  opacity: 0;
+  transform: translate3d(-10px, 0, 0);
+  transition:
+    opacity var(--dur-fast) ease,
+    transform var(--dur-base) var(--ease-out-expo);
+}
+
+.nav-drawer[data-open] [data-stagger] {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(min(var(--i, 0), 10) * 22ms + 40ms);
+}
+
+.nav-module {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  border-radius: var(--glass-radius-md);
+  transition: background-color var(--dur-fast) ease;
+}
+
+.nav-module:hover,
+.nav-module[data-active] {
+  background: var(--glass-bg-hover);
+}
+
+.nav-module[data-active] {
+  box-shadow: var(--glass-specular), inset 3px 0 0 var(--mesh-1);
+}
+
+.nav-module-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding: 0.65rem 0.5rem 0.65rem 0.85rem;
+  border-radius: var(--glass-radius-md);
+  text-align: left;
+  font-family: var(--font-serif);
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+}
+
+.nav-module-main:focus-visible,
+.nav-module-expand:focus-visible,
+.nav-link:focus-visible {
+  outline: 2px solid var(--mesh-1);
+  outline-offset: -2px;
+}
+
+.nav-count {
+  font-family: var(--font-sans);
+  font-size: 0.72rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+  padding: 0.1rem 0.5rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--text-main) 6%, transparent);
+}
+
+.nav-module-expand {
+  flex-shrink: 0;
+  width: 2.25rem;
+  height: 2.25rem;
+  margin-right: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 9999px;
+  color: var(--text-muted);
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.nav-module-expand:hover {
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--text-main) 7%, transparent);
+}
+
+.nav-module-expand > svg {
+  transition: transform var(--dur-base) var(--ease-out-expo);
+}
+
+.nav-module-expand[aria-expanded='true'] > svg {
+  transform: rotate(90deg);
+}
+
+/* Lista de artigos do módulo: grid 0fr→1fr anima a altura sem medir no JS */
+.nav-articles {
+  display: grid;
+  grid-template-rows: 0fr;
+  transition: grid-template-rows var(--dur-base) var(--ease-out-expo);
+}
+
+.nav-articles[data-expanded] {
+  grid-template-rows: 1fr;
+}
+
+.nav-articles > div {
+  overflow: hidden;
+}
+
+.nav-articles ul {
+  margin: 0.15rem 0 0.4rem 1.1rem;
+  padding-left: 0.75rem;
+  border-left: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
+}
+
+.nav-link {
+  display: block;
+  padding: 0.45rem 0.6rem;
+  border-radius: var(--glass-radius-sm);
+  font-size: 0.86rem;
+  line-height: 1.35;
+  color: var(--text-muted);
+  transition:
+    color var(--dur-fast) ease,
+    background-color var(--dur-fast) ease;
+}
+
+.nav-link:hover {
+  color: var(--text-main);
+  background: color-mix(in srgb, var(--text-main) 5%, transparent);
+}
+
+.nav-link[aria-current='page'] {
+  color: var(--text-main);
+  font-weight: 600;
+  background: color-mix(in srgb, var(--mesh-1) 12%, transparent);
+}
+
+.nav-link-more {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--mesh-1);
+}
+
+.nav-shortcut {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  width: 100%;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--glass-radius-md);
+  font-size: 0.92rem;
+  text-align: left;
+  color: var(--text-main);
+  transition: background-color var(--dur-fast) ease;
+}
+
+.nav-shortcut:hover {
+  background: var(--glass-bg-hover);
+}
+
+.nav-shortcut:focus-visible {
+  outline: 2px solid var(--mesh-1);
+  outline-offset: -2px;
+}
+
+.nav-shortcut > svg {
+  color: var(--text-muted);
+}
+
+.nav-drawer-footer {
+  padding: 0.75rem 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--text-main) 8%, transparent);
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ── Busca no cabeçalho (HeaderSearch) ───────────────────────────────────── */
+.header-search {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.header-search-field {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  width: min(24rem, 38vw);
+  height: 2.5rem;
+  padding: 0 0.35rem 0 0.9rem;
+  border-radius: 9999px;
+  background: color-mix(in srgb, var(--bg-island) 92%, transparent);
+  border: 1px solid color-mix(in srgb, var(--text-main) 12%, transparent);
+  box-shadow: var(--glass-specular);
+  animation: header-search-expand var(--dur-base) var(--ease-out-expo) both;
+}
+
+.header-search-field:focus-within {
+  border-color: color-mix(in srgb, var(--mesh-1) 55%, transparent);
+  box-shadow: var(--glass-specular), 0 0 0 3px color-mix(in srgb, var(--mesh-1) 18%, transparent);
+}
+
+.header-search-close {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  color: var(--text-muted);
+  transition:
+    background-color var(--dur-fast) ease,
+    color var(--dur-fast) ease;
+}
+
+.header-search-close:hover {
+  color: var(--text-main);
+  background: var(--glass-bg-hover);
+}
+
+.header-search-close:focus-visible {
+  outline: 2px solid var(--mesh-1);
+  outline-offset: 1px;
+}
+
+.header-search-panel {
+  position: absolute;
+  top: calc(100% + 0.9rem);
+  right: 0;
+  width: min(28rem, calc(100vw - 2rem));
+  padding: 0.5rem;
+  border-radius: var(--glass-radius-md);
+  background:
+    linear-gradient(var(--glass-tint), var(--glass-tint)),
+    color-mix(in srgb, var(--bg-island) 96%, transparent);
+  box-shadow: var(--glass-chroma), var(--glass-specular), var(--glass-shadow-3);
+  animation: header-search-drop var(--dur-base) var(--ease-out-expo) both;
+  z-index: 5;
+}
+
+.header-search-option {
+  cursor: pointer;
+  border-radius: var(--glass-radius-sm);
+  padding: 0.55rem 0.75rem;
+  transition: background-color var(--dur-instant) ease;
+}
+
+.header-search-option[aria-selected='true'] {
+  background: color-mix(in srgb, var(--mesh-1) 12%, var(--glass-bg-hover));
+}
+
+@keyframes header-search-expand {
+  from {
+    clip-path: inset(0 0 0 calc(100% - 2.5rem) round 9999px);
+    opacity: 0.5;
+  }
+  to {
+    clip-path: inset(0 0 0 0 round 9999px);
+    opacity: 1;
+  }
+}
+
+@keyframes header-search-drop {
+  from {
+    opacity: 0;
+    transform: translate3d(0, -6px, 0);
+  }
+}
+
+/* ── Modo lite ───────────────────────────────────────────────────────────── */
+html[data-glass='lite'] .app-header::before,
+html[data-glass='lite'] .nav-drawer {
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+  background: var(--bg-island);
+}
+
+/* ── Telas estreitas ─────────────────────────────────────────────────────── */
+@media (max-width: 640px) {
+  .app-header {
+    top: 8px;
+    left: 8px;
+    right: 8px;
+  }
+
+  .nav-drawer {
+    top: calc(8px + 3.5rem + 8px);
+    left: 8px;
+    right: 8px;
+    bottom: 8px;
+    width: auto;
+  }
+
+  .nav-toggle-label,
+  .app-header-brand-text {
+    display: none;
+  }
+
+  /* Busca aberta: os outros itens saem e o campo ocupa a largura toda */
+  .app-header:has(.header-search[data-open]) > :not(.app-header-actions),
+  .app-header-actions:has(.header-search[data-open]) > :not(.header-search) {
+    display: none;
+  }
+
+  .app-header-actions:has(.header-search[data-open]),
+  .header-search[data-open] {
+    flex: 1;
+    min-width: 0;
+    margin-left: 0;
+  }
+
+  .header-search[data-open] .header-search-field {
+    width: 100%;
+  }
+
+  .header-search[data-open] .header-search-panel {
+    left: 0;
+    right: 0;
+    width: auto;
+    top: calc(100% + 0.75rem);
+  }
+}
+
+@media (max-width: 420px) {
+  .app-header .nav-icon-button {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .nav-toggle {
+    padding: 0 0.7rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .app-header,
+  .nav-drawer,
+  .nav-drawer[data-open],
+  .nav-drawer-scroll,
+  .nav-drawer [data-stagger],
+  .nav-articles,
+  .nav-toggle-icon > span,
+  .nav-theme-sun,
+  .nav-theme-moon {
+    transition: none !important;
+  }
+
+  .header-search-field,
+  .header-search-panel {
+    animation: none;
+  }
+}

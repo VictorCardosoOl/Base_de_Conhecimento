@@ -1,0 +1,22 @@
+{
+  "cSpell.language": "en,pt,pt-BR",
+  "cSpell.words": [
+    "authservice",
+    "basecore",
+    "cmdk",
+    "gsap",
+    "isready",
+    "minisearch",
+    "mypy",
+    "overcomplication",
+    "psycopg",
+    "pycache",
+    "pytest",
+    "turbopack",
+    "turborepo",
+    "typecheck",
+    "uvicorn",
+    "venv",
+    "vitest"
+  ]
+}

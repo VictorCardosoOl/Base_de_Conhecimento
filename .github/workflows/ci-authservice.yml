@@ -1,15 +1,15 @@
-name: CI AuthService
+name: CI API (AuthService)
 
 on:
   push:
     branches: [main, master]
     paths:
-      - "AuthService/**"
+      - "apps/api/**"
       - ".github/workflows/ci-authservice.yml"
   pull_request:
     branches: [main, master]
     paths:
-      - "AuthService/**"
+      - "apps/api/**"
       - ".github/workflows/ci-authservice.yml"
   workflow_dispatch:
 
@@ -20,10 +20,10 @@ concurrency:
 permissions:
   contents: read
 
-# Monorepo: tudo roda na pasta do serviço (AuthService/).
+# Monorepo: tudo roda na pasta do serviço (apps/api/).
 defaults:
   run:
-    working-directory: AuthService
+    working-directory: apps/api
 
 jobs:
   quality:
@@ -35,7 +35,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: AuthService/requirements-dev.txt
+          cache-dependency-path: apps/api/requirements-dev.txt
       - run: pip install -r requirements-dev.txt
       - run: ruff check backend migrations tests
       - run: ruff format --check backend migrations tests
@@ -63,7 +63,7 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-          cache-dependency-path: AuthService/requirements-dev.txt
+          cache-dependency-path: apps/api/requirements-dev.txt
       - run: pip install -r requirements-dev.txt
 
       - name: Migrations (upgrade → downgrade → upgrade + checagem de divergência)
@@ -90,7 +90,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - run: docker build --tag authservice:ci .
+      - run: docker build --tag authservice:ci apps/api
 
   secrets:
     name: Varredura de segredos

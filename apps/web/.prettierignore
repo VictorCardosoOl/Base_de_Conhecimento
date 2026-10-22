@@ -1,0 +1,4 @@
+# Gerados por scripts/generate-catalog.js (predev/prebuild): a saída do gerador é a versão
+# versionada. Formatar estes arquivos faria cada build "sujar" o git.
+src/data/catalog.json
+src/data/mapping.ts

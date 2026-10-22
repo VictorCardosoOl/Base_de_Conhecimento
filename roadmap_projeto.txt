@@ -1,0 +1,125 @@
+================================================================================
+ROADMAP EXECUTIVO DE ESCALONAMENTO E ARQUITETURA - BASE DE CONHECIMENTO SST
+================================================================================
+
+Este documento apresenta a estratégia de evolução contínua, escalabilidade,
+segurança e excelência operacional para o ecossistema da Base de Conhecimento SST.
+O planejamento é estruturado em 4 fases progressivas orientadas a resultados de negócio.
+
+--------------------------------------------------------------------------------
+FASE 1: FUNDAÇÃO LOCAL, DOCKER COMPOSE UNIFICADO E BANCO DE DADOS/MIGRATIONS
+--------------------------------------------------------------------------------
+Objetivo: Garantir que qualquer desenvolvedor (do nível júnior ao sênior) consiga
+clonar o repositório e inicializar todo o ecossistema com um único comando, com dados
+reprodutíveis e isolamento completo.
+
+Metas Claras:
+  [ ] Padronizar arquivos de ambiente (.env.example) com validação de chaves.
+  [ ] Unificar os fluxos do Docker Compose raiz para subir PostgreSQL, Mailpit,
+      AuthService e BaseCore sem conflito de portas ou dependências manuais.
+  [ ] Automatizar a criação de chaves criptográficas RSA/JWT na inicialização do serviço.
+  [ ] Executar migrações do banco (Alembic) e seed inicial de tabelas essenciais
+      (perfis, roles de usuário e permissões) no startup do contêiner.
+  [ ] Adicionar verificação de saúde (healthchecks) em todos os contêineres do compose.
+
+Tecnologias Envolvidas:
+  - Docker & Docker Compose v2.20+
+  - PostgreSQL 16 Alpine
+  - Python 3.12, FastAPI, SQLAlchemy e Alembic
+  - Next.js 15 (Node.js 20 LTS)
+  - Mailpit (Servidor SMTP simulado para testes locais de e-mail)
+
+Entregáveis Esperados:
+  - Script único `docker compose up -d --build` funcional a partir da raiz.
+  - Documentação atualizada de Onboarding rápido (Quickstart) no README.md.
+  - Banco de dados inicializado e migrado sem intervenção manual.
+  - Ambiente local resiliente e sem dependência de instalações globais no SO.
+
+
+--------------------------------------------------------------------------------
+FASE 2: ESTRATÉGIA DE DEPLOY EM NUVEM E PIPELINES DE CI/CD
+--------------------------------------------------------------------------------
+Objetivo: Estabelecer ambientes segregados (Staging e Produção) com automação
+completa de testes, análise de qualidade e deploy contínuo em nuvem.
+
+Metas Claras:
+  [ ] Configurar pipeline de CI no GitHub Actions executando linter (ESLint/Prettier/Ruff),
+      checagem de tipos (tsc/mypy) e testes unitários a cada Pull Request.
+  [ ] Implementar estratégia de deploy segregada:
+      - Frontend (BaseCore): Hospedagem em Edge / Plataforma Serverless (Vercel ou Cloudflare Pages).
+      - Backend & Banco (AuthService/Postgres): Infraestrutura gerenciada (Render, AWS ECS ou GCP Cloud Run).
+  [ ] Configurar gestão segura de segredos em nuvem (Secret Manager / GitHub Secrets),
+      eliminando credenciais expostas em código.
+  [ ] Estabelecer estratégia de migrações automáticas pré-deploy (release phase) com rollback seguro.
+  [ ] Provisionar certificados SSL/TLS automáticos, políticas de HSTS e cabeçalhos de segurança (CSP, CORS).
+
+Tecnologias Envolvidas:
+  - GitHub Actions (CI/CD)
+  - Docker Multi-stage Builds otimizados
+  - Cloud Providers (Render Blueprint / AWS / Vercel / Cloudflare)
+  - Cloudflare DNS & WAF (Web Application Firewall)
+  - SonarCloud / GitHub CodeQL (Análise estática de vulnerabilidades)
+
+Entregáveis Esperados:
+  - Workflows de CI/CD automatizados disparando deploys automáticos em homologação e produção.
+  - URLs de pré-visualização (Preview Deployments) por Pull Request.
+  - Isolamento de ambientes com variáveis de produção protegidas.
+
+
+--------------------------------------------------------------------------------
+FASE 3: REFATORAÇÃO PARA CLEAN ARCHITECTURE, DESIGN PATTERNS E TESTES AUTOMATIZADOS
+--------------------------------------------------------------------------------
+Objetivo: Eliminar o débito técnico, desacoplar a lógica de negócio dos frameworks web
+e alcançar alta cobertura de testes automatizados e confiabilidade.
+
+Metas Claras:
+  [ ] Reorganizar o projeto na estrutura Enterprise Monorepo (apps/web, apps/api, packages/).
+  [ ] Isolar o Domínio (Domain): criar entidades ricas e value objects imutáveis (ex: Email, Cpf, Slug).
+  [ ] Adotar Repository Pattern com inversão de controle (IArticleRepository, IUserRepository),
+      permitindo trocar a fonte de artigos (Markdown local vs Banco/CMS) sem alterar as telas.
+  [ ] Implementar Casos de Uso (Use Cases) explícitos para cada operação de negócio na camada Application.
+  [ ] Estabelecer suite de testes automatizados em pirâmide:
+      - Testes Unitários de Domínio e Casos de Uso (cobertura mínima de 80%).
+      - Testes de Integração de API com banco real de testes (Testcontainers ou SQLite in-memory).
+      - Testes End-to-End (E2E) com Playwright cobrindo fluxos críticos (Login, Busca e Leitura).
+
+Tecnologias Envolvidas:
+  - Turborepo / pnpm Workspaces
+  - Vitest / Pytest para testes unitários e de integração
+  - Playwright para testes ponta a ponta (E2E)
+  - Zod & Pydantic para validação estrita de contratos e DTOs
+
+Entregáveis Esperados:
+  - Arquitetura limpa com fronteiras explícitas e desacoplamento total de frameworks.
+  - Relatório de cobertura de testes integrado ao pipeline de CI.
+  - Suíte de testes ponta a ponta validando os cenários críticos de uso do portal.
+
+
+--------------------------------------------------------------------------------
+FASE 4: RECURSOS AVANÇADOS, PERFORMANCE, SEO CONTÍNUO E DIFERENCIAIS DE MERCADO
+--------------------------------------------------------------------------------
+Objetivo: Elevar o portal ao patamar de referência nacional no segmento de SST através de
+alta velocidade de carregamento, recursos de IA, busca semântica e engajamento.
+
+Metas Claras:
+  [ ] Implementar camada de Cache Distribuído com Redis para consultas frequentes e sessões.
+  [ ] Evoluir o mecanismo de busca: migrar de busca lexical simples para Busca Semântica / Vetorial
+      (PostgreSQL com pgvector ou Qdrant), permitindo que o usuário encontre NRs por intenção e contexto.
+  [ ] Desenvolver Assistente de Inteligência Artificial para tirar dúvidas sobre eSocial e NRs,
+      baseado exclusivamente no conteúdo auditado do repositório (arquitetura RAG - Retrieval-Augmented Generation).
+  [ ] Otimização Contínua de Web Vitals (LCP < 1.2s, FID/INP < 100ms, CLS 0) com auditorias Lighthouse automatizadas.
+  [ ] Monitoramento em tempo real de erros e telemetria com Sentry e OpenTelemetry.
+  [ ] Monitoramento de indexação orgânica via Google Search Console e geração dinâmica de sitemaps.
+
+Tecnologias Envolvidas:
+  - Redis / Upstash (Cache e Rate Limiting distribuído)
+  - PostgreSQL + extensão pgvector (Busca Vetorial)
+  - Modelos de Linguagem e Embeddings (Google Gemini API / OpenAI)
+  - Sentry (Error Tracking & APM)
+  - OpenTelemetry + Prometheus / Grafana para métricas de observabilidade
+
+Entregáveis Esperados:
+  - Portal de altíssima performance alcançando nota 95+ em todas as métricas do Google Lighthouse.
+  - Mecanismo inteligente de consulta semântica com suporte a IA generativa auditada.
+  - Observabilidade completa do sistema com alertas em tempo real.
+================================================================================

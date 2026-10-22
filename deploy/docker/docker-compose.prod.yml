@@ -1,0 +1,25 @@
+# Produção: apps/api + apps/web + postgres
+services:
+  web:
+    build:
+      context: ../../apps/web
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      NODE_ENV: production
+      PORT: "3000"
+    ports:
+      - "3000:3000"
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ../../apps/api
+      dockerfile: Dockerfile
+    restart: always
+    environment:
+      ENVIRONMENT: production
+      PORT: "8000"
+    ports:
+      - "8000:8000"

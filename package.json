@@ -1,0 +1,22 @@
+{
+  "name": "base-de-conhecimento-monorepo",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Enterprise Clean Monorepo - Base de Conhecimento SST",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace=apps/web",
+    "dev:all": "npm run dev:all --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "lint": "npm run lint --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspace=apps/web",
+    "test": "npm run test --workspace=apps/web",
+    "test:coverage": "npm run test:coverage --workspace=apps/web"
+  },
+  "devDependencies": {
+    "turbo": "^2.4.4"
+  }
+}

@@ -5,17 +5,17 @@
 #   docker compose up -d --build
 # Base: http://localhost:3000 | AuthService: http://localhost:8010 | Mailpit: http://localhost:8025
 #
-# O AuthService continua com o próprio compose (AuthService/docker-compose.yml), usado
-# também por `npm run dev:all` na BaseCore para rodar o Next fora do Docker.
+# O AuthService continua com o próprio compose (apps/api/docker-compose.yml), usado
+# também por `npm run dev:all` na apps/web para rodar o Next fora do Docker.
 
 include:
-  - path: AuthService/docker-compose.yml
-    env_file: AuthService/.env
+  - path: apps/api/docker-compose.yml
+    env_file: apps/api/.env
 
 services:
   basecore:
     build:
-      context: BaseCore
+      context: apps/web
       # Os rewrites do Next são fixados no build: o endereço interno do AuthService entra aqui.
       args:
         AUTH_INTERNAL_URL: http://auth-service:8000
