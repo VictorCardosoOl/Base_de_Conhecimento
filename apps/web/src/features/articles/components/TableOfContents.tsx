@@ -131,9 +131,9 @@ export const TableOfContents: React.FC<TableOfContentsProps> = ({
   if (items.length < 2) return null;
 
   return (
-    <aside className="glass-card sticky top-20 p-5 text-xs border border-border shadow-[var(--glass-shadow-1)] rounded-[20px] bg-bg-island" aria-label="Neste artigo">
-      <div className="flex items-center gap-2 pb-3.5 mb-2 border-b border-border text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted font-mono">
-        <ListFilter size={14} className="text-text-main" aria-hidden="true" />
+    <aside className="sticky top-24 p-2 text-xs border-l border-border pl-6" aria-label="Neste artigo">
+      <div className="flex items-center gap-2 pb-3 mb-3 text-[10px] font-bold uppercase tracking-[0.2em] text-text-muted font-mono">
+        <ListFilter size={13} className="text-text-main" aria-hidden="true" />
         <span>Neste Artigo</span>
       </div>
 

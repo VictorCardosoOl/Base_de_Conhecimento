@@ -15,7 +15,6 @@ const FOLDER: Record<string, string> = {
     [Category.EVENTOS]: 'Eventos',
     [Category.INFORMACOES]: 'Informacoes',
     [Category.COLETIVO]: 'Coletivo',
-    [Category.FINANCEIRO]: 'financeiro',
     [Category.TI]: 'TI',
 };
 const CATEGORIES = Object.keys(FOLDER) as Category[];

@@ -27,6 +27,7 @@ const ArticleInteractions = dynamic(() =>
 import { catalogTextOf, readingMinutes } from '@/features/articles/article-meta';
 import { ArticleReadingControls } from './ArticleReadingControls';
 import { TableOfContents } from './TableOfContents';
+import { useZenMode } from '../hooks/use-zen-mode';
 import { ArticleHero } from './ArticleHero';
 import { ArticleNeighbors } from './ArticleNeighbors';
 import {
@@ -52,7 +53,7 @@ const ModalArticleContent = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-8">
       <div className="flex-1 min-w-0">
         <ArticleContent
           htmlContent={htmlContent}
@@ -96,7 +97,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
   }, [item?.id]);
 
   // Estados da nova experiência de leitura
-  const [isZenMode, setIsZenMode] = useState(false);
+  const { isZenMode, toggleZenMode } = useZenMode(isOpen, onClose);
   const [typography, setTypography] = useState<TypographyPreferences>(() =>
     ReadingExperienceService.getTypography()
   );
@@ -112,32 +113,32 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
     if (isOpen) {
       setMounted(true);
     } else if (mounted) {
-      // Animate out: suave (tween ease: power2.inOut) para saída sem travamento
+      // Animate out: ágil e suave
       dialogRef.current?.setAttribute('data-animating', '');
       const tl = gsap.timeline({
         onComplete: () => setMounted(false)
       });
-      if (backdropRef.current) tl.to(backdropRef.current, { opacity: 0, duration: 0.35, ease: 'power2.inOut' }, 0);
-      if (dialogRef.current) tl.to(dialogRef.current, { y: '100%', duration: 0.38, ease: 'power3.in' }, 0);
+      if (backdropRef.current) tl.to(backdropRef.current, { opacity: 0, duration: 0.22, ease: 'power2.out' }, 0);
+      if (dialogRef.current) tl.to(dialogRef.current, { y: '100%', duration: 0.26, ease: 'power3.inOut' }, 0);
     }
   }, { dependencies: [isOpen, mounted] });
 
   useGSAP(() => {
     if (mounted && isOpen) {
-      // Animate in: spring physics inspirada em damping: 30, stiffness: 300 (curva de entrada fluida vindo do fundo)
+      // Animate in: entrada veloz e responsiva
       const reduced = window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      if (backdropRef.current) gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: reduced ? 0 : 0.3, ease: 'power2.out' });
+      if (backdropRef.current) gsap.fromTo(backdropRef.current, { opacity: 0 }, { opacity: 1, duration: reduced ? 0 : 0.28, ease: 'power2.out' });
       const sheet = dialogRef.current;
       if (sheet) {
         sheet.setAttribute('data-animating', '');
         gsap.fromTo(
           sheet,
-          { y: reduced ? '0%' : '100%', opacity: reduced ? 1 : 0.6 },
+          { y: reduced ? '0%' : '100%', opacity: reduced ? 1 : 0.85 },
           {
             y: '0%',
             opacity: 1,
-            duration: reduced ? 0 : 0.65,
-            ease: 'back.out(1.15)', // efeito spring orgânico e suave
+            duration: reduced ? 0 : 0.42,
+            ease: 'power4.out',
             clearProps: 'transform,opacity',
             onComplete: () => sheet.removeAttribute('data-animating'),
           }
@@ -146,21 +147,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
     }
   }, [mounted]);
 
-  // Escuta tecla ESC para sair do Zen Mode ou fechar modal
-  useEffect(() => {
-    if (!isOpen) return;
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        if (isZenMode) {
-          setIsZenMode(false);
-        } else {
-          onClose();
-        }
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [isOpen, isZenMode, onClose]);
+
 
   // Trava o scroll do body enquanto aberto e sempre restaura no fechamento/desmontagem
   useEffect(() => {
@@ -249,25 +236,25 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
             {/* Header Section inside the Modal (Zen Mode minimiza distrações) */}
             <nav
               aria-label="Ações do artigo"
-              className="sticky top-2 z-50 px-3 sm:px-5 no-print"
+              className="sticky top-0 z-50 px-4 sm:px-8 2xl:px-12 py-3 bg-bg-main/90 backdrop-blur-md border-b border-border transition-colors no-print"
             >
-              <div className="glass-strong !bg-bg-island !rounded-[20px] overflow-hidden max-w-6xl mx-auto shadow-[var(--glass-shadow-2)] border border-border">
+              <div className="w-full flex items-center justify-between">
                 <div
                   ref={progressRef}
                   aria-hidden="true"
                   data-testid="reading-progress"
-                  className="absolute bottom-0 left-4 right-4 h-[2px] rounded-[20px] bg-text-main origin-left z-50"
+                  className="absolute bottom-0 left-0 right-0 h-[2px] bg-text-main origin-left z-50 pointer-events-none"
                   style={{ transform: 'scaleX(0)' }}
                 />
-                <div className={`w-full flex items-center justify-between px-4 sm:px-6 ${isZenMode ? 'h-12' : 'h-14 2xl:h-16'}`}>
+                <div className={`w-full flex items-center justify-between ${isZenMode ? 'h-10' : 'h-12'}`}>
                   <div className="flex items-center gap-2 text-xs text-text-muted">
                     <button
                       onClick={onClose}
                       aria-label="Voltar para a página anterior"
-                      className="hover:text-text-main transition-colors flex items-center gap-2 py-2"
+                      className="hover:text-text-main transition-colors flex items-center gap-2 py-1.5"
                     >
                       <ArrowLeft size={16} strokeWidth={1.5} />
-                      <span className="hidden sm:inline font-mono uppercase text-[10px] tracking-[0.2em]">Voltar</span>
+                      <span className="hidden sm:inline font-mono uppercase text-[11px] tracking-[0.2em]">Voltar</span>
                     </button>
                     
                     {!isZenMode && (
@@ -286,7 +273,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                   <div className="flex items-center gap-1">
                     <ArticleReadingControls
                       isZenMode={isZenMode}
-                      onToggleZenMode={() => setIsZenMode(!isZenMode)}
+                      onToggleZenMode={toggleZenMode}
                       typography={typography}
                       onTypographyChange={setTypography}
                     />
@@ -296,7 +283,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                     <button
                       onClick={onClose}
                       aria-label="Fechar Modal de Artigo"
-                      className="p-2 rounded-[20px] hover:bg-black/5 dark:hover:bg-white/10 text-text-muted hover:text-text-main transition-colors transform-gpu active:scale-95"
+                      className="p-2 rounded-full hover:bg-black/5 dark:hover:bg-white/10 text-text-muted hover:text-text-main transition-colors transform-gpu active:scale-95"
                     >
                       <X size={18} />
                     </button>
@@ -347,7 +334,7 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                   </div>
                 </div>
 
-                <div className="w-full pt-6 pb-2 px-3 sm:px-6 md:px-10 2xl:px-16 max-w-6xl mx-auto">
+                <div className="w-full pt-8 pb-4 px-4 sm:px-8 md:px-12 2xl:px-16 mx-auto">
                   {item && (
                     <ArticleHero
                       article={item}
@@ -359,12 +346,12 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                 </div>
 
                 {/* Grid de Conteúdo Principal + Índice Dinâmico (ToC) */}
-                <div className="px-3 sm:px-6 md:px-10 2xl:px-16 py-6 md:py-8 max-w-6xl mx-auto">
+                <div className="px-4 sm:px-8 md:px-12 2xl:px-16 py-6 md:py-10 mx-auto w-full">
                   <div
-                    className={`grid grid-cols-1 ${!isZenMode ? 'xl:grid-cols-[1fr_260px]' : ''} gap-6 xl:gap-8 items-start`}
+                    className={`grid grid-cols-1 ${!isZenMode ? 'xl:grid-cols-[1fr_260px] 2xl:grid-cols-[1fr_300px]' : ''} gap-8 xl:gap-14 items-start w-full`}
                   >
-                    {/* Corpo do texto: superfície limpa, contraste perfeito, raio 20px */}
-                    <div ref={bodyRef} className="min-w-0 reading-surface rounded-[20px] border border-border px-6 py-8 sm:px-12 sm:py-12 lg:px-16 shadow-[var(--glass-shadow-1)]">
+                    {/* Corpo do texto: fluido, minimalista, editorial */}
+                    <div ref={bodyRef} className="min-w-0 w-full">
                       {item && (
                         <ModalArticleContent
                           article={item}
@@ -382,14 +369,14 @@ export const ArticleModal: React.FC<ArticleModalProps> = ({
                   </div>
                   
                   {item && !isZenMode && (
-                    <div className="mt-8 flex flex-col gap-8">
+                    <div className="flex flex-col">
                       <ArticleNeighbors articleId={item.id} replace />
                       <RelatedArticles articleId={item.id} replace />
                     </div>
                   )}
                   {/* Avaliar, sugerir correção e comentar: no fim da leitura */}
                   {item && (
-                    <div className="mt-8">
+                    <div>
                       <LazyMount>
                         <ArticleInteractions articleId={item.id} articleTitle={item.question} contentRef={bodyRef} />
                       </LazyMount>

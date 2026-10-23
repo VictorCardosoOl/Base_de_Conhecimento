@@ -1,5 +1,5 @@
 'use client';
-import React, { useEffect, useId, useState } from 'react';
+import React, { useId, useState } from 'react';
 import { Alert } from '@/components/ui/Alert';
 import { Button } from '@/components/ui/Button';
 import { ConfirmDialog } from '@/components/ui/Dialog';
@@ -37,16 +37,12 @@ export function CookiePreferences() {
   const name = useId();
   const [choice, setChoice] = useState<Choice | null>(null);
   const [status, setStatus] = useState('');
-  const [localCount, setLocalCount] = useState<number | null>(null);
+  const [localCount, setLocalCount] = useState<number | null>(() => (typeof window !== 'undefined' ? countFeatureData() : null));
   const [confirmClear, setConfirmClear] = useState(false);
 
   // A escolha gravada chega depois da hidratação (localStorage).
   const current: Choice | null = consent === 'pending' ? null : consent;
   const selected = choice ?? current;
-
-  useEffect(() => {
-    setLocalCount(countFeatureData());
-  }, []);
 
   const save = () => {
     if (!selected) return;
@@ -74,6 +70,7 @@ export function CookiePreferences() {
   const clearLocal = () => {
     clearFeatureData();
     setConfirmClear(false);
+    setLocalCount(0);
     // Recarrega para que tema, Minha Lista e demais recursos reflitam a limpeza.
     window.location.reload();
   };

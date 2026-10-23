@@ -107,7 +107,6 @@ describe('página Sobre', () => {
       ['Portfólio de Victor Cardoso', 'https://victor-cardoso.vercel.app'],
       ['Página de links de Guilherme Cruz', 'https://gcruz.dev.br/links'],
       ['LinkedIn de Sabrina Fraguela', 'https://br.linkedin.com/in/sabrinaalvesfraguela'],
-      ['LinkedIn de Aron Nascimento', 'https://www.linkedin.com/in/aron-cipriano/'],
       ['GitHub de João Sanchez', 'https://github.com/Juao-crtl-c'],
     ];
     for (const [label, href] of expected) {
@@ -118,11 +117,11 @@ describe('página Sobre', () => {
     }
   });
 
-  it('Consultoria: três cartões quadrados, cada um com contribuições e um único link', () => {
+  it('Consultoria: cartões quadrados, cada um com contribuições e um único link', () => {
     renderPage();
     const section = screen.getByRole('region', { name: 'Consultoria técnica' });
     const cards = within(section).getAllByRole('article');
-    expect(cards).toHaveLength(3);
+    expect(cards).toHaveLength(2);
     for (const card of cards) {
       expect(card.className).toContain('aspect-square');
       expect(within(card).getAllByRole('link')).toHaveLength(1);

@@ -14,9 +14,20 @@ export type ClientSessionSummary =
     }
   | { authenticated: false; expired?: boolean };
 
+function isClientSessionSummary(data: unknown): data is ClientSessionSummary {
+  if (!data || typeof data !== 'object') return false;
+  const d = data as Record<string, unknown>;
+  if (d.authenticated === true) {
+    return typeof d.email === 'string' && typeof d.username === 'string';
+  }
+  return d.authenticated === false;
+}
+
 async function fetchSummary(): Promise<ClientSessionSummary> {
   const response = await fetch('/api/session', { credentials: 'same-origin', cache: 'no-store' });
-  return (await response.json()) as ClientSessionSummary;
+  if (!response.ok) return { authenticated: false };
+  const data = await response.json();
+  return isClientSessionSummary(data) ? data : { authenticated: false };
 }
 
 /**

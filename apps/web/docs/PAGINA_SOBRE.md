@@ -33,7 +33,7 @@ Rota `/sobre`. Conteúdo em `src/features/sobre/about-content.ts` (texto sem JSX
 ## Seções sobre as pessoas
 
 - **Quem faz a Base SST** (`MAINTAINERS`): Victor Cardoso e Guilherme Cruz, em blocos alternados (zigue-zague só no desktop, via grade; HTML sempre na ordem foto → texto → link).
-- **Consultoria técnica** (`CONSULTANTS`): Sabrina Fraguela, Aron Nascimento e João Sanchez, em cartões quadrados com um único link de perfil.
+- **Consultoria técnica** (`CONSULTANTS`): Sabrina Fraguela e João Sanchez, em cartões quadrados com um único link de perfil.
 - Componentes: `src/features/sobre/components/People.tsx`; ícones de LinkedIn e GitHub em `src/components/ui/BrandIcons.tsx` (o lucide-react 1.x não os inclui).
 - Fontes dos textos: README (Créditos), dados da equipe que já existiam no projeto e autoria dos commits no git. Links: os informados pelo responsável pelo projeto em 10/10/2026.
 
@@ -43,9 +43,9 @@ Rota `/sobre`. Conteúdo em `src/features/sobre/about-content.ts` (texto sem JSX
 
 1. **Bios:** formação e trajetória de Victor Cardoso e Guilherme Cruz não foram fornecidas; os textos atuais usam só o que é verificável no projeto.
 2. **Fotos:** nenhuma foto autorizada foi fornecida; as cinco pessoas aparecem com iniciais. Para usar fotos, salve-as em `public/equipe/` (WebP, retrato 4:5 para Victor e Guilherme) e preencha `photo` em `about-content.ts`.
-3. **Consultoria:** funções e contribuições vêm de uma frase por pessoa nos dados do projeto; confirmar e detalhar as contribuições de Sabrina, Aron e João.
+3. **Consultoria:** funções e contribuições vêm de uma frase por pessoa nos dados do projeto; confirmar e detalhar as contribuições de Sabrina e João.
 4. **Nomes:** "Victor Cardoso" (git e README usam "Victor Cardoso Cunha"); "João Sanchez" (README usa "João Sanches").
-5. **LinkedIn:** os perfis de Sabrina e Aron respondem com bloqueio a robôs (código 999) e não puderam ser verificados automaticamente; confirmar que estão ativos.
+5. **LinkedIn:** o perfil de Sabrina responde com bloqueio a robôs (código 999) e não pôde ser verificado automaticamente; confirmar que está ativo.
 6. **Empresa de origem:** se e como citar a organização onde o projeto nasceu.
 7. **Resultados:** só voltar a citar ganhos (chamados, tempo de resposta, integração de novas pessoas) com dados medidos.
 8. **Contato:** confirmar `suporte@basesst.br`.

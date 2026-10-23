@@ -84,12 +84,10 @@ export const CommandPalette: React.FC<CommandPaletteProps> = ({
   const showQueue = !inputValue || PALETTE_STRINGS.QUEUE.some(isMatch);
   const showTheme = !inputValue || PALETTE_STRINGS.THEME.some(isMatch);
 
-  // Reset input when opening
+  // Reset input and focus when opening
   useEffect(() => {
     if (isOpen) {
-      setInputValue('');
-      // Delay autoFocus to match animation timing
-      setTimeout(() => inputRef.current?.focus(), 300);
+      inputRef.current?.focus();
     }
   }, [isOpen]);
 

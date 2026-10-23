@@ -60,21 +60,19 @@ export const CookieBanner: React.FC = () => {
 
   const handleAction = (action: () => void) => {
     setIsClosing(true);
+    action();
     if (containerRef.current) {
       gsap.to(containerRef.current, {
         opacity: 0,
         y: 10,
         duration: 0.22,
         ease: 'power3.in',
-        // Sem voltar isClosing a false, o banner ficaria montado (invisível) por cima
-        // da página depois da escolha, interceptando cliques.
         onComplete: () => {
-          action();
           setIsClosing(false);
         },
       });
     } else {
-      action();
+      setIsClosing(false);
     }
   };
 

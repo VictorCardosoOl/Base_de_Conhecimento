@@ -140,7 +140,7 @@ export const IntroHero: React.FC = () => {
                         src/content/artigos/
                       </code>
                       , separados em subdiretórios modulares por domínio técnico
-                      (como eSocial, GRO, TI, Financeiro).
+                      (como eSocial, GRO, TI).
                     </li>
                     <li>
                       <strong className="text-text-main font-semibold">

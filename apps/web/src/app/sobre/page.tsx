@@ -67,7 +67,7 @@ export default function SobrePage() {
   return (
     <div className="mx-auto max-w-6xl space-y-16 sm:space-y-20 py-4">
       {/* 1. Apresentação */}
-      <section aria-labelledby="sobre-titulo" className="article-hero rounded-[2rem] px-6 py-10 sm:px-10 sm:py-14 lg:px-16">
+      <section aria-labelledby="sobre-titulo" className="glass-card rounded-[2rem] px-6 py-10 sm:px-10 sm:py-14 lg:px-16">
         <div className="max-w-3xl">
           <p className="ui-eyebrow">Sobre</p>
           <h1 id="sobre-titulo" className="ui-page-title mt-3">

@@ -139,12 +139,25 @@
   .article-content-render p,
   .article-content-render li {
     font-family: var(--font-serif);
-    font-size: 1.1875rem; /* 19px for better readability */
-    line-height: 1.8;
+    font-size: 1.25rem; /* 20px luxo editorial para leitura confortável */
+    line-height: 1.85;
     letter-spacing: -0.015em;
     text-align: left;
-    margin-bottom: 1.5em;
+    margin-bottom: 1.75em;
     color: inherit;
+  }
+
+  /* Drop Cap sofisticado no primeiro parágrafo */
+  .article-content-render > p:first-of-type::first-letter {
+    font-family: var(--font-serif);
+    float: left;
+    font-size: 4.25rem;
+    line-height: 0.82;
+    padding-top: 4px;
+    padding-right: 14px;
+    padding-bottom: 2px;
+    font-weight: 700;
+    color: var(--text-main);
   }
 
   /* Headings */
@@ -153,9 +166,9 @@
   .article-content-render h3,
   .article-content-render h4 {
     color: var(--text-main);
-    font-weight: 500;
-    line-height: 1.25;
-    letter-spacing: -0.015em;
+    font-weight: 600;
+    line-height: 1.2;
+    letter-spacing: -0.025em;
   }
 
   /* Hiding duplicate title from markdown content */
@@ -164,38 +177,38 @@
   }
 
   .article-content-render h1 {
-    font-size: clamp(2rem, 4.5vw, 3rem);
-    margin-top: 1.8em;
-    margin-bottom: 0.6em;
+    font-size: clamp(2.2rem, 5vw, 3.25rem);
+    margin-top: 2em;
+    margin-bottom: 0.75em;
   }
 
   .article-content-render h2 {
-    font-family: var(--font-sans);
-    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-family: var(--font-serif);
+    font-size: clamp(1.65rem, 3vw, 2.25rem);
     font-weight: 600;
-    margin-top: 2.2em;
-    margin-bottom: 0.8em;
-    padding-bottom: 0.5em;
-    border-bottom: 1px solid color-mix(in srgb, var(--border) 60%, transparent);
+    margin-top: 2.5em;
+    margin-bottom: 0.85em;
+    padding-bottom: 0.6em;
+    border-bottom: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
   }
 
   .article-content-render h3 {
     font-family: var(--font-sans);
-    font-size: clamp(1.15rem, 2vw, 1.45rem);
+    font-size: clamp(1.25rem, 2.2vw, 1.55rem);
     font-weight: 600;
-    margin-top: 1.8em;
-    margin-bottom: 0.6em;
+    margin-top: 2em;
+    margin-bottom: 0.65em;
   }
 
   .article-content-render h4 {
-    font-size: 0.95rem;
+    font-size: 1rem;
     font-weight: 700;
     font-family: var(--font-sans);
     text-transform: uppercase;
-    letter-spacing: 0.08em;
+    letter-spacing: 0.12em;
     color: var(--text-muted);
-    margin-top: 1.6em;
-    margin-bottom: 0.5em;
+    margin-top: 1.8em;
+    margin-bottom: 0.6em;
   }
 
   /* Blockquotes - Clean, Modern Editorial B&W Style */

@@ -77,6 +77,7 @@
 
   /* ── Movimento: rápido para responder, suave para assentar ─────────────── */
   --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-spring: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-elastic: cubic-bezier(0.34, 1.4, 0.64, 1);
   --ease-in-quick: cubic-bezier(0.4, 0, 1, 1);
   --dur-instant: 90ms;
@@ -176,7 +177,7 @@ html.dark .liquid-backdrop {
     content: '';
     position: absolute;
     inset: 0;
-    z-index: -1;
+    z-index: 1;
     border-radius: inherit;
     padding: var(--glass-edge-width);
     background: var(--glass-edge);
@@ -201,10 +202,14 @@ html.dark .liquid-backdrop {
 
   /* Interativo: sobe e acende no hover (CSS puro, sem acompanhar o ponteiro) */
   .glass-interactive {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    will-change: transform, box-shadow;
     transition:
-      transform var(--dur-base) var(--ease-out-expo),
-      box-shadow var(--dur-base) var(--ease-out-expo),
-      background-color var(--dur-fast) ease;
+      transform var(--dur-base) var(--ease-spring),
+      box-shadow var(--dur-base) var(--ease-spring),
+      background-color var(--dur-fast) ease,
+      border-color var(--dur-fast) ease;
   }
 
   .glass-interactive::after {
@@ -219,7 +224,7 @@ html.dark .liquid-backdrop {
   }
 
   .glass-interactive:hover {
-    transform: translateY(-2px);
+    transform: translate3d(0, -3px, 0);
     box-shadow: var(--glass-specular), var(--glass-shadow-3);
   }
 
@@ -336,16 +341,20 @@ html.dark .liquid-backdrop {
 @keyframes enter-rise {
   from {
     opacity: 0;
-    transform: translate3d(0, 12px, 0);
+    transform: translate3d(0, 14px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0);
   }
 }
 
-/* Cabeçalho do artigo: design limpo editorial em preto e branco */
+/* Cabeçalho do artigo: design limpo editorial em preto e branco, sem caixa ou borda ao redor */
 .article-hero {
-  background: var(--glass-surface);
-  border: 1px solid var(--border);
-  border-radius: var(--glass-radius-unified);
-  box-shadow: var(--glass-shadow-1);
+  background: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Folha do artigo (modal): fundo opaco sólido monocromático com bordas limpas */
@@ -389,6 +398,17 @@ html[data-glass='lite'] .glass-strong {
   -webkit-backdrop-filter: none !important;
   backdrop-filter: none !important;
   background: var(--bg-island);
+}
+
+html[data-glass='lite'] .glass::before,
+html[data-glass='lite'] .glass-strong::before,
+html[data-glass='lite'] .glass-card::before {
+  display: none !important;
+}
+
+html[data-glass='lite'] .glass,
+html[data-glass='lite'] .glass-card {
+  border: 1px solid var(--border) !important;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {

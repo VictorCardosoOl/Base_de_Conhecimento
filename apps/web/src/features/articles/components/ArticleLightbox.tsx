@@ -18,36 +18,27 @@ export const ArticleLightbox: React.FC<ArticleLightboxProps> = ({
 }) => {
   const [scale, setScale] = useState(1);
   const containerRef = useRef<HTMLDivElement>(null);
-  const [mounted, setMounted] = useState(false);
-  const [shouldClose, setShouldClose] = useState(false);
-
-  useEffect(() => {
-    if (src) {
-      setMounted(true);
-      setShouldClose(false);
-    } else {
-      setShouldClose(true);
-    }
-  }, [src]);
+  const [mounted, setMounted] = useState(() => Boolean(src));
 
   useGSAP(() => {
-    if (mounted && !shouldClose && containerRef.current) {
+    if (src && containerRef.current) {
+      setMounted(true);
       gsap.fromTo(containerRef.current, { opacity: 0 }, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-    } else if (mounted && shouldClose && containerRef.current) {
+    } else if (!src && mounted && containerRef.current) {
       gsap.to(containerRef.current, {
         opacity: 0,
         duration: 0.2,
         ease: 'power2.in',
         onComplete: () => {
           setMounted(false);
+          setScale(1);
         }
       });
     }
-  }, [mounted, shouldClose]);
+  }, [src]);
 
   useEffect(() => {
     if (!mounted) return;
-    setScale(1);
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') onClose();

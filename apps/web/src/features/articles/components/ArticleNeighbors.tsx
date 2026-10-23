@@ -23,31 +23,44 @@ export function ArticleNeighbors({ articleId, replace = false }: { articleId: st
   const { previous, next } = neighborsOf(articleId);
   if (!previous && !next) return null;
 
-  const card =
-    'glass-card glass-interactive glass-focus group flex flex-col gap-2 p-5 sm:p-6 min-h-[7.5rem] justify-between';
-
   return (
-    <nav aria-label="Continue lendo" className="below-fold grid grid-cols-1 sm:grid-cols-2 gap-4">
-      {previous ? (
-        <Link href={`/artigo/${previous.id}`} replace={replace} scroll={false} className={card}>
-          <span className="inline-flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-            <ArrowLeft size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-0.5" />
-            Anterior
-          </span>
-          <span className="font-serif text-lg leading-snug text-text-main line-clamp-2">{previous.question}</span>
-        </Link>
-      ) : (
-        <span aria-hidden="true" className="hidden sm:block" />
-      )}
-      {next && (
-        <Link href={`/artigo/${next.id}`} replace={replace} scroll={false} className={`${card} sm:text-right`}>
-          <span className="inline-flex items-center gap-1.5 sm:justify-end text-[11px] font-semibold uppercase tracking-[0.16em] text-text-muted">
-            Próximo
-            <ArrowRight size={14} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-0.5" />
-          </span>
-          <span className="font-serif text-lg leading-snug text-text-main line-clamp-2">{next.question}</span>
-        </Link>
-      )}
+    <nav aria-label="Continue lendo" className="below-fold border-t border-border pt-10 sm:pt-14 mt-12 sm:mt-16">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 sm:gap-12">
+        {previous ? (
+          <Link
+            href={`/artigo/${previous.id}`}
+            replace={replace}
+            scroll={false}
+            className="group flex flex-col gap-2.5 py-2 text-left"
+          >
+            <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-text-muted font-mono">
+              <ArrowLeft size={13} aria-hidden="true" className="transition-transform duration-200 group-hover:-translate-x-1" />
+              Anterior
+            </span>
+            <span className="font-serif text-xl sm:text-2xl leading-snug text-text-main line-clamp-2 group-hover:underline underline-offset-4 decoration-1">
+              {previous.question}
+            </span>
+          </Link>
+        ) : (
+          <span aria-hidden="true" className="hidden sm:block" />
+        )}
+        {next && (
+          <Link
+            href={`/artigo/${next.id}`}
+            replace={replace}
+            scroll={false}
+            className="group flex flex-col gap-2.5 py-2 sm:text-right sm:items-end"
+          >
+            <span className="inline-flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.2em] text-text-muted font-mono">
+              Próximo
+              <ArrowRight size={13} aria-hidden="true" className="transition-transform duration-200 group-hover:translate-x-1" />
+            </span>
+            <span className="font-serif text-xl sm:text-2xl leading-snug text-text-main line-clamp-2 group-hover:underline underline-offset-4 decoration-1">
+              {next.question}
+            </span>
+          </Link>
+        )}
+      </div>
     </nav>
   );
 }

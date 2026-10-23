@@ -94,13 +94,11 @@ export function ArticleComments({
 
   const changeTotal = useCallback(
     (delta: number) => {
-      setTotal((value) => {
-        const next = Math.max(0, value + delta);
-        onCountChange?.(next);
-        return next;
-      });
+      const next = Math.max(0, total + delta);
+      setTotal(next);
+      onCountChange?.(next);
     },
-    [onCountChange]
+    [total, onCountChange]
   );
 
   const publish = async (body: string, parentId: string | null): Promise<string | null> => {
@@ -233,12 +231,12 @@ export function ArticleComments({
   };
 
   return (
-    <section aria-labelledby={`comments-${articleId}`} className="below-fold glass-card p-5 sm:p-7">
-      <div className="flex items-center justify-between gap-3">
-        <h2 id={`comments-${articleId}`} className="text-lg font-semibold text-text-main flex items-center gap-2">
-          <MessageSquare size={18} aria-hidden="true" className="text-[color:var(--mesh-1)]" />
+    <section aria-labelledby={`comments-${articleId}`} className="below-fold border-t border-border pt-10 sm:pt-14">
+      <div className="flex items-center justify-between gap-3 pb-4 border-b border-border/60">
+        <h2 id={`comments-${articleId}`} className="text-xl font-serif text-text-main flex items-center gap-2.5">
+          <MessageSquare size={20} aria-hidden="true" className="text-text-muted" />
           Comentários
-          {state === 'ready' && <span className="ui-badge">{total}</span>}
+          {state === 'ready' && <span className="text-xs font-mono px-2 py-0.5 rounded-full bg-text-main/10 text-text-main font-normal">{total}</span>}
         </h2>
       </div>
 

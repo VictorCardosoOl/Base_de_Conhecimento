@@ -189,13 +189,6 @@ export const CONSULTANTS: Consultant[] = [
     contributions: ['Curadoria do conteúdo operacional', 'Revisão do conteúdo operacional publicado'],
   },
   {
-    id: 'aron-nascimento',
-    name: 'Aron Nascimento',
-    role: 'Consultor técnico',
-    link: { kind: 'linkedin', url: 'https://www.linkedin.com/in/aron-cipriano/' },
-    contributions: ['Orientação técnica sobre as regras de SST e eSocial', 'Validação das regras documentadas na base'],
-  },
-  {
     id: 'joao-sanchez',
     name: 'João Sanchez',
     role: 'Consultor técnico',

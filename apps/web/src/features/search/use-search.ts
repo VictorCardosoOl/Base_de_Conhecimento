@@ -1,30 +1,31 @@
 import { useMemo, useDeferredValue } from 'react';
 import MiniSearch from 'minisearch';
 
-interface UseSearchOptions<T> {
+interface UseSearchOptions {
   keys: string[];
   threshold?: number;
 }
 
-export function useSearch<T extends Record<string, any>>(
+export function useSearch<T extends object>(
   data: T[],
   query: string,
-  options: UseSearchOptions<T>
+  options: UseSearchOptions
 ): T[] {
   // Mantém digitação suave sem travar o event loop
   const deferredQuery = useDeferredValue(query);
+  const trimmed = deferredQuery?.trim();
 
-  // Constrói e indexa os documentos no MiniSearch
+  // Constrói e indexa os documentos no MiniSearch com memoização estável
   const miniSearch = useMemo(() => {
     const ms = new MiniSearch<T>({
       fields: options.keys,
       storeFields: ['id'],
       idField: 'id',
       // Tokenização otimizada para português e pontuação
-      tokenize: (string) =>
-        string
+      tokenize: (str) =>
+        str
           .toLowerCase()
-          .split(/[\s,./\\-_;:!?()\[\]"']+/)
+          .split(/[\s,./\\-_;:!?()[\]"']+/)
           .filter(Boolean),
       searchOptions: {
         boost: {
@@ -34,30 +35,29 @@ export function useSearch<T extends Record<string, any>>(
           searchText: 1,
           answer: 1,
         },
-        prefix: true, // Busca por prefixo (ex: 'cat' encontra 'cat' e termos prefixados)
-        fuzzy: (term) => (term.length > 2 ? 0.3 : false), // Tolerância proporcional ao tamanho do termo
+        prefix: true,
+        fuzzy: (term) => (term.length > 2 ? 0.3 : false),
         combineWith: 'OR',
       },
     });
 
-    // Garante que cada item tenha um id único para indexação
-    const indexedData = data.map((item, index) => ({
-      ...item,
-      id:
-        item.id !== undefined && item.id !== null
-          ? String(item.id)
-          : `item-${index}`,
-    }));
+    const indexedData = data.map((item, index) => {
+      const record = item as Record<string, unknown>;
+      return {
+        ...item,
+        id: record.id !== undefined && record.id !== null ? String(record.id) : `item-${index}`,
+      };
+    });
 
     ms.addAll(indexedData);
     return {
       engine: ms,
       idMap: new Map(indexedData.map((item) => [item.id, item])),
     };
-  }, [data, options.keys, options.threshold]);
+  }, [data, options.keys]);
 
   const results = useMemo(() => {
-    const trimmed = deferredQuery?.trim();
+    // Guard clause: termo vazio retorna lista completa imediatamente
     if (!trimmed) return data;
 
     // 1. Busca rápida indexada no MiniSearch
@@ -67,32 +67,35 @@ export function useSearch<T extends Record<string, any>>(
       .map((hit) => miniSearch.idMap.get(hit.id) as T | undefined)
       .filter((item): item is T => item !== undefined);
 
-    // 2. Substring fallback para acrônimos ou termos contidos em palavras compostas (ex: "CAT" dentro de "LTCAT")
+    // Se a busca indexada já retornou resultados ou o termo for muito curto, evitamos varredura completa cara
+    if (matchedItems.length >= 5 || trimmed.length < 3) {
+      return matchedItems;
+    }
+
+    // 2. Substring fallback sob demanda apenas se a busca indexada retornar poucos resultados
     const lowerQuery = trimmed.toLowerCase();
 
     const fallbackItems = data.filter((item) => {
-      const itemId =
-        item.id !== undefined && item.id !== null ? String(item.id) : '';
+      const record = item as Record<string, unknown>;
+      const itemId = record.id !== undefined && record.id !== null ? String(record.id) : '';
 
       // Guard clause: se já foi encontrado pelo MiniSearch, pula
       if (itemId && hitIds.has(itemId)) return false;
 
       return options.keys.some((key) => {
-        const val = item[key];
+        const val = record[key];
         if (typeof val === 'string') {
           return val.toLowerCase().includes(lowerQuery);
         }
         if (Array.isArray(val)) {
-          return val.some(
-            (v) => typeof v === 'string' && v.toLowerCase().includes(lowerQuery)
-          );
+          return val.some((v) => typeof v === 'string' && v.toLowerCase().includes(lowerQuery));
         }
         return false;
       });
     });
 
     return [...matchedItems, ...fallbackItems];
-  }, [miniSearch, deferredQuery, data, options.keys]);
+  }, [miniSearch, trimmed, data, options.keys]);
 
   return results;
 }

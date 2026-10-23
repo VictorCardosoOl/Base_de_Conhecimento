@@ -48,7 +48,7 @@ describe('seleção de artigos (página inicial)', () => {
   });
 
   it('módulo sem artigos: mensagem própria', () => {
-    render(<HomeGrid categoryParam="Financeiro" />);
+    render(<HomeGrid categoryParam="Coletivo" />);
     expect(screen.getByText('Nenhum artigo neste módulo ainda.')).toBeTruthy();
   });
 });

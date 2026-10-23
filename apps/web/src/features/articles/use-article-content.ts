@@ -40,8 +40,6 @@ export const useArticleContent = (article: FAQItem) => {
 
   useEffect(() => {
     let mounted = true;
-    setIsLoading(true);
-    setError(null);
 
     const loadContent = async () => {
       try {
@@ -76,6 +74,7 @@ export const useArticleContent = (article: FAQItem) => {
             // Fallback to basic answer if markdown doesn't exist
             setHtmlContent(sanitizeArticleHtml(article.answer || ''));
           }
+          setError(null);
         }
       } catch (err) {
         reportContentError(err, {

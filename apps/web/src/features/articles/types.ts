@@ -5,7 +5,6 @@ export enum Category {
   INFORMACOES = 'Informações',
   EVENTOS = 'Eventos',
   COLETIVO = 'Coletivo',
-  FINANCEIRO = 'Financeiro',
   TI = 'Tecnologia',
 }
 

@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { useArticleContent } from '@/features/articles/use-article-content';
 import { FAQItem, Category } from '@/features/articles/types';
 
-const createMockArticle = (contentVal: any): FAQItem => ({
+const createMockArticle = (contentVal: FAQItem['content']): FAQItem => ({
   id: 'test-article',
   question: 'Pergunta Teste',
   answer: 'Resposta de Fallback',

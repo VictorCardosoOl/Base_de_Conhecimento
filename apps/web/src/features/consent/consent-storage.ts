@@ -1,3 +1,5 @@
+import { safeStorage } from '@/lib/storage';
+
 /**
  * Decisão de consentimento (LGPD) guardada no navegador.
  *
@@ -13,6 +15,5 @@ export const CONSENT_UPDATED_EVENT = 'sst_consent_updated';
 
 /** No servidor não há consentimento: sempre false. */
 export function hasUserConsented(): boolean {
-  if (typeof window === 'undefined') return false;
-  return localStorage.getItem(CONSENT_STORAGE_KEY) === 'granted';
+  return safeStorage.getString(CONSENT_STORAGE_KEY, '') === 'granted';
 }

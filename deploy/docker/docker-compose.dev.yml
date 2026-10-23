@@ -18,12 +18,12 @@ services:
         AUTH_INTERNAL_URL: http://auth-service:8000
         AUTH_ISSUER: ${AUTH_ISSUER:-http://localhost:8010}
         AUTH_AUDIENCE: ${AUTH_AUDIENCE:-knowledge-api}
-        AUTH_ACCESS_COOKIE_NAME: ${AUTH_ACCESS_COOKIE_NAME:-kb_at}
+        AUTH_ACCESS_COOKIE_NAME: ${AUTH_ACCESS_COOKIE_NAME:-__Host-kb_at}
     environment:
       AUTH_INTERNAL_URL: http://auth-service:8000
       AUTH_ISSUER: ${AUTH_ISSUER:-http://localhost:8010}
       AUTH_AUDIENCE: ${AUTH_AUDIENCE:-knowledge-api}
-      AUTH_ACCESS_COOKIE_NAME: ${AUTH_ACCESS_COOKIE_NAME:-kb_at}
+      AUTH_ACCESS_COOKIE_NAME: ${AUTH_ACCESS_COOKIE_NAME:-__Host-kb_at}
     ports:
       - "127.0.0.1:${WEB_PORT:-3000}:3000"
     depends_on:

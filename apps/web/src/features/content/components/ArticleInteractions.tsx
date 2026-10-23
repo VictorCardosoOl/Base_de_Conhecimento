@@ -46,14 +46,14 @@ export function ArticleInteractions({
   }, [articleId, signedIn, reloadKey]);
 
   return (
-    <div className="flex flex-col gap-6">
-      <section aria-labelledby={`feedback-${articleId}`} className="below-fold glass-card p-5 sm:p-7">
-        <div className="flex flex-wrap items-start justify-between gap-3">
+    <div className="flex flex-col gap-10 border-t border-border pt-10 sm:pt-14 mt-12 sm:mt-16">
+      <section aria-labelledby={`feedback-${articleId}`} className="below-fold">
+        <div className="flex flex-wrap items-start justify-between gap-4 pb-6 border-b border-border/60">
           <div>
-            <h2 id={`feedback-${articleId}`} className="text-lg font-semibold text-text-main">
+            <h2 id={`feedback-${articleId}`} className="text-xl font-serif text-text-main">
               Avalie e contribua
             </h2>
-            <p className="mt-1 text-sm text-text-muted max-w-xl">
+            <p className="mt-1 text-sm text-text-muted max-w-xl font-light">
               Sua nota orienta as revisões. Encontrou algo errado ou desatualizado? Envie uma correção para a equipe editorial.
             </p>
           </div>

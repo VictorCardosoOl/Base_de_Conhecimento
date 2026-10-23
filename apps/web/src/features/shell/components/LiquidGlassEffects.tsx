@@ -23,13 +23,15 @@ function prefers(query: string): boolean {
   return typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
 }
 
-/** Aparelho modesto ou pedido explícito de economia. */
+/** Aparelho modesto, mobile ou pedido explícito de economia. */
 export function shouldUseLiteGlass(nav: Navigator & NavigatorHints = navigator): boolean {
-  const lowCpu = typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 2;
-  const lowMemory = typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 2;
+  const lowCpu = typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4;
+  const lowMemory = typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 4;
+  const isSmallScreen = typeof window !== 'undefined' && window.innerWidth < 768;
   return (
     lowCpu ||
     lowMemory ||
+    isSmallScreen ||
     Boolean(nav.connection?.saveData) ||
     prefers('(prefers-reduced-transparency: reduce)')
   );

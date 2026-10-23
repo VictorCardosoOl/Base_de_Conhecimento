@@ -1,10 +1,11 @@
 'use client';
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useSearchParams } from 'next/navigation';
 import { Bookmark, ChevronRight, Info, ShieldCheck } from 'lucide-react';
 import { FAQ_DATA } from '@/features/articles/catalog';
 import { Category, type FAQItem } from '@/features/articles/types';
+import { useNavDrawerHover } from '../hooks/use-nav-drawer-hover';
 
 /** Artigos por módulo, calculado uma vez (o catálogo é estático). */
 const BY_MODULE: ReadonlyMap<Category, readonly FAQItem[]> = (() => {
@@ -38,6 +39,7 @@ export interface NavDrawerProps {
  *
  * - "Filtrar por módulo X" filtra a página inicial; a seta ao lado abre os artigos do
  *   módulo ali mesmo (até 8, mais "ver todos").
+ * - Ao passar o mouse sobre o módulo (ou seus subitens), o menu de artigos expande; ao sair, recolhe.
  * - Abrindo um artigo, o módulo dele já aparece aberto e o artigo marcado.
  * - Fechado, sai do Tab e dos leitores de tela (inert). Movimento só em CSS.
  */
@@ -53,7 +55,6 @@ export function NavDrawer({
   onClose,
 }: NavDrawerProps) {
   const pathname = usePathname();
-  // Módulo ativo vem da URL (filtro da página inicial): menu e pílulas da página concordam.
   const searchParams = useSearchParams();
   const selectedCategory =
     pathname === '/' ? (searchParams?.get('category') as Category | null) ?? null : currentCategory;
@@ -65,18 +66,15 @@ export function NavDrawer({
     [currentArticleId]
   );
 
-  // Aberto/fechado escolhido pela pessoa; sem escolha, abre o módulo do artigo atual.
-  const [overrides, setOverrides] = useState<Partial<Record<Category, boolean>>>({});
-  const isExpanded = (cat: Category) => overrides[cat] ?? cat === currentArticleModule;
-  const toggleModule = (cat: Category) =>
-    setOverrides((prev) => ({ ...prev, [cat]: !(prev[cat] ?? cat === currentArticleModule) }));
+  const { isExpanded, toggleModule, handleMouseEnter, handleMouseLeave } =
+    useNavDrawerHover(currentArticleModule);
 
   // Ao abrir, o foco vai para o primeiro item (o botão do cabeçalho devolve no fechar).
   const firstRef = useRef<HTMLButtonElement>(null);
   useEffect(() => {
     if (!open) return;
-    const id = window.setTimeout(() => firstRef.current?.focus({ preventScroll: true }), 60);
-    return () => window.clearTimeout(id);
+    const timerId = window.setTimeout(() => firstRef.current?.focus({ preventScroll: true }), 60);
+    return () => window.clearTimeout(timerId);
   }, [open]);
 
   let staggerIndex = 0;
@@ -103,8 +101,14 @@ export function NavDrawer({
               const active = selectedCategory === cat || currentArticleModule === cat;
               const listId = `${id}-${index}`;
               const isOpen = isExpanded(cat);
+              const hasArticles = articles.length > 0;
               return (
-                <li key={cat} {...stagger()}>
+                <li
+                  key={cat}
+                  {...stagger()}
+                  onMouseEnter={() => handleMouseEnter(cat, hasArticles)}
+                  onMouseLeave={() => handleMouseLeave(cat, hasArticles)}
+                >
                   <div className="nav-module" data-active={active || undefined}>
                     <button
                       ref={index === 0 ? firstRef : undefined}
@@ -119,7 +123,7 @@ export function NavDrawer({
                         {articles.length}
                       </span>
                     </button>
-                    {articles.length > 0 && (
+                    {hasArticles && (
                       <button
                         type="button"
                         className="nav-module-expand"
@@ -132,7 +136,7 @@ export function NavDrawer({
                       </button>
                     )}
                   </div>
-                  {articles.length > 0 && (
+                  {hasArticles && (
                     <div id={listId} className="nav-articles" data-expanded={isOpen || undefined}>
                       <div>
                         {/* Recolhido: fora do Tab também (a altura 0 não basta). */}

@@ -23,8 +23,6 @@ const mapCategory = (cat?: string): Category => {
       return Category.SOBRE;
     case 'coletivo':
       return Category.COLETIVO;
-    case 'financeiro':
-      return Category.FINANCEIRO;
     case 'tecnologia':
     case 'ti':
       return Category.TI;

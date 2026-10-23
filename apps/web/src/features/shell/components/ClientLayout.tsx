@@ -76,13 +76,8 @@ function ClientLayoutContent({
     }
   };
 
-  useEffect(() => {
-    if (pathname === '/sobre') {
-      setCurrentCategory(SOBRE_CATEGORY);
-    } else if (pathname === '/minha-lista') {
-      setCurrentCategory(null);
-    }
-  }, [pathname]);
+  const isSobreRoute = pathname === '/sobre';
+  const effectiveCategory = isSobreRoute ? SOBRE_CATEGORY : currentCategory;
 
   const toggleDark = () => setIsDarkMode((prev) => !prev);
   const goToQueue = (close?: () => void) => {
@@ -114,7 +109,7 @@ function ClientLayoutContent({
 
   const sidebar = (
     <Sidebar
-      currentCat={currentCategory}
+      currentCat={effectiveCategory}
       onSelect={handleCategorySelect}
       isDarkMode={isDarkMode}
       toggleDark={toggleDark}
@@ -158,8 +153,11 @@ function ClientLayoutContent({
         >
           <div
             className={`max-w-[2000px] 4xl:max-w-[2400px] mx-auto w-full transition-all duration-300 ease-[cubic-bezier(0.16,1,0.3,1)]
-                        px-5 sm:px-8 2xl:px-16 3xl:px-24 4xl:px-32 max-lg:pt-24 max-lg:pb-12 lg:pt-28 lg:pb-12 2xl:pb-16 3xl:pb-24
-                        ${MAIN_LAYOUT_PADDING_CLASS}
+                        ${
+                          isArticleRoute
+                            ? 'px-4 sm:px-8 md:px-12 2xl:px-16 pt-20 md:pt-24 pb-16'
+                            : `px-5 sm:px-8 2xl:px-16 3xl:px-24 4xl:px-32 max-lg:pt-24 max-lg:pb-12 lg:pt-28 lg:pb-12 2xl:pb-16 3xl:pb-24 ${MAIN_LAYOUT_PADDING_CLASS}`
+                        }
                     `}
           >
             <div ref={containerRef} className="w-full transform-gpu">

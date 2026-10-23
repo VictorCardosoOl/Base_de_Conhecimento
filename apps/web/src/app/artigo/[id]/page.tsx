@@ -92,16 +92,19 @@ export default async function ArticlePage({ params }: Props) {
   };
 
   return (
-    <article className="max-w-6xl mx-auto space-y-6 xl:space-y-8">
+    <article className="w-full max-w-[1700px] mx-auto space-y-12 pb-24">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: toJsonLd(jsonLd) }}
       />
+      {/* Top Editorial Hero */}
       <ArticleHero
         article={article}
         minutes={readingMinutes(article.searchText)}
         actions={<ArticleActions articleId={article.id} title={article.question} summary={article.answer} />}
       />
+
+      {/* Main Reading Flow & Side Index */}
       <ArticleReader
         htmlContent={htmlContent}
         articleId={article.id}

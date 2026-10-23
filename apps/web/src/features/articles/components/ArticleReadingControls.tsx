@@ -21,16 +21,17 @@ export const ArticleReadingControls: React.FC<ArticleReadingControlsProps> = ({
   onTypographyChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [pref, setPref] = useState<TypographyPreferences>(() =>
+  const [localPref, setLocalPref] = useState<TypographyPreferences>(() =>
     ReadingExperienceService.getTypography()
   );
+  const pref = typography ?? localPref;
   const popoverRef = useRef<HTMLDivElement>(null);
   const popoverContentRef = useRef<HTMLDivElement>(null);
   const [mounted, setMounted] = useState(false);
 
   const updatePreference = (newPref: Partial<TypographyPreferences>) => {
     const updated = { ...pref, ...newPref };
-    setPref(updated);
+    setLocalPref(updated);
     ReadingExperienceService.setTypography(updated);
     if (onTypographyChange) onTypographyChange(updated);
   };

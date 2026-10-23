@@ -104,7 +104,7 @@ export function reportContentError(
   error: unknown,
   context?: Record<string, unknown>
 ) {
-  if (!IS_PROD) {
+  if (!IS_PROD && process.env.NODE_ENV !== 'test') {
     console.error('🚨 [Content Error / Chunk Failure]:', error, context);
   }
 

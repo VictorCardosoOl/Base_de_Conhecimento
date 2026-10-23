@@ -27,7 +27,9 @@
     "test:coverage": "vitest run --coverage",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "check": "npm run lint && npm run typecheck && npm run test"
+    "check": "npm run lint && npm run typecheck && npm run test",
+    "test:ui": "vitest run src/tests/(articles|navigation|search|shell|sobre|consent)",
+    "test:all": "vitest run --include=\"src/**/*.test.{ts,tsx}\""
   },
   "lint-staged": {
     "src/content/artigos/**/*.md": [

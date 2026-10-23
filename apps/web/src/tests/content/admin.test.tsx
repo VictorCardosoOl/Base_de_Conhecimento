@@ -14,7 +14,7 @@ vi.mock('@/features/articles/catalog', () => ({
       content: () => Promise.resolve({ default: { content: '\n## Passo a passo\n\nTexto.\n' } }),
     },
     { id: 'aso-guia', question: 'Guia do ASO', answer: 'ASO', category: 'GRO', date: '04 Sep 2026', tags: ['aso'] },
-    { id: 'sem-relacao', question: 'Outro assunto', answer: 'x', category: 'Financeiro', date: '2026-09-01', tags: [] },
+    { id: 'sem-relacao', question: 'Outro assunto', answer: 'x', category: 'Coletivo', date: '2026-09-01', tags: [] },
   ],
 }));
 

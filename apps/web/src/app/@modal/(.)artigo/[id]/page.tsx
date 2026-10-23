@@ -1,5 +1,4 @@
 import { FAQ_DATA } from '@/features/articles/catalog';
-import { notFound } from 'next/navigation';
 import { ModalWrapper } from './ModalWrapper';
 
 export async function generateStaticParams() {

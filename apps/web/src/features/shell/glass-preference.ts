@@ -1,3 +1,5 @@
+import { safeStorage } from '@/lib/storage';
+
 /**
  * Preferência de efeitos visuais escolhida pela pessoa (fica neste navegador).
  *
@@ -11,25 +13,23 @@ export const GLASS_PREFERENCE_KEY = 'sst_glass_preference';
 export const GLASS_PREFERENCE_EVENT = 'sst:glass-preference';
 
 export function readGlassPreference(): GlassPreference {
-  try {
-    const value = window.localStorage.getItem(GLASS_PREFERENCE_KEY);
-    return value === 'full' || value === 'lite' ? value : 'auto';
-  } catch {
-    return 'auto';
-  }
+  const value = safeStorage.getString(GLASS_PREFERENCE_KEY, 'auto');
+  return value === 'full' || value === 'lite' ? value : 'auto';
 }
 
 export function writeGlassPreference(value: GlassPreference): void {
-  try {
-    if (value === 'auto') window.localStorage.removeItem(GLASS_PREFERENCE_KEY);
-    else window.localStorage.setItem(GLASS_PREFERENCE_KEY, value);
-  } catch {
-    // Armazenamento bloqueado: vale só até recarregar.
+  if (value === 'auto') {
+    safeStorage.removeItem(GLASS_PREFERENCE_KEY);
+  } else {
+    safeStorage.setItem(GLASS_PREFERENCE_KEY, value);
   }
-  window.dispatchEvent(new CustomEvent(GLASS_PREFERENCE_EVENT, { detail: value }));
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent(GLASS_PREFERENCE_EVENT, { detail: value }));
+  }
 }
 
 export function subscribeGlassPreference(onChange: () => void): () => void {
+  if (typeof window === 'undefined') return () => {};
   window.addEventListener(GLASS_PREFERENCE_EVENT, onChange);
   window.addEventListener('storage', onChange);
   return () => {

@@ -1,14 +1,14 @@
 'use client';
-import React, { useEffect, useRef, useState, useCallback } from 'react';
-
-import { sanitizeArticleHtml } from '@/features/articles/sanitize-html';
+import React, { useEffect, useRef, useState, useCallback, useSyncExternalStore } from 'react';
 import { ArticleLightbox } from './ArticleLightbox';
 import { ArticleHighlightsToolbar } from './ArticleHighlightsToolbar';
+import { useMermaidRenderer } from '../hooks/use-mermaid-renderer';
+import { useTextHighlighter } from '../hooks/use-text-highlighter';
 import {
   READING_EVENTS,
   ReadingExperienceService,
-  HighlightItem,
-  TypographyPreferences,
+  type HighlightItem,
+  type TypographyPreferences,
 } from '@/features/reading/reading-experience-service';
 
 interface ArticleContentProps {
@@ -17,107 +17,62 @@ interface ArticleContentProps {
   typography?: TypographyPreferences;
 }
 
+const emptySubscribe = () => () => {};
+const getClientMounted = () => true;
+const getServerMounted = () => false;
+
 export const ArticleContent: React.FC<ArticleContentProps> = ({
   htmlContent,
   articleId,
   typography: propTypography,
 }) => {
   const contentRef = useRef<HTMLDivElement>(null);
-  const [isMounted, setIsMounted] = useState(false);
-
-  useEffect(() => {
-    setIsMounted(true);
-  }, []);
+  const isMounted = useSyncExternalStore(emptySubscribe, getClientMounted, getServerMounted);
 
   const [lightboxSrc, setLightboxSrc] = useState<string | null>(null);
   const [lightboxAlt, setLightboxAlt] = useState<string>('');
-  const [typography, setTypography] = useState<TypographyPreferences | null>(propTypography || null);
-  const [activeHighlights, setActiveHighlights] = useState<HighlightItem[]>([]);
+  const [typography, setTypography] = useState<TypographyPreferences | null>(
+    () => propTypography || (typeof window !== 'undefined' ? ReadingExperienceService.getTypography() : null)
+  );
+  const [activeHighlights, setActiveHighlights] = useState<HighlightItem[]>(
+    () => (articleId && typeof window !== 'undefined' ? ReadingExperienceService.getHighlights(articleId) : [])
+  );
 
+  // Sincronização de preferências de leitura e destaques
   useEffect(() => {
-    setTypography(ReadingExperienceService.getTypography());
-    if (articleId) {
-      setActiveHighlights(ReadingExperienceService.getHighlights(articleId));
-    }
-
     const handleSettingsUpdate = () => {
       setTypography(ReadingExperienceService.getTypography());
     };
 
     const handleHighlightsUpdate = (e: Event) => {
-      const evt = e as CustomEvent<{ articleId: string }>;
-      if (articleId && evt.detail?.articleId === articleId) {
+      const evt = e as CustomEvent<{ articleId?: string }>;
+      if (articleId && (!evt.detail?.articleId || evt.detail.articleId === articleId)) {
         setActiveHighlights(ReadingExperienceService.getHighlights(articleId));
       }
     };
 
-    // Atenção: nada dispara 'sst_reading_settings_updated' (o serviço dispara
-    // READING_EVENTS.typographyUpdated). Mantido como está: ver docs/ARQUITETURA.md,
-    // "Problemas conhecidos".
-    window.addEventListener(
-      'sst_reading_settings_updated',
-      handleSettingsUpdate
-    );
+    window.addEventListener(READING_EVENTS.typographyUpdated, handleSettingsUpdate);
     window.addEventListener(READING_EVENTS.highlightsUpdated, handleHighlightsUpdate);
 
     return () => {
-      window.removeEventListener(
-        'sst_reading_settings_updated',
-        handleSettingsUpdate
-      );
-      window.removeEventListener(
-        READING_EVENTS.highlightsUpdated,
-        handleHighlightsUpdate
-      );
+      window.removeEventListener(READING_EVENTS.typographyUpdated, handleSettingsUpdate);
+      window.removeEventListener(READING_EVENTS.highlightsUpdated, handleHighlightsUpdate);
     };
   }, [articleId]);
+
+  // Hooks especializados
+  useMermaidRenderer(htmlContent);
+  const processedHtml = useTextHighlighter(htmlContent, activeHighlights, isMounted);
 
   const handleCloseLightbox = useCallback(() => {
     setLightboxSrc(null);
   }, []);
 
   useEffect(() => {
-    if (!htmlContent || !htmlContent.includes('language-mermaid')) return;
-    
-    const initMermaid = async () => {
-      try {
-        const mermaidModule = await import('mermaid');
-        const mermaid = mermaidModule.default;
-        
-        mermaid.initialize({
-          startOnLoad: false,
-          theme: document.documentElement.classList.contains('dark')
-            ? 'dark'
-            : 'default',
-          securityLevel: 'loose',
-        });
-        
-        const nodes = document.querySelectorAll<HTMLElement>('.language-mermaid');
-        if (nodes.length > 0) {
-          await mermaid.run({ nodes: Array.from(nodes) });
-        }
-      } catch (e) {
-        console.error('Mermaid init error:', e);
-      }
-    };
-    
-    // Pequeno atraso para garantir que o React já renderizou o HTML sanitizado
-    const timer = setTimeout(() => {
-      initMermaid();
-    }, 100);
-    
-    return () => clearTimeout(timer);
-  }, [htmlContent]);
-
-  useEffect(() => {
     if (!contentRef.current) return;
     const images = contentRef.current.querySelectorAll('img');
     images.forEach((img) => {
-      img.classList.add(
-        'cursor-zoom-in',
-        'transition-transform',
-        'hover:opacity-90'
-      );
+      img.classList.add('cursor-zoom-in', 'transition-transform', 'hover:opacity-90');
     });
   }, [htmlContent]);
 
@@ -129,76 +84,15 @@ export const ArticleContent: React.FC<ArticleContentProps> = ({
     }
   }, []);
 
-  const processedHtml = React.useMemo(() => {
-    if (!htmlContent) return '';
-    if (!isMounted) return ''; // Previne injeção de HTML sujo no servidor e erros de hidratação
-
-    // Sanitização inicial segura
-    let safeHtml = sanitizeArticleHtml(htmlContent);
-
-    if (activeHighlights.length > 0) {
-      try {
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(safeHtml, 'text/html');
-        const walker = document.createTreeWalker(doc.body, NodeFilter.SHOW_TEXT, null);
-        
-        const nodesToReplace: {node: Text, newNodes: Node[]}[] = [];
-        
-        let node;
-        while (node = walker.nextNode()) {
-          const text = node.nodeValue;
-          if (!text || text.trim() === '') continue;
-          
-          let newHtml = text;
-          let matchFound = false;
-          
-          activeHighlights.forEach(h => {
-            if (!h.text) return;
-            const escaped = h.text.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-            const safeColor = ['amber', 'emerald', 'sky', 'rose'].includes(h.color) ? h.color : 'amber';
-            
-            // Seguro: aplicado apenas sobre TextNodes, não corrompe HTML e sem Lookaheads perigosos
-            const regex = new RegExp(`(${escaped})`, 'gi');
-            if (regex.test(newHtml)) {
-                matchFound = true;
-                newHtml = newHtml.replace(regex, `<mark class="sst-highlight-${safeColor}">$1</mark>`);
-            }
-          });
-          
-          if (matchFound) {
-            const temp = document.createElement('div');
-            temp.innerHTML = newHtml;
-            nodesToReplace.push({node: node as Text, newNodes: Array.from(temp.childNodes)});
-          }
-        }
-        
-        nodesToReplace.forEach(({node, newNodes}) => {
-          const parent = node.parentNode;
-          if (parent) {
-            newNodes.forEach(n => parent.insertBefore(n, node));
-            parent.removeChild(node);
-          }
-        });
-        
-        safeHtml = doc.body.innerHTML;
-      } catch(e) {
-        console.error('Error applying highlights to HTML:', e);
-      }
-    }
-
-    // Os destaques reinserem o texto como HTML (temp.innerHTML): sanitiza de novo o
-    // resultado final, senão um texto com "&lt;img onerror…&gt;" viraria uma tag de verdade.
-    return sanitizeArticleHtml(safeHtml);
-  }, [htmlContent, activeHighlights, isMounted]);
-
+  const activeTypo = propTypography || typography;
   const typoClasses = [
-    typography?.fontFamily === 'sans'
+    activeTypo?.fontFamily === 'sans'
       ? 'article-font-sans'
-      : typography?.fontFamily === 'dyslexic'
+      : activeTypo?.fontFamily === 'dyslexic'
         ? 'article-font-dyslexic'
         : 'article-font-serif',
-    `article-size-${typography?.fontSize || 'base'}`,
-    `article-leading-${typography?.lineHeight || 'relaxed'}`,
+    `article-size-${activeTypo?.fontSize || 'base'}`,
+    `article-leading-${activeTypo?.lineHeight || 'relaxed'}`,
   ].join(' ');
 
   return (

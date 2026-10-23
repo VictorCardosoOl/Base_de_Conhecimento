@@ -80,13 +80,13 @@ export function ArticleReader({
         />
       </div>
 
-      <div className="grid grid-cols-1 xl:grid-cols-[1fr_260px] gap-6 xl:gap-8 items-start">
+      <div className="grid grid-cols-1 xl:grid-cols-[1fr_260px] 2xl:grid-cols-[1fr_300px] gap-8 xl:gap-14 items-start w-full">
         <div
           ref={bodyRef}
           data-reveal
-          className="min-w-0 reading-surface rounded-[20px] border border-border px-6 py-8 sm:px-12 sm:py-12 lg:px-16 shadow-[var(--glass-shadow-1)]"
+          className="min-w-0 w-full transition-colors"
         >
-          <div className="prose dark:prose-invert max-w-none">
+          <div className="prose dark:prose-invert max-w-none prose-lg text-text-body font-sans leading-relaxed">
             <ArticleContent htmlContent={htmlContent} articleId={articleId} />
           </div>
         </div>
