@@ -42,25 +42,25 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_role_requests_user_id_users"),
             ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
             ["decided_by"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_role_requests_decided_by_users"),
             ondelete="SET NULL",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_role_requests")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ux_role_requests_one_pending_per_user",
         "role_requests",
         ["user_id"],
         unique=True,
-        schema="auth",
+        schema="app_auth",
         postgresql_where=sa.text("status = 'pending'"),
     )
     op.create_index(
@@ -68,13 +68,13 @@ def upgrade() -> None:
         "role_requests",
         ["status", "created_at"],
         unique=False,
-        schema="auth",
+        schema="app_auth",
     )
 
 
 def downgrade() -> None:
-    op.drop_index("ix_role_requests_status_created", table_name="role_requests", schema="auth")
+    op.drop_index("ix_role_requests_status_created", table_name="role_requests", schema="app_auth")
     op.drop_index(
-        "ux_role_requests_one_pending_per_user", table_name="role_requests", schema="auth"
+        "ux_role_requests_one_pending_per_user", table_name="role_requests", schema="app_auth"
     )
-    op.drop_table("role_requests", schema="auth")
+    op.drop_table("role_requests", schema="app_auth")

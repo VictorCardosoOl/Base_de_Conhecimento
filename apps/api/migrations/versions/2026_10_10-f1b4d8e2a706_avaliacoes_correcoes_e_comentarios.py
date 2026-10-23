@@ -44,41 +44,41 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(
             ["deleted_by"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_article_comments_deleted_by_users"),
             ondelete="SET NULL",
         ),
         sa.ForeignKeyConstraint(
             ["parent_id"],
-            ["auth.article_comments.id"],
+            ["app_auth.article_comments.id"],
             name=op.f("fk_article_comments_parent_id_article_comments"),
             ondelete="CASCADE",
         ),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_article_comments_user_id_users"),
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_article_comments")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ix_article_comments_article_created",
         "article_comments",
         ["article_id", "created_at"],
         unique=False,
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ix_article_comments_created",
         "article_comments",
         ["created_at"],
         unique=False,
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
-        "ix_article_comments_parent", "article_comments", ["parent_id"], unique=False, schema="auth"
+        "ix_article_comments_parent", "article_comments", ["parent_id"], unique=False, schema="app_auth"
     )
     op.create_table(
         "article_corrections",
@@ -120,32 +120,32 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(
             ["resolved_by"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_article_corrections_resolved_by_users"),
             ondelete="SET NULL",
         ),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_article_corrections_user_id_users"),
             ondelete="SET NULL",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_article_corrections")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ix_article_corrections_article",
         "article_corrections",
         ["article_id"],
         unique=False,
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ix_article_corrections_status_created",
         "article_corrections",
         ["status", "created_at"],
         unique=False,
-        schema="auth",
+        schema="app_auth",
     )
     op.create_table(
         "article_ratings",
@@ -172,26 +172,26 @@ def upgrade() -> None:
         sa.CheckConstraint("value BETWEEN 1 AND 5", name=op.f("ck_article_ratings_value_range")),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_article_ratings_user_id_users"),
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_article_ratings")),
         sa.UniqueConstraint("article_id", "user_id", name="uq_article_ratings_article_user"),
-        schema="auth",
+        schema="app_auth",
     )
 
 
 def downgrade() -> None:
-    op.drop_table("article_ratings", schema="auth")
+    op.drop_table("article_ratings", schema="app_auth")
     op.drop_index(
-        "ix_article_corrections_status_created", table_name="article_corrections", schema="auth"
+        "ix_article_corrections_status_created", table_name="article_corrections", schema="app_auth"
     )
-    op.drop_index("ix_article_corrections_article", table_name="article_corrections", schema="auth")
-    op.drop_table("article_corrections", schema="auth")
-    op.drop_index("ix_article_comments_parent", table_name="article_comments", schema="auth")
-    op.drop_index("ix_article_comments_created", table_name="article_comments", schema="auth")
+    op.drop_index("ix_article_corrections_article", table_name="article_corrections", schema="app_auth")
+    op.drop_table("article_corrections", schema="app_auth")
+    op.drop_index("ix_article_comments_parent", table_name="article_comments", schema="app_auth")
+    op.drop_index("ix_article_comments_created", table_name="article_comments", schema="app_auth")
     op.drop_index(
-        "ix_article_comments_article_created", table_name="article_comments", schema="auth"
+        "ix_article_comments_article_created", table_name="article_comments", schema="app_auth"
     )
-    op.drop_table("article_comments", schema="auth")
+    op.drop_table("article_comments", schema="app_auth")

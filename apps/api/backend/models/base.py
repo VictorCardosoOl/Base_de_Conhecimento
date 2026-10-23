@@ -3,8 +3,8 @@ from datetime import datetime
 from sqlalchemy import DateTime, MetaData, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 
-# O AuthService é dono do schema `auth`: não depende de tabelas de outros serviços.
-AUTH_SCHEMA = "auth"
+# O AuthService é dono do schema `app_auth`: não depende de tabelas de outros serviços.
+AUTH_SCHEMA = "app_auth"
 
 NAMING_CONVENTION = {
     "ix": "ix_%(column_0_label)s",

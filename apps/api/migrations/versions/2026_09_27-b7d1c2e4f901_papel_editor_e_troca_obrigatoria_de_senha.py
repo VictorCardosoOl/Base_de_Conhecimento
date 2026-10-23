@@ -19,12 +19,12 @@ depends_on: str | Sequence[str] | None = None
 
 
 def upgrade() -> None:
-    op.drop_constraint(op.f("ck_users_role_valid"), "users", schema="auth", type_="check")
+    op.drop_constraint(op.f("ck_users_role_valid"), "users", schema="app_auth", type_="check")
     op.create_check_constraint(
         op.f("ck_users_role_valid"),
         "users",
         "role IN ('admin', 'editor', 'user')",
-        schema="auth",
+        schema="app_auth",
     )
     op.add_column(
         "users",
@@ -34,18 +34,18 @@ def upgrade() -> None:
             server_default=sa.text("false"),
             nullable=False,
         ),
-        schema="auth",
+        schema="app_auth",
     )
 
 
 def downgrade() -> None:
     # Sem perda silenciosa: editores voltam a ser usuários comuns antes de restringir o papel.
-    op.execute("UPDATE auth.users SET role = 'user' WHERE role = 'editor'")
-    op.drop_column("users", "must_change_password", schema="auth")
-    op.drop_constraint(op.f("ck_users_role_valid"), "users", schema="auth", type_="check")
+    op.execute("UPDATE app_auth.users SET role = 'user' WHERE role = 'editor'")
+    op.drop_column("users", "must_change_password", schema="app_auth")
+    op.drop_constraint(op.f("ck_users_role_valid"), "users", schema="app_auth", type_="check")
     op.create_check_constraint(
         op.f("ck_users_role_valid"),
         "users",
         "role IN ('admin', 'user')",
-        schema="auth",
+        schema="app_auth",
     )

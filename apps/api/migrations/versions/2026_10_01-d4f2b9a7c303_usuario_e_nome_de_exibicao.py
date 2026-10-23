@@ -34,7 +34,7 @@ WITH base AS (
             ),
             22
         ) AS candidate
-    FROM auth.users
+    FROM app_auth.users
 ),
 normalized AS (
     SELECT
@@ -51,7 +51,7 @@ ranked AS (
         row_number() OVER (PARTITION BY candidate ORDER BY id) AS position
     FROM normalized
 )
-UPDATE auth.users AS u
+UPDATE app_auth.users AS u
 SET
     username = CASE
         WHEN r.position = 1 THEN r.candidate
@@ -64,31 +64,31 @@ WHERE u.id = r.id
 
 
 def upgrade() -> None:
-    op.add_column("users", sa.Column("username", sa.String(length=30)), schema="auth")
-    op.add_column("users", sa.Column("display_name", sa.String(length=100)), schema="auth")
+    op.add_column("users", sa.Column("username", sa.String(length=30)), schema="app_auth")
+    op.add_column("users", sa.Column("display_name", sa.String(length=100)), schema="app_auth")
     op.execute(_BACKFILL)
-    op.alter_column("users", "username", nullable=False, schema="auth")
-    op.alter_column("users", "display_name", nullable=False, schema="auth")
-    op.create_unique_constraint(op.f("uq_users_username"), "users", ["username"], schema="auth")
+    op.alter_column("users", "username", nullable=False, schema="app_auth")
+    op.alter_column("users", "display_name", nullable=False, schema="app_auth")
+    op.create_unique_constraint(op.f("uq_users_username"), "users", ["username"], schema="app_auth")
     op.create_check_constraint(
         op.f("ck_users_username_format"),
         "users",
         f"username ~ '{USERNAME_PATTERN}'",
-        schema="auth",
+        schema="app_auth",
     )
     op.create_check_constraint(
         op.f("ck_users_display_name_not_blank"),
         "users",
         "length(btrim(display_name)) > 0",
-        schema="auth",
+        schema="app_auth",
     )
 
 
 def downgrade() -> None:
     op.drop_constraint(
-        op.f("ck_users_display_name_not_blank"), "users", schema="auth", type_="check"
+        op.f("ck_users_display_name_not_blank"), "users", schema="app_auth", type_="check"
     )
-    op.drop_constraint(op.f("ck_users_username_format"), "users", schema="auth", type_="check")
-    op.drop_constraint(op.f("uq_users_username"), "users", schema="auth", type_="unique")
-    op.drop_column("users", "display_name", schema="auth")
-    op.drop_column("users", "username", schema="auth")
+    op.drop_constraint(op.f("ck_users_username_format"), "users", schema="app_auth", type_="check")
+    op.drop_constraint(op.f("uq_users_username"), "users", schema="app_auth", type_="unique")
+    op.drop_column("users", "display_name", schema="app_auth")
+    op.drop_column("users", "username", schema="app_auth")

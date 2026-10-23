@@ -43,24 +43,24 @@ def _now() -> sa.TextClause:
 
 def upgrade() -> None:
     # ── users ────────────────────────────────────────────────────────────────
-    op.alter_column("users", "password_hash", nullable=True, schema="auth")
+    op.alter_column("users", "password_hash", nullable=True, schema="app_auth")
     op.add_column(
-        "users", sa.Column("email_verified_at", sa.DateTime(timezone=True)), schema="auth"
+        "users", sa.Column("email_verified_at", sa.DateTime(timezone=True)), schema="app_auth"
     )
-    op.add_column("users", sa.Column("organization", sa.String(length=120)), schema="auth")
-    op.add_column("users", sa.Column("professional_area", sa.String(length=40)), schema="auth")
+    op.add_column("users", sa.Column("organization", sa.String(length=120)), schema="app_auth")
+    op.add_column("users", sa.Column("professional_area", sa.String(length=40)), schema="app_auth")
     areas = ", ".join(f"'{area}'" for area in _AREAS)
     op.create_check_constraint(
         op.f("ck_users_professional_area_valid"),
         "users",
         f"professional_area IS NULL OR professional_area IN ({areas})",
-        schema="auth",
+        schema="app_auth",
     )
     op.create_check_constraint(
         op.f("ck_users_organization_not_blank"),
         "users",
         "organization IS NULL OR length(btrim(organization)) > 0",
-        schema="auth",
+        schema="app_auth",
     )
 
     # ── account_tokens ───────────────────────────────────────────────────────
@@ -80,25 +80,25 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_account_tokens_user_id_users"),
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_account_tokens")),
         sa.UniqueConstraint("token_hash", name=op.f("uq_account_tokens_token_hash")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ix_account_tokens_user_purpose",
         "account_tokens",
         ["user_id", "purpose"],
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         op.f("ix_auth_account_tokens_expires_at"),
         "account_tokens",
         ["expires_at"],
-        schema="auth",
+        schema="app_auth",
     )
 
     # ── oauth_identities ─────────────────────────────────────────────────────
@@ -113,26 +113,26 @@ def upgrade() -> None:
         sa.Column("last_login_at", sa.DateTime(timezone=True)),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_oauth_identities_user_id_users"),
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_oauth_identities")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ux_oauth_identities_provider_subject",
         "oauth_identities",
         ["provider", "subject"],
         unique=True,
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         "ux_oauth_identities_user_provider",
         "oauth_identities",
         ["user_id", "provider"],
         unique=True,
-        schema="auth",
+        schema="app_auth",
     )
 
     # ── oauth_states ─────────────────────────────────────────────────────────
@@ -145,10 +145,10 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=_now(), nullable=False),
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("state_hash", name=op.f("pk_oauth_states")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
-        op.f("ix_auth_oauth_states_expires_at"), "oauth_states", ["expires_at"], schema="auth"
+        op.f("ix_auth_oauth_states_expires_at"), "oauth_states", ["expires_at"], schema="app_auth"
     )
 
     # ── oauth_pending_signups ────────────────────────────────────────────────
@@ -164,13 +164,13 @@ def upgrade() -> None:
         sa.Column("created_at", sa.DateTime(timezone=True), server_default=_now(), nullable=False),
         sa.Column("expires_at", sa.DateTime(timezone=True), nullable=False),
         sa.PrimaryKeyConstraint("token_hash", name=op.f("pk_oauth_pending_signups")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         op.f("ix_auth_oauth_pending_signups_expires_at"),
         "oauth_pending_signups",
         ["expires_at"],
-        schema="auth",
+        schema="app_auth",
     )
 
     # ── terms_acceptances ────────────────────────────────────────────────────
@@ -188,36 +188,36 @@ def upgrade() -> None:
         ),
         sa.ForeignKeyConstraint(
             ["user_id"],
-            ["auth.users.id"],
+            ["app_auth.users.id"],
             name=op.f("fk_terms_acceptances_user_id_users"),
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint("id", name=op.f("pk_terms_acceptances")),
-        schema="auth",
+        schema="app_auth",
     )
     op.create_index(
         op.f("ix_auth_terms_acceptances_user_id"),
         "terms_acceptances",
         ["user_id"],
-        schema="auth",
+        schema="app_auth",
     )
 
 
 def downgrade() -> None:
-    op.drop_table("terms_acceptances", schema="auth")
-    op.drop_table("oauth_pending_signups", schema="auth")
-    op.drop_table("oauth_states", schema="auth")
-    op.drop_table("oauth_identities", schema="auth")
-    op.drop_table("account_tokens", schema="auth")
+    op.drop_table("terms_acceptances", schema="app_auth")
+    op.drop_table("oauth_pending_signups", schema="app_auth")
+    op.drop_table("oauth_states", schema="app_auth")
+    op.drop_table("oauth_identities", schema="app_auth")
+    op.drop_table("account_tokens", schema="app_auth")
     op.drop_constraint(
-        op.f("ck_users_organization_not_blank"), "users", schema="auth", type_="check"
+        op.f("ck_users_organization_not_blank"), "users", schema="app_auth", type_="check"
     )
     op.drop_constraint(
-        op.f("ck_users_professional_area_valid"), "users", schema="auth", type_="check"
+        op.f("ck_users_professional_area_valid"), "users", schema="app_auth", type_="check"
     )
-    op.drop_column("users", "professional_area", schema="auth")
-    op.drop_column("users", "organization", schema="auth")
-    op.drop_column("users", "email_verified_at", schema="auth")
+    op.drop_column("users", "professional_area", schema="app_auth")
+    op.drop_column("users", "organization", schema="app_auth")
+    op.drop_column("users", "email_verified_at", schema="app_auth")
     # Contas só com login social não têm senha: o downgrade falha se existir alguma
     # (NOT NULL). Remova-as ou defina uma senha antes de voltar a versão.
-    op.alter_column("users", "password_hash", nullable=False, schema="auth")
+    op.alter_column("users", "password_hash", nullable=False, schema="app_auth")
