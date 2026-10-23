@@ -47,7 +47,7 @@ const SAME_ORIGIN_BASE = 'http://base-de-conhecimento.local';
  * Valida o `next` recebido na URL do login antes de redirecionar.
  * Aceita só caminhos da própria aplicação; qualquer outra coisa vira `fallback`.
  */
-export function sanitizeNextPath(value: unknown, fallback = '/'): string {
+export function sanitizeNextPath(value: unknown, fallback = '/artigos'): string {
   if (typeof value !== 'string' || !value.startsWith('/')) return fallback;
   // "//host" e "/\host" são interpretados pelos navegadores como outra origem.
   if (value.startsWith('//') || value.startsWith('/\\')) return fallback;

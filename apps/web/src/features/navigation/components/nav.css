@@ -30,14 +30,15 @@
   align-items: center;
   gap: 0.5rem;
   padding: 0 0.5rem 0 0.5rem;
-  border-radius: var(--glass-radius-pill);
+  border-radius: 9999px;
   color: var(--text-main);
   isolation: isolate;
   contain: layout style;
   transform: translate3d(0, 0, 0);
   transition:
-    transform var(--dur-slow) var(--ease-out-expo),
-    box-shadow var(--dur-base) ease;
+    transform 480ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 /* Material do cabeçalho numa camada própria: a troca de densidade ao rolar é só
@@ -56,9 +57,11 @@
   background: linear-gradient(var(--glass-tint), var(--glass-tint)), var(--glass-bg-strong);
   -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
   backdrop-filter: blur(var(--glass-blur)) saturate(var(--glass-saturate));
-  box-shadow: var(--glass-specular), var(--glass-shadow-1);
-  opacity: 0.82;
-  transition: opacity var(--dur-base) ease;
+  box-shadow: var(--glass-specular), 0 4px 20px -2px rgba(0, 0, 0, 0.05);
+  opacity: 0.85;
+  transition: 
+    opacity 320ms ease,
+    box-shadow 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Borda luminosa */
@@ -75,7 +78,11 @@
 }
 
 .app-header[data-scrolled] {
-  box-shadow: var(--glass-shadow-2);
+  box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.08), 0 4px 12px rgba(0, 0, 0, 0.04);
+}
+
+.app-header[data-scrolled]::before {
+  opacity: 0.96;
 }
 
 /* Rolando para baixo: o cabeçalho sai de cena (só transform). */
@@ -89,18 +96,25 @@
   gap: 0.5rem;
   min-height: 2.75rem;
   padding: 0.25rem 0.65rem 0.25rem 0.4rem;
-  border-radius: var(--glass-radius-pill);
+  border-radius: 9999px;
   font-family: var(--font-sans);
   font-size: 0.95rem;
   font-weight: 700;
   letter-spacing: -0.01em;
   color: var(--text-main);
   white-space: nowrap;
-  transition: background-color var(--dur-fast) ease;
+  transition: 
+    background-color 220ms ease,
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .app-header-brand:hover {
   background: var(--glass-bg-hover);
+  transform: scale(1.02);
+}
+
+.app-header-brand:active {
+  transform: scale(0.97);
 }
 
 .app-header-brand-mark {
@@ -124,67 +138,82 @@
 }
 
 /* Botão do menu: duas barras que viram um X (só transform) */
+/* Botão do menu: visual sólido, estável e elegante */
 .nav-toggle {
   display: inline-flex;
   align-items: center;
   gap: 0.6rem;
   height: 2.5rem;
   padding: 0 0.95rem 0 0.8rem;
-  border-radius: var(--glass-radius-pill);
+  border-radius: 9999px;
   font-size: 0.875rem;
   font-weight: 500;
   color: var(--text-main);
-  background: color-mix(in srgb, var(--glass-bg-strong) 70%, transparent);
+  background: color-mix(in srgb, var(--glass-bg-strong) 75%, transparent);
   border: 1px solid color-mix(in srgb, var(--text-main) 10%, transparent);
-  box-shadow: var(--glass-specular);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+  cursor: pointer;
+  user-select: none;
   transition:
-    transform var(--dur-fast) var(--ease-out-expo),
-    background-color var(--dur-fast) ease;
+    background-color 200ms ease,
+    border-color 200ms ease,
+    box-shadow 200ms ease;
 }
 
 .nav-toggle:hover {
   background: var(--glass-bg-hover);
+  border-color: color-mix(in srgb, var(--text-main) 18%, transparent);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 .nav-toggle:active {
-  transform: scale(0.95);
+  background: color-mix(in srgb, var(--text-main) 8%, transparent);
 }
 
 .nav-toggle:focus-visible {
   outline: 2px solid var(--mesh-1);
-  outline-offset: 3px;
+  outline-offset: 2px;
+}
+
+.nav-toggle-label {
+  display: inline-block;
+  font-weight: 500;
+  letter-spacing: -0.01em;
 }
 
 .nav-toggle-icon {
   position: relative;
   width: 16px;
   height: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .nav-toggle-icon > span {
-  position: absolute;
-  left: 0;
+  display: block;
   width: 100%;
-  height: 1.75px;
+  height: 2px;
   border-radius: 2px;
   background: currentColor;
-  transition: transform var(--dur-base) var(--ease-out-expo);
+  transform-origin: center;
+  transition: transform 260ms cubic-bezier(0.16, 1, 0.3, 1), opacity 200ms ease;
 }
 
 .nav-toggle-icon > span:first-child {
-  top: 2px;
+  transform: translateY(0) rotate(0deg);
 }
 
 .nav-toggle-icon > span:last-child {
-  bottom: 2px;
+  transform: translateY(0) rotate(0deg);
 }
 
 .nav-toggle[aria-expanded='true'] .nav-toggle-icon > span:first-child {
-  transform: translateY(3.1px) rotate(45deg);
+  transform: translateY(5px) rotate(45deg);
 }
 
 .nav-toggle[aria-expanded='true'] .nav-toggle-icon > span:last-child {
-  transform: translateY(-3.1px) rotate(-45deg);
+  transform: translateY(-5px) rotate(-45deg);
 }
 
 /* Botões redondos (busca, alertas, tema, lista, conta) */
@@ -204,6 +233,8 @@
 
 .nav-icon-button:hover {
   background: var(--glass-bg-hover);
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .nav-icon-button:active {
@@ -326,7 +357,7 @@
   width: min(380px, calc(100vw - 24px));
   display: flex;
   flex-direction: column;
-  border-radius: var(--glass-radius-xl);
+  border-radius: 28px;
   color: var(--text-main);
   isolation: isolate;
   contain: layout paint style;
@@ -410,13 +441,21 @@
   display: flex;
   align-items: center;
   gap: 0.25rem;
-  border-radius: var(--glass-radius-md);
-  transition: background-color var(--dur-fast) ease;
+  border-radius: 16px;
+  position: relative;
+  transition:
+    background-color 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    transform 220ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 220ms ease;
 }
 
-.nav-module:hover,
+.nav-module:hover {
+  background: color-mix(in srgb, var(--text-main) 7%, transparent);
+}
+
 .nav-module[data-active] {
   background: var(--glass-bg-hover);
+  box-shadow: var(--glass-specular), inset 3px 0 0 var(--mesh-1);
 }
 
 .nav-module[data-active] {
@@ -507,18 +546,19 @@
 .nav-link {
   display: block;
   padding: 0.45rem 0.6rem;
-  border-radius: var(--glass-radius-sm);
+  border-radius: 10px;
   font-size: 0.86rem;
   line-height: 1.35;
   color: var(--text-muted);
   transition:
-    color var(--dur-fast) ease,
-    background-color var(--dur-fast) ease;
+    color 180ms ease,
+    background-color 180ms ease,
+    transform 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .nav-link:hover {
   color: var(--text-main);
-  background: color-mix(in srgb, var(--text-main) 5%, transparent);
+  background: color-mix(in srgb, var(--text-main) 6%, transparent);
 }
 
 .nav-link[aria-current='page'] {

@@ -99,23 +99,16 @@ describe('NavDrawer (menu lateral)', () => {
     expect(screen.getByRole('button', { name: 'Ver artigos de eSocial' }).getAttribute('aria-expanded')).toBe('false');
   });
 
-  it('hover no módulo: expande ao entrar e recolhe ao sair', async () => {
-    vi.useFakeTimers();
+  it('clique na seta do módulo: expande e recolhe os artigos', () => {
     drawer();
-    const esocialBtn = screen.getByRole('button', { name: 'Filtrar por módulo eSocial' });
-    const li = esocialBtn.closest('li')!;
     const expand = screen.getByRole('button', { name: 'Ver artigos de eSocial' });
     expect(expand.getAttribute('aria-expanded')).toBe('false');
 
-    fireEvent.mouseEnter(li);
+    fireEvent.click(expand);
     expect(screen.getByRole('button', { name: 'Ocultar artigos de eSocial' }).getAttribute('aria-expanded')).toBe('true');
 
-    fireEvent.mouseLeave(li);
-    act(() => {
-      vi.advanceTimersByTime(200);
-    });
+    fireEvent.click(screen.getByRole('button', { name: 'Ocultar artigos de eSocial' }));
     expect(screen.getByRole('button', { name: 'Ver artigos de eSocial' }).getAttribute('aria-expanded')).toBe('false');
-    vi.useRealTimers();
   });
 
   it('fechado: fora do Tab e dos leitores de tela', () => {

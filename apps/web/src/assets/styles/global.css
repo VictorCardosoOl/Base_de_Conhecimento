@@ -57,6 +57,7 @@
   }
 
   html {
+    scroll-behavior: smooth;
     font-size: clamp(14px, 0.8rem + 0.4vw, 18px);
     /* Espaço ocupado pelo banner de cookies (0 quando ele não está visível):
        o foco por teclado rola o elemento para acima do banner. */
@@ -565,4 +566,19 @@
     page-break-inside: avoid;
     break-inside: avoid;
   }
+}
+
+
+/* Momentum and Smooth Container Scroll */
+.article-sheet,
+.article-sheet > div,
+[role="dialog"] {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Suavização de scrollbars e transições dentro de interações e comentários */
+.below-fold {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 400px;
 }

@@ -5,7 +5,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 import { Bookmark, ChevronRight, Info, ShieldCheck } from 'lucide-react';
 import { FAQ_DATA } from '@/features/articles/catalog';
 import { Category, type FAQItem } from '@/features/articles/types';
-import { useNavDrawerHover } from '../hooks/use-nav-drawer-hover';
+import { useState, useCallback } from 'react';
 
 /** Artigos por módulo, calculado uma vez (o catálogo é estático). */
 const BY_MODULE: ReadonlyMap<Category, readonly FAQItem[]> = (() => {
@@ -66,8 +66,22 @@ export function NavDrawer({
     [currentArticleId]
   );
 
-  const { isExpanded, toggleModule, handleMouseEnter, handleMouseLeave } =
-    useNavDrawerHover(currentArticleModule);
+  const [expandedModules, setExpandedModules] = useState<Partial<Record<Category, boolean>>>({});
+
+  const isExpanded = useCallback(
+    (cat: Category) => expandedModules[cat] ?? cat === currentArticleModule,
+    [expandedModules, currentArticleModule]
+  );
+
+  const toggleModule = useCallback(
+    (cat: Category) => {
+      setExpandedModules((prev) => ({
+        ...prev,
+        [cat]: !(prev[cat] ?? cat === currentArticleModule),
+      }));
+    },
+    [currentArticleModule]
+  );
 
   // Ao abrir, o foco vai para o primeiro item (o botão do cabeçalho devolve no fechar).
   const firstRef = useRef<HTMLButtonElement>(null);
@@ -106,8 +120,6 @@ export function NavDrawer({
                 <li
                   key={cat}
                   {...stagger()}
-                  onMouseEnter={() => handleMouseEnter(cat, hasArticles)}
-                  onMouseLeave={() => handleMouseLeave(cat, hasArticles)}
                 >
                   <div className="nav-module" data-active={active || undefined}>
                     <button
